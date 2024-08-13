@@ -29,7 +29,7 @@ public class TestScene3 extends Scene {
         pMesh = new PolygonMesh();
         pMesh.addPolygon(backLeftBottom, backRightTop, backRightBottom);
         pMesh.addPolygon(backLeftBottom, backLeftTop, backRightTop);
-        pMesh.setMaterial(Material.WHITE_MATERIAL);
+        pMesh.setMaterial(Material.GRAY_MATERIAL);
         addMesh(pMesh);
         // Left Wall
         pMesh = new PolygonMesh();
@@ -53,7 +53,7 @@ public class TestScene3 extends Scene {
         pMesh = new PolygonMesh();
         pMesh.addPolygon(frontRightTop, frontLeftTop, backRightTop);
         pMesh.addPolygon(backRightTop, frontLeftTop, backLeftTop);
-        pMesh.setMaterial(Material.WHITE_EMISSIVE_MATERIAL);
+        pMesh.setMaterial(Material.WHITE_BRIGHT_EMISSIVE_MATERIAL);
         addMesh(pMesh);
         // Front Wall
         pMesh = new PolygonMesh();

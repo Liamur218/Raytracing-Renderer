@@ -1,5 +1,7 @@
 package util;
 
+import renderer.RenderSettings;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -76,6 +78,10 @@ public abstract class Debug {
             stringBuilder.append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public static void writeLogsToFile(RenderSettings settings) {
+        writeLogsToFile(settings.toFilenameString() + ".txt");
     }
 
     public static void writeLogsToFile(String filepath) {

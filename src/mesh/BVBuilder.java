@@ -5,8 +5,8 @@ import java.util.Comparator;
 
 public abstract class BVBuilder {
     // Constants
-    private static final int MAX_TRIANGLES_PER_BOX = 50;
-    private static final int MAX_DEPTH = 16;
+    private static final int DEFAULT_MAX_TRIANGLES_PER_BOX = 50;
+    private static final int DEFAULT_MAX_DEPTH = 32;
 
     // Base bounding volume for simple operations
     // Not a binary tree
@@ -34,13 +34,18 @@ public abstract class BVBuilder {
     // Used for collision detection and polygon (triangle) culling in more advanced collision detection
     // NOTE: THIS IS DESTRUCTIVE TO THE ARRAY LIST PASSED INTO THE METHOD
     public static BoundingVolume newBVH(ArrayList<Polygon> polygons) {
-        return newBVH(polygons, 0);
+        return newBVH(polygons, DEFAULT_MAX_TRIANGLES_PER_BOX, DEFAULT_MAX_DEPTH);
     }
 
-    private static BoundingVolume newBVH(ArrayList<Polygon> polygons, int currentDepth) {
+    public static BoundingVolume newBVH(ArrayList<Polygon> polygons, int maxTrianglesPerBox, int maxDepth) {
+        return newBVH(polygons, maxTrianglesPerBox, maxDepth, 0);
+    }
+
+    private static BoundingVolume newBVH(ArrayList<Polygon> polygons,
+                                         int maxTrianglesPerBox, int maxDepth, int currentDepth) {
         BoundingVolume boundingVolume = newBV(polygons);
 
-        if (polygons.size() > MAX_TRIANGLES_PER_BOX && currentDepth < MAX_DEPTH) {
+        if (polygons.size() > maxTrianglesPerBox && currentDepth < maxDepth) {
             Vector size = boundingVolume.getSize();
             Vector longAxis = (size.x > size.y && size.x > size.z) ? Vector.X_AXIS :
                     ((size.y > size.x && size.y > size.z) ? Vector.Y_AXIS : Vector.Z_AXIS);
@@ -48,13 +53,13 @@ public abstract class BVBuilder {
             PolygonSorter polygonSorter = new PolygonSorter(longAxis);
             polygons.sort(polygonSorter);
 
-            ArrayList<Polygon> leftPolygons = new ArrayList<>();
+            ArrayList<Polygon> rightPolygons = new ArrayList<>();
             for (int i = 0; i < polygons.size() / 2; i++) {
-                leftPolygons.add(polygons.remove(0));
+                rightPolygons.add(polygons.remove(polygons.size() - 1));
             }
 
-            boundingVolume.left = newBVH(leftPolygons, currentDepth + 1);
-            boundingVolume.right = newBVH(polygons, currentDepth + 1);
+            boundingVolume.right = newBVH(rightPolygons, maxTrianglesPerBox, maxDepth, currentDepth + 1);
+            boundingVolume.left = newBVH(polygons, maxTrianglesPerBox, maxDepth, currentDepth + 1);
         } else {
             boundingVolume.polygons = polygons.toArray(new Polygon[0]);
         }

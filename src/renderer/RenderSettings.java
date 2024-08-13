@@ -29,6 +29,7 @@ public class RenderSettings {
         DEFAULT_SETTINGS.setThreadCount(25);
         DEFAULT_SETTINGS.setSectionSize(500, 500);
         DEFAULT_SETTINGS.setRngSeed(0);
+        DEFAULT_SETTINGS.setHoldingDir("holding_dir");
     }
 
     private RenderSettings() {}
@@ -47,6 +48,7 @@ public class RenderSettings {
         sectionWidth = settings.sectionWidth;
         sectionHeight = settings.sectionHeight;
         rngSeed = settings.rngSeed;
+        holdingDir = settings.holdingDir;
     }
 
     public void setSize(Dimension size) {

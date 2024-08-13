@@ -47,6 +47,10 @@ public class Image extends BufferedImage {
         writeToFile(date.getTime() + " : " + date.getMonth() + "-" + date.getDay() + "-" + date.getYear());
     }
 
+    public void writeToFile(RenderSettings settings) {
+        writeToFile(settings.toFilenameString() + ".png");
+    }
+
     public void writeToFile(String filename) {
         if (infoOnImage) {
             writeStrOnImage("Size: " + renderSettings.size.width + " x " + renderSettings.size.height,

@@ -133,7 +133,7 @@ public abstract class Renderer {
             try {
                 holdingFile.createNewFile();
             } catch (IOException e) {
-                System.out.println("Encountered error while creating holding file " + i);
+                Debug.printMsgLn("\n[ERROR] Encountered error while creating holding file " + holdingFile);
                 System.exit(1);
             }
         }
