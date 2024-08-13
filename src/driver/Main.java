@@ -16,7 +16,7 @@ public class Main {
         Scene scene = new TestScene3();
         Dimension imageSize = new Dimension(3024, 1964);
         int recursionCount = 30;
-        int frameCount = 100;
+        int frameCount = 200;
         int threadCount = 50;
         int rngSeed = 0;
 

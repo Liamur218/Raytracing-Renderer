@@ -198,6 +198,7 @@ public abstract class Renderer {
             File holdingFile = new File(imageFragmentFilepath + i);
             // Read image fragments from holding directory
             ArrayList<ImageFragment> imageFragments = ImageFragment.readBatchFromFile(holdingFile);
+            holdingFile.delete();
             if (!imageFragments.isEmpty()) {
                 // Write image fragments to image
                 int fragPosX = imageFragments.get(0).posX;
