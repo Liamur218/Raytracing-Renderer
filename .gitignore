@@ -1,0 +1,13 @@
+# General
+.DS_Store
+
+# Holding directory
+holding_dir/
+
+# Image output directory
+renders
+
+# IDE's
+.vscode
+.idea
+
