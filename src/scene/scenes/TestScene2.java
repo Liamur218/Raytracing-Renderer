@@ -40,7 +40,7 @@ public class TestScene2 extends Scene {
 
         // Central Cube
         cube = new CubeMesh(0, 0, 0.0625, 0.125, 0.125, 0.125);
-        cube.setMaterial(Material.WHITE_BRIGHT_EMISSIVE_MATERIAL);
+        cube.setMaterial(Material.WHITE_VERY_BRIGHT_EMISSIVE_MATERIAL);
         addMesh(cube);
 
         // Surrounding Cubes

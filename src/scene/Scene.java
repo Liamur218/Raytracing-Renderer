@@ -31,7 +31,7 @@ public class Scene {
     // Setup
     public void addMesh(Mesh mesh) {
         if (mesh instanceof PolygonMesh pMesh) {
-            if (pMesh.boundingVolume == null) {
+            if (pMesh.polygons == null) {
                 pMesh.finalizeMesh();
             }
         }

@@ -53,20 +53,36 @@ public class Material {
     public static final Material PURPLE_EMISSIVE_MATERIAL = new Material(DoubleColor.PURPLE, 0, 1);
 
     // Bright emissive materials
-    public static final Material WHITE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.WHITE, 0, 3);
-    public static final Material LIGHT_GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.LIGHT_GRAY, 0, 3);
-    public static final Material GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.GRAY, 0, 3);
-    public static final Material DARK_GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.DARK_GRAY, 0, 3);
-    public static final Material BLACK_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.BLACK, 0, 3);
-    public static final Material RED_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.RED, 0, 3);
-    public static final Material PINK_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.PINK, 0, 3);
-    public static final Material ORANGE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.ORANGE, 0, 3);
-    public static final Material YELLOW_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.YELLOW, 0, 3);
-    public static final Material GREEN_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.GREEN, 0, 3);
-    public static final Material MAGENTA_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.MAGENTA, 0, 3);
-    public static final Material CYAN_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.CYAN, 0, 3);
-    public static final Material BLUE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.BLUE, 0, 3);
-    public static final Material PURPLE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.PURPLE, 0, 3);
+    public static final Material WHITE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.WHITE, 0, 2);
+    public static final Material LIGHT_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.LIGHT_GRAY, 0, 2);
+    public static final Material GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.GRAY, 0, 2);
+    public static final Material DARK_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.DARK_GRAY, 0, 2);
+    public static final Material BLACK_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.BLACK, 0, 2);
+    public static final Material RED_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.RED, 0, 2);
+    public static final Material PINK_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.PINK, 0, 2);
+    public static final Material ORANGE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.ORANGE, 0, 2);
+    public static final Material YELLOW_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.YELLOW, 0, 2);
+    public static final Material GREEN_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.GREEN, 0, 2);
+    public static final Material MAGENTA_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.MAGENTA, 0, 2);
+    public static final Material CYAN_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.CYAN, 0, 2);
+    public static final Material BLUE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.BLUE, 0, 2);
+    public static final Material PURPLE_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.PURPLE, 0, 2);
+
+    // Very bright emissive materials
+    public static final Material WHITE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.WHITE, 0, 3);
+    public static final Material LIGHT_VERY_GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.LIGHT_GRAY, 0, 3);
+    public static final Material GRAY_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.GRAY, 0, 3);
+    public static final Material DARK_VERY_GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.DARK_GRAY, 0, 3);
+    public static final Material BLACK_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.BLACK, 0, 3);
+    public static final Material RED_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.RED, 0, 3);
+    public static final Material PINK_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.PINK, 0, 3);
+    public static final Material ORANGE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.ORANGE, 0, 3);
+    public static final Material YELLOW_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.YELLOW, 0, 3);
+    public static final Material GREEN_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.GREEN, 0, 3);
+    public static final Material MAGENTA_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.MAGENTA, 0, 3);
+    public static final Material CYAN_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.CYAN, 0, 3);
+    public static final Material BLUE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.BLUE, 0, 3);
+    public static final Material PURPLE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(DoubleColor.PURPLE, 0, 3);
 
     // Mirrors
     public static final Material WHITE_MIRROR = new Material(DoubleColor.WHITE, 1, 0, 1);

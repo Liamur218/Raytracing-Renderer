@@ -6,12 +6,12 @@ import util.Debug;
 import util.Util;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
 
 public class PolygonMesh extends Mesh {
 
     private final ArrayList<Polygon> polygonArrayList;
-    public BoundingVolume boundingVolume;
+    public Polygon[] polygons;
     public int polygonCount;
 
     public PolygonMesh() {
@@ -35,8 +35,9 @@ public class PolygonMesh extends Mesh {
         if (material == null) {
             material = DEFAULT_MATERIAL;
         }
-        polygonCount = polygonArrayList.size();
-        boundingVolume = BVBuilder.newBVH(polygonArrayList);
+        polygons = polygonArrayList.toArray(new Polygon[0]);
+        polygonCount = polygons.length;
+        polygonArrayList.clear();
     }
 
     // For scene setup
@@ -55,7 +56,7 @@ public class PolygonMesh extends Mesh {
 
     public PolygonMesh rotate(double dxDeg, double dyDeg, double dzDeg) {
         for (Polygon polygon : polygonArrayList) {
-            for (Vector point : polygon.points) {
+            for (Vector point : polygon) {
                 point.rotate(Vector.X_AXIS, dxDeg);
                 point.rotate(Vector.Y_AXIS, dyDeg);
                 point.rotate(Vector.Z_AXIS, dzDeg);
@@ -70,7 +71,7 @@ public class PolygonMesh extends Mesh {
 
     public PolygonMesh scale(double x, double y, double z) {
         for (Polygon polygon : polygonArrayList) {
-            for (Vector point : polygon.points) {
+            for (Vector point : polygon) {
                 point.x *= x;
                 point.y *= y;
                 point.z *= z;
@@ -81,9 +82,9 @@ public class PolygonMesh extends Mesh {
 
     // More complicated transformations
     public void setCenterAt(double x, double y, double z) {
-        Vector delta = Vector.subtract(new Vector(x, y, z), BVBuilder.newBV(polygonArrayList).getCenter());
+        Vector delta = Vector.subtract(new Vector(x, y, z), getCenter());
         for (Polygon polygon : polygonArrayList) {
-            for (Vector vector : polygon.points) {
+            for (Vector vector : polygon) {
                 vector.add(delta);
             }
         }
@@ -95,40 +96,36 @@ public class PolygonMesh extends Mesh {
         RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
         Polygon lastPolygon = (lastCast == null) ? null : lastCast.polygon;
 
-        // Get all leaf bounding volumes that this ray intersects
-        ArrayList<BoundingVolume> volumes = boundingVolume.getIntersectedVolumes(origin, ray);
-        for (BoundingVolume volume : volumes) {
-            for (Polygon polygon : volume.polygons) {
-                // Make sure a polygon is not collided with twice
-                if (polygon != lastPolygon) {
+        for (Polygon polygon : polygons) {
+            // Make sure a polygon is not collided with twice
+            if (polygon != lastPolygon) {
 
-                    // Determine intersection point
-                    double t = -Vector.componentMultiply(
-                            polygon.normal, Vector.subtract(origin, polygon.points[0])).sum() /
-                            Vector.componentMultiply(polygon.normal, ray).sum();
-                    Vector intersection = origin.copy().add(Vector.multiply(ray, t));
+                // Determine intersection point
+                double t = -Vector.componentMultiply(
+                        polygon.normal, Vector.subtract(origin, polygon.points[0])).sum() /
+                        Vector.componentMultiply(polygon.normal, ray).sum();
+                Vector intersection = origin.copy().add(Vector.multiply(ray, t));
 
-                    // Check if intersection is in front of origin point
-                    if (t > 0) {
-                        // Check if intersection in inside polygon
-                        Vector PA = Vector.subtract(polygon.points[0], intersection);
-                        Vector PB = Vector.subtract(polygon.points[1], intersection);
-                        Vector PC = Vector.subtract(polygon.points[2], intersection);
-                        double totalAngle = Vector.angleBetween(PA, PB) +
-                                Vector.angleBetween(PB, PC) + Vector.angleBetween(PC, PA);
+                // Check if intersection is in front of origin point
+                if (t > 0) {
+                    // Check if intersection in inside polygon
+                    Vector PA = Vector.subtract(polygon.points[0], intersection);
+                    Vector PB = Vector.subtract(polygon.points[1], intersection);
+                    Vector PC = Vector.subtract(polygon.points[2], intersection);
+                    double totalAngle = Vector.angleBetween(PA, PB) +
+                            Vector.angleBetween(PB, PC) + Vector.angleBetween(PC, PA);
 
-                        if (360 - Renderer.POLYGON_ERROR < totalAngle && totalAngle < 360 + Renderer.POLYGON_ERROR) {
-                            double distance = Vector.distanceBetween(origin, intersection);
-                            // Replace existing raycast info if this collision point is the closest intersection point
-                            if (raycastInfo.intersection == null || distance < raycastInfo.distance) {
-                                raycastInfo.intersection = intersection;
-                                raycastInfo.normal = (Vector.angleBetween(polygon.normal, ray) > 90) ?
-                                        polygon.normal : Vector.multiply(polygon.normal, -1);
-                                raycastInfo.mesh = this;
-                                raycastInfo.material = material;
-                                raycastInfo.polygon = polygon;
-                                raycastInfo.distance = distance;
-                            }
+                    if (360 - Renderer.POLYGON_ERROR < totalAngle && totalAngle < 360 + Renderer.POLYGON_ERROR) {
+                        double distance = Vector.distanceBetween(origin, intersection);
+                        // Replace existing raycast info if this collision point is the closest intersection point
+                        if (raycastInfo.intersection == null || distance < raycastInfo.distance) {
+                            raycastInfo.intersection = intersection;
+                            raycastInfo.normal = (Vector.angleBetween(polygon.normal, ray) > 90) ?
+                                    polygon.normal : Vector.multiply(polygon.normal, -1);
+                            raycastInfo.mesh = this;
+                            raycastInfo.material = material;
+                            raycastInfo.polygon = polygon;
+                            raycastInfo.distance = distance;
                         }
                     }
                 }
@@ -245,5 +242,22 @@ public class PolygonMesh extends Mesh {
             }
         }
         return polygonMesh;
+    }
+
+    // This is probably going to get removed later
+    Vector getCenter() {
+        Vector min = Vector.MIN_VECTOR;
+        Vector max = Vector.MAX_VECTOR;
+        for (Polygon polygon : polygonArrayList) {
+            for (Vector vector : polygon) {
+                vector.x = Math.max(vector.x, max.x);
+                vector.y = Math.max(vector.y, max.y);
+                vector.z = Math.max(vector.z, max.z);
+                vector.x = Math.min(vector.x, min.x);
+                vector.y = Math.min(vector.y, min.y);
+                vector.z = Math.min(vector.z, min.z);
+            }
+        }
+        return Vector.divide(Vector.add(max, min), 2);
     }
 }

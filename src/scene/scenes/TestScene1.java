@@ -91,7 +91,7 @@ public class TestScene1 extends Scene {
         // Small cube (cube under ledge)
         pos = new Vector(1.25, 0.5, -0.875);
         cMesh = new CubeMesh(pos, 0.25, 0.25, 0.25, 0, 0, -30);
-        cMesh.setMaterial(Material.ORANGE_BRIGHT_EMISSIVE_MATERIAL);
+        cMesh.setMaterial(Material.ORANGE_VERY_BRIGHT_EMISSIVE_MATERIAL);
         addMesh(cMesh);
     }
 }

@@ -28,6 +28,6 @@ public class Main {
         Image image = Renderer.render(settings);
 
         image.writeToFile(settings);
-        Debug.writeLogsToFile(settings);
+        //Debug.writeLogsToFile(settings);
     }
 }

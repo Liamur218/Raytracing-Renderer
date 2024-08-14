@@ -1,6 +1,8 @@
 package mesh;
 
-public class Polygon {
+import java.util.Iterator;
+
+public class Polygon implements Iterable<Vector> {
 
     Vector[] points;
     Vector normal;
@@ -39,5 +41,26 @@ public class Polygon {
             return true;
         }
         return false;
+    }
+
+
+    @Override
+    public Iterator<Vector> iterator() {
+        return new PolygonIterator();
+    }
+
+    private class PolygonIterator implements Iterator<Vector> {
+
+        int index = (points == null) ? -1 : 0;
+
+        @Override
+        public boolean hasNext() {
+            return index > -1 && index < points.length;
+        }
+
+        @Override
+        public Vector next() {
+            return points[index++];
+        }
     }
 }
