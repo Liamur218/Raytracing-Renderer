@@ -62,7 +62,7 @@ public class TestScene3 extends Scene {
         pMesh.setMaterial(Material.WHITE_MATERIAL);
         addMesh(pMesh);
         // Knight
-        pMesh = PolygonMesh.loadMesh("../assets/knight.stl");
+        pMesh = PolygonMesh.loadMesh("assets/KNIGHT.stl");
         pMesh.scale(1.5 / 3.37);
         //pMesh.rotate(0, 0, 90 + 45);
         pMesh.setCenterAt(1.5, 0, -0.25);

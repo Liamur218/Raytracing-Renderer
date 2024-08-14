@@ -25,8 +25,6 @@ public abstract class Renderer {
     private static Random random;
     public static final double DEFAULT_REFRACTIVE_INDEX = 1;
 
-    private static final String IMAGE_FRAGMENT_NAME = "img_frag_";
-
     public static Image render(Scene scene, int width, int height, int recursionCount, int frameCount) {
         return render(scene, width, height, recursionCount, frameCount, 1);
     }
@@ -59,6 +57,7 @@ public abstract class Renderer {
         int rngSeed = renderSettings.rngSeed;
 
         Debug.logMsgLn("Starting renderer");
+        Image image = new Image(width, height);
 
         // Variable setup
         Camera camera = scene.activeCamera;
@@ -122,21 +121,7 @@ public abstract class Renderer {
 
         // Frames
         RETURN_BUFFER.clear();
-        String imageFragmentFilepath = renderSettings.holdingDir + "/" + IMAGE_FRAGMENT_NAME;
         int totalImgFragCount = threads.size();
-
-        // Clear holding directory and create holding files
-        //     THIS IS REALLY IMPORTANT!!!!!!!!!!!!
-        //File holdingDir = new File(renderSettings.holdingDir);
-        for (int i = 0; i < fragsPerFrame; i++) {
-            File holdingFile = new File(imageFragmentFilepath + i);
-            try {
-                holdingFile.createNewFile();
-            } catch (IOException e) {
-                Debug.printMsgLn("\n[ERROR] Encountered error while creating holding file " + holdingFile);
-                System.exit(1);
-            }
-        }
 
         // Sort threads however we feel like today
         threads.sort(new RaytracingThread.ThreadComparator());
@@ -173,12 +158,20 @@ public abstract class Renderer {
                 } catch (InterruptedException | ExecutionException ignored) {}
             }
 
-            // Write image fragment objects to holding file in holding directory
-            File holdingFile = new File(imageFragmentFilepath + currentFrameSpaceID);
-            ImageFragment.writeBatchToFile(RETURN_BUFFER, holdingFile);
+            // Write image fragments to output image
+            int fragPosX = RETURN_BUFFER.get(0).posX;
+            int fragPosY = RETURN_BUFFER.get(0).posY;
+            Dimension fragSize = RETURN_BUFFER.get(0).size;
+            for (int localX = 0; localX < fragSize.width; localX++) {
+                for (int localY = 0; localY < fragSize.height; localY++) {
+                    DoubleColor[] colors = new DoubleColor[RETURN_BUFFER.size()];
+                    for (int frameNumber = 0; frameNumber < colors.length; frameNumber++) {
+                        colors[frameNumber] = RETURN_BUFFER.get(frameNumber).array[localX][localY];
+                    }
+                    image.setRGB(fragPosX + localX, fragPosY + localY, DoubleColor.average(colors).getRGB());
+                }
+            }
 
-            // Increment counter AFTER writing to your files using counter
-            // Dumbass
             currentFrameSpaceID++;
 
             // CLEAR RETURN BUFFER!!!!!!!!!!
@@ -188,37 +181,6 @@ public abstract class Renderer {
         threadPool.close();
         Debug.logMsgLn("\n" + Util.getCurrentTime() + " Render complete");
         Debug.logElapsedTime("-> Render complete in: ", start);
-
-        // Build image * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-        Debug.logMsg(Util.getCurrentTime() + " Building image... ");
-        start = System.nanoTime();
-        // Setup image object to write image fragments to
-        Image image = new Image(width, height);
-        for (int i = 0; i < fragsPerFrame; i++) {
-            File holdingFile = new File(imageFragmentFilepath + i);
-            // Read image fragments from holding directory
-            ArrayList<ImageFragment> imageFragments = ImageFragment.readBatchFromFile(holdingFile);
-            holdingFile.delete();
-            if (!imageFragments.isEmpty()) {
-                // Write image fragments to image
-                int fragPosX = imageFragments.get(0).posX;
-                int fragPosY = imageFragments.get(0).posY;
-                Dimension fragSize = imageFragments.get(0).size;
-                for (int localX = 0; localX < fragSize.width; localX++) {
-                    for (int localY = 0; localY < fragSize.height; localY++) {
-                        DoubleColor[] colors = new DoubleColor[imageFragments.size()];
-                        for (int frameNumber = 0; frameNumber < imageFragments.size(); frameNumber++) {
-                            colors[frameNumber] = imageFragments.get(frameNumber).array[localX][localY];
-                        }
-                        image.setRGB(fragPosX + localX, fragPosY + localY, DoubleColor.average(colors).getRGB());
-                    }
-                }
-            }
-        }
-
-        end = System.nanoTime();
-        Debug.logMsgLn("Done");
-        Debug.logElapsedTime("-> Image build complete in: ", start, end);
 
         masterEnd = System.nanoTime();
         Debug.logMsgLn(Util.getCurrentTime() + " All done");

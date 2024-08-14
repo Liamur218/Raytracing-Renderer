@@ -192,6 +192,10 @@ public class Vector {
         return cross(new Vector(this).rotate(X_AXIS, 90).rotate(Y_AXIS, 90), this).normalize();
     }
 
+    public Vector getLongestDimension() {
+        return (x > y && x > z) ? Vector.X_AXIS : ((y > x && y > z) ? Vector.Y_AXIS : Vector.Z_AXIS);
+    }
+
     public static Vector getPlaneIntersection(Vector origin, Vector vector, Vector planeRefPoint, Vector planeNormal) {
         // Equation of a plane -- a1(x - x0) + b1(y - y0) + c1(z - z0) = 0
         // Equation of a ray ---- <x, y, z> = <a2, b2, c2> * t + <x1, y1, z1>

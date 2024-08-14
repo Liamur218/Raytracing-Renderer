@@ -38,9 +38,9 @@ public abstract class Util {
     /*
     * Using a and b instead of x and y here because it makes IntelliJ happy
     * */
-    public static boolean isPointInside2DBox(double pointA, double pointB,
-                                             double boxMinA, double boxMaxA, double boxMinB, double boxMaxB) {
-        return boxMinA < pointA && pointA < boxMaxA && boxMinB < pointB && pointB < boxMaxB;
+    public static boolean isPointInside2DBox(double pointX1, double pointX2,
+                                             double boxMinX1, double boxMaxX1, double boxMinX2, double boxMaxX2) {
+        return boxMinX1 < pointX1 && pointX1 < boxMaxX1 && boxMinX2 < pointX2 && pointX2 < boxMaxX2;
     }
 
     // Byte shaboingery

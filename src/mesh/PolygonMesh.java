@@ -11,8 +11,10 @@ import java.util.ArrayList;
 public class PolygonMesh extends Mesh {
 
     private final ArrayList<Polygon> polygonArrayList;
+
     public Polygon[] polygons;
-    public int polygonCount;
+
+    private Vector center;
 
     public PolygonMesh() {
         polygonArrayList = new ArrayList<>();
@@ -36,7 +38,6 @@ public class PolygonMesh extends Mesh {
             material = DEFAULT_MATERIAL;
         }
         polygons = polygonArrayList.toArray(new Polygon[0]);
-        polygonCount = polygons.length;
         polygonArrayList.clear();
     }
 
@@ -96,7 +97,9 @@ public class PolygonMesh extends Mesh {
         RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
         Polygon lastPolygon = (lastCast == null) ? null : lastCast.polygon;
 
+        // TODO: 8/14/24 Do bounding box stuff here
         for (Polygon polygon : polygons) {
+
             // Make sure a polygon is not collided with twice
             if (polygon != lastPolygon) {
 
@@ -135,13 +138,13 @@ public class PolygonMesh extends Mesh {
     }
 
     public static PolygonMesh loadMesh(String filepath) {
-        String[] array = filepath.split("\\.");
-        if (array.length == 1) {
+        String[] filepathArray = filepath.split("\\.");
+        if (filepathArray.length == 1) {
             Debug.logMsgLn("[ERROR] Unable to read file " + filepath + " - no file extension specified");
         } else {
-            if (array[array.length - 1].equals("obj")) {
+            if (filepathArray[filepathArray.length - 1].equals("obj")) {
                 return loadObj(filepath);
-            } else if (array[array.length - 1].equals("stl")) {
+            } else if (filepathArray[filepathArray.length - 1].equals("stl")) {
                 return loadStl(filepath);
             } else {
                 Debug.logMsgLn("[ERROR] Unable to load file " + filepath + " - unsupported file format");
@@ -152,7 +155,7 @@ public class PolygonMesh extends Mesh {
     }
 
     private static PolygonMesh loadStl(String filepath) {
-        File file = new File("assets/KNIGHT.stl");
+        File file = new File(filepath);
         FileInputStream input = null;
         BufferedReader in = null;
         PolygonMesh polygonMesh = new PolygonMesh();
@@ -244,8 +247,7 @@ public class PolygonMesh extends Mesh {
         return polygonMesh;
     }
 
-    // This is probably going to get removed later
-    Vector getCenter() {
+    public Vector[] getMinMax() {
         Vector min = Vector.MIN_VECTOR;
         Vector max = Vector.MAX_VECTOR;
         for (Polygon polygon : polygonArrayList) {
@@ -258,6 +260,30 @@ public class PolygonMesh extends Mesh {
                 vector.z = Math.min(vector.z, min.z);
             }
         }
-        return Vector.divide(Vector.add(max, min), 2);
+        return new Vector[]{ min, max };
+    }
+
+    public Vector[] getCenterAndSize() {
+        Vector min = Vector.MIN_VECTOR;
+        Vector max = Vector.MAX_VECTOR;
+        for (Polygon polygon : polygonArrayList) {
+            for (Vector vector : polygon) {
+                vector.x = Math.max(vector.x, max.x);
+                vector.y = Math.max(vector.y, max.y);
+                vector.z = Math.max(vector.z, max.z);
+                vector.x = Math.min(vector.x, min.x);
+                vector.y = Math.min(vector.y, min.y);
+                vector.z = Math.min(vector.z, min.z);
+            }
+        }
+        return new Vector[]{ Vector.subtract(max, min), Vector.divide(Vector.add(max, min), 2) };
+    }
+
+    public Vector getSize() {
+        return getCenterAndSize()[1];
+    }
+
+    public Vector getCenter() {
+        return getCenterAndSize()[0];
     }
 }
