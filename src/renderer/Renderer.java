@@ -1,18 +1,21 @@
 package renderer;
 
-import mesh.Mesh;
 import mesh.DoubleColor;
-import scene.Camera;
+import mesh.Mesh;
 import mesh.Vector;
+import scene.Camera;
 import scene.Scene;
 import util.Debug;
 import util.ProgressBar;
 import util.Util;
 
 import java.awt.*;
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public abstract class Renderer {
 
@@ -148,14 +151,19 @@ public abstract class Renderer {
             while (thread.imageFragment.frameSpaceID == currentFrameSpaceID) {
                 futures.add(threadPool.submit(thread));
                 threads.remove(thread);
-                if (!threads.isEmpty()) { thread = threads.get(0); } else { break; }
+                if (!threads.isEmpty()) {
+                    thread = threads.get(0);
+                } else {
+                    break;
+                }
             }
 
             // Wait for all current threads to finish
             for (Future<?> future : futures) {
                 try {
                     future.get();
-                } catch (InterruptedException | ExecutionException ignored) {}
+                } catch (InterruptedException | ExecutionException ignored) {
+                }
             }
 
             // Write image fragments to output image
@@ -250,7 +258,7 @@ public abstract class Renderer {
                 Vector binormal = Vector.cross(raycast.direction, raycast.normal);
                 Vector newNormal = Vector.multiply(raycast.normal, -1);
                 double incomingAngle = Vector.angleBetween(newNormal, raycast.direction);
-                double outgoingAngle = Util.asind(n1/n2 * Util.sind(incomingAngle));
+                double outgoingAngle = Util.asind(n1 / n2 * Util.sind(incomingAngle));
                 Vector refDir = Vector.rotate(newNormal, binormal, outgoingAngle);
 
                 refCast = raycast(raycast.intersection, refDir, bouncesToLive - 1, scene, raycast);

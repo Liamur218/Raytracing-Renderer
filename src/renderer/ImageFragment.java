@@ -30,43 +30,5 @@ public class ImageFragment implements Serializable {
     void setRGB(int x, int y, DoubleColor color) {
         array[x][y] = color;
     }
-
-    public static void writeBatchToFile(ArrayList<ImageFragment> imageFragments, File file) {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
-            for (ImageFragment imageFragment : imageFragments) {
-                outputStream.writeObject(imageFragment);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    public static ArrayList<ImageFragment> readBatchFromFile(File file) {
-        ArrayList<ImageFragment> imageFragments = new ArrayList<>();
-        ObjectInputStream inputStream = null;
-        try {
-            inputStream = new ObjectInputStream(new FileInputStream(file));
-            try {
-                for (
-                        ImageFragment imageFragment = (ImageFragment) inputStream.readObject();
-                        imageFragment != null;
-                        imageFragment = (ImageFragment) inputStream.readObject()) {
-                    imageFragments.add(imageFragment);
-                }
-            } catch (EOFException ignored) {  // Thrown when file is empty
-            }
-        } catch (EOFException ignored) {
-            Debug.logMsgLn("\n[WARNING] Encountered empty file while reading from " + file.getName());
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            System.exit(1);
-        } finally {
-            try {
-                inputStream.close();
-            } catch (NullPointerException | IOException ignored) {}
-        }
-        return imageFragments;
-    }
 }
 
