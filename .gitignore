@@ -5,7 +5,7 @@
 holding_dir/
 
 # Image output directory
-renders
+renders/
 
 # IDE's
 .vscode
