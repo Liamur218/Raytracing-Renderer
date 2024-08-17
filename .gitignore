@@ -4,6 +4,9 @@
 # Holding directory
 holding_dir/
 
+# Master Chief Helmet, b/c it's really big
+assets/master chief/
+
 # Image output directory
 renders/
 

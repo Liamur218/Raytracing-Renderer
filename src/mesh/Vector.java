@@ -11,8 +11,6 @@ public class Vector {
     public static final Vector Y_AXIS = new Vector(0, 1, 0);
     public static final Vector Z_AXIS = new Vector(0, 0, 1);
     public static final Vector[] AXES = new Vector[]{ X_AXIS, Y_AXIS, Z_AXIS };
-    public static final Vector MAX_VECTOR = new Vector(Double.MAX_VALUE);
-    public static final Vector MIN_VECTOR = new Vector(Double.MIN_VALUE);
 
     public static final int LENGTH = 3;
 
@@ -115,7 +113,7 @@ public class Vector {
     }
 
     // Dot & Cross Products
-    static double dot(Vector v1, Vector v2) {
+    public static double dot(Vector v1, Vector v2) {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
@@ -194,31 +192,6 @@ public class Vector {
 
     public Vector getLongestDimension() {
         return (x > y && x > z) ? Vector.X_AXIS : ((y > x && y > z) ? Vector.Y_AXIS : Vector.Z_AXIS);
-    }
-
-    public static Vector getPlaneIntersection(Vector origin, Vector vector, Vector planeRefPoint, Vector planeNormal) {
-        // Equation of a plane -- a1(x - x0) + b1(y - y0) + c1(z - z0) = 0
-        // Equation of a ray ---- <x, y, z> = <a2, b2, c2> * t + <x1, y1, z1>
-        // Intersection:  a1*((a2 * t + x1) - x0) + b1*((b2 * t + y1) - y0) + c1*((c2 * t + z1) - z0) = 0
-        //                a1*a2*t + a1*x1 - a1*x0 + b1*b2*t - b1*y1 + b1*y0 + c1*c2*t + c1*z1 - c1*z0 = 0
-        //                a1*a2*t + b1*b2*t + c1*c2*t + a1*x1 - a1*x0 - b1*y1 + b1*y0 + c1*z1 - c1*z0 = 0
-        //                t(a1*a2 + b1*b2 + c1*c2) + a1*x1 - a1*x0 - b1*y1 + b1*y0 + c1*z1 - c1*z0 = 0
-        //                t(a1*a2 + b1*b2 + c1*c2) = -a1*x1 + a1*x0 + b1*y1 - b1*y0 - c1*z1 + c1*z0
-        //                t(a1*a2 + b1*b2 + c1*c2) = -a1*(x1 + x0) + b1*(y1 - y0) - c1*(z1 + z0)
-        //                t = (a1*(x0 - x1) + b1*(y0 - y1) + c1*(z0 - z1)) / (a1*a2 + b1*b2 + c1*c2)
-
-        double denominator = planeNormal.x * vector.x + planeNormal.y * vector.y + planeNormal.z * vector.z;
-        if (denominator > 0) {
-            double t = (
-                    planeNormal.x * (planeRefPoint.x - origin.x) +
-                            planeNormal.y * (planeRefPoint.y - origin.y) +
-                            planeNormal.z * (planeRefPoint.z - origin.z)) /
-                    denominator;
-
-            return Vector.add(origin, Vector.multiply(vector, t));
-        } else {
-            return null;
-        }
     }
 
     // Other Methods

@@ -20,67 +20,61 @@ public class Camera {
 
     public Camera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
            double normalX, double normalY, double normalZ) {
-        this(posX, posY, posZ, dirX, dirY, dirZ, normalX, normalY, normalZ, DEFAULT_FOV.width, DEFAULT_FOV.height);
+        pos = new Vector(posX, posY, posZ);
+        dir = new Vector(dirX, dirY, dirZ).normalize();
+        normal = new Vector(normalX, normalY, normalZ).normalize();
+        binormal = Vector.cross(dir, normal);
+        normal = Vector.cross(binormal, dir);  // Re-set normal in cast it wasn't @ 90° to dir to begin with
+        setFOV(DEFAULT_FOV);
     }
 
     public Camera(Vector pos, Vector dir, Vector normal) {
-        this(pos, dir, normal, DEFAULT_FOV);
+        this(pos.getX(), pos.getY(), pos.getZ(),
+                dir.getX(), dir.getY(), dir.getZ(),
+                normal.getX(), normal.getY(), normal.getZ());
     }
 
-    public Camera(Vector pos, Vector dir, Vector normal, Dimension fov) {
-        this(pos, dir, normal, fov.width, fov.height);
+    public Camera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
+                  double normalX, double normalY, double normalZ, int hFOV, double aspectRatio) {
+        this(posX, posY, posZ, dirX, dirY, dirZ, normalX, normalY, normalZ);
+        setFOV(hFOV, DEFAULT_FOV.height);
+        setAspectRatio(aspectRatio);
     }
 
     public Camera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
            double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
-        this(new Vector(posX, posY, posZ), new Vector(dirX, dirY, dirZ), new Vector(normalX, normalY, normalZ),
+        this(new Vector(posX, posY, posZ),
+                new Vector(dirX, dirY, dirZ),
+                new Vector(normalX, normalY, normalZ),
                 hFOV, vFOV);
     }
 
     public Camera(Vector pos, Vector dir, Vector normal, int hFOV, int vFOV) {
-        this.pos = new Vector(pos);
-        this.dir = new Vector(dir).normalize();
-        this.normal = new Vector(normal).normalize();
-        if (Vector.angleBetween(normal, dir) != 90) {
-            Vector hold = Vector.cross(dir, normal).normalize();
-            this.normal = Vector.cross(hold, dir);
-        }
-        binormal = Vector.cross(dir, normal);
-        this.fov = new Dimension(hFOV, vFOV);
+        this(pos, dir, normal);
+        setFOV(hFOV, vFOV);
     }
 
-    public Camera setFOV(int hFOV, int vFOV) {
-        fov.width = hFOV;
-        fov.height = vFOV;
-        return this;
+    public Camera(Vector pos, Vector dir, Vector normal, int hFOV, double aspectRatio) {
+        this(pos, dir, normal);
+        setFOV(hFOV, DEFAULT_FOV.height);
+        setAspectRatio(aspectRatio);
     }
 
     public Camera setFOV(int fov) {
         return setFOV(fov, fov);
     }
 
-    public Camera setAspectRatio(int width, int height, boolean RefHFOV) {
-        double whRatio = (double) width / height;
-        if (RefHFOV) {
-            fov.height = (int) (fov.width / whRatio);
-        } else {
-            fov.width = (int) (fov.height * whRatio);
-        }
-        System.out.println(fov);
+    public Camera setFOV(int hFOV, int vFOV) {
+        fov = new Dimension(hFOV, vFOV);
         return this;
     }
 
-    public Camera setAspectRatio(int width, int height) {
-        return setAspectRatio(width, height, true);
+    public Camera setFOV(Dimension fov) {
+        return setFOV(fov.width, fov.height);
     }
 
-    public Camera setAspectRatio(int width, int height, int fov, boolean useHFOV) {
-        setFOV(fov);
-        return setAspectRatio(width, height, useHFOV);
-    }
-
-    public Camera setAspectRatio(int width, int height, int fov) {
-        return setAspectRatio(width, height, fov, true);
+    public Camera setAspectRatio(double aspectRatio) {
+        return setFOV(fov.width, (int) (fov.width / aspectRatio));
     }
 
     public void rotate(Vector axis, double angle) {

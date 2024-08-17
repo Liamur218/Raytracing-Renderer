@@ -3,6 +3,7 @@ package renderer;
 import scene.Scene;
 
 import java.awt.*;
+import java.util.Random;
 
 public class RenderSettings {
 
@@ -18,6 +19,8 @@ public class RenderSettings {
 
     int rngSeed;
 
+    PostProcessor postProcessor;
+
     // Default settings
     static final RenderSettings DEFAULT_SETTINGS = new RenderSettings();
     static {
@@ -26,7 +29,7 @@ public class RenderSettings {
         DEFAULT_SETTINGS.setFrameCount(30);
         DEFAULT_SETTINGS.setThreadCount(25);
         DEFAULT_SETTINGS.setSectionSize(500, 500);
-        DEFAULT_SETTINGS.setRngSeed(0);
+        DEFAULT_SETTINGS.setRngSeed(new Random().nextInt());
     }
 
     private RenderSettings() {}
@@ -84,9 +87,13 @@ public class RenderSettings {
         this.rngSeed = rngSeed;
     }
 
+    public void setPostProcessor(PostProcessor postProcessor) {
+        this.postProcessor = postProcessor;
+    }
+
     @Override
     public String toString() {
-        return scene.getName() + "_" +
+        return scene + "_" +
                 size.width + "x" + size.height + "_" +
                 "R" + recursionCount + "_" +
                 "F" + frameCount + "_" +
@@ -94,7 +101,7 @@ public class RenderSettings {
     }
 
     public String toFilenameString() {
-        return scene.getName() + "_" +
+        return scene + "_" +
                 size.width + "x" + size.height + "_" +
                 "R" + recursionCount + "_" +
                 "F" + frameCount;

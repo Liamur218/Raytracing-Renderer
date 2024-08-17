@@ -1,10 +1,11 @@
 package driver;
 
 import renderer.Image;
+import renderer.PostProcessor;
 import renderer.RenderSettings;
 import renderer.Renderer;
 import scene.Scene;
-import scene.scenes.TestScene1;
+import scene.scenes.*;
 import util.Debug;
 
 import java.awt.*;
@@ -17,7 +18,7 @@ public class Main {
         Dimension imageSize = new Dimension(3024, 1964);
         int recursionCount = 15;
         int frameCount = 50;
-        int threadCount = 50;
+        int threadCount = -1;
 
         RenderSettings settings = new RenderSettings(scene);
         //settings.setSize(imageSize);
@@ -28,6 +29,6 @@ public class Main {
         Image image = Renderer.render(settings);
 
         image.writeToFile(settings);
-        //Debug.writeLogsToFile(settings);
+        Debug.writeLogsToFile(settings);
     }
 }

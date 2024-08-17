@@ -30,9 +30,13 @@ public class Scene {
 
     // Setup
     public void addMesh(Mesh mesh) {
+        addMesh(mesh, BoundingBox.DEFAULT_DO_COLL_CHECKING, BoundingBox.DEFAULT_IS_BVH);
+    }
+
+    public void addMesh(Mesh mesh, boolean doBBoxCollChecking, boolean genBBoxAsBVH) {
         if (mesh instanceof PolygonMesh pMesh) {
-            if (pMesh.polygons == null) {
-                pMesh.finalizeMesh();
+            if (!pMesh.finalized) {
+                pMesh.finalizeMesh(doBBoxCollChecking, genBBoxAsBVH);
             }
         }
         meshes.add(mesh);
@@ -43,7 +47,7 @@ public class Scene {
     }
 
     public void addCamera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
-                   double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
+                          double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
         addCamera(new Vector(posX, posY, posZ), new Vector(dirX, dirY, dirZ), new Vector(normalX, normalY, normalZ),
                 hFOV, vFOV);
     }
@@ -62,7 +66,7 @@ public class Scene {
     }
 
     public void addActiveCamera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
-                         double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
+                                double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
         addActiveCamera(
                 new Vector(posX, posY, posZ), new Vector(dirX, dirY, dirZ), new Vector(normalX, normalY, normalZ),
                 hFOV, vFOV);
@@ -80,7 +84,33 @@ public class Scene {
         backgroundColor = color;
     }
 
-    public String getName() {
+    // Printing stuff
+    @Override
+    public String toString() {
         return sceneName;
+    }
+
+    public void printAllObjects(boolean detailMaterials) {
+        for (Mesh mesh : meshes) {
+            if (mesh instanceof PolygonMesh polygonMesh) {
+                Vector[] centerAndSize = polygonMesh.getCenterAndSize();
+                System.out.print("Polygon Mesh w/ " + polygonMesh.polygons.length + " polygons @ " +
+                        centerAndSize[0] + " (Dim: " + centerAndSize[1] + ") ");
+            } else if (mesh instanceof SphereMesh sphereMesh) {
+                System.out.print("Sphere Mesh @ " + sphereMesh.center + " radius: " + sphereMesh.radius);
+            } else {
+                System.out.print(mesh);
+            }
+
+            System.out.println("Mat: " + mesh.material);
+            if (detailMaterials) {
+                System.out.println("\tColor ------------ " + mesh.material.color);
+                System.out.println("\tReflectivity ----- " + mesh.material.reflectivity);
+                System.out.println("\tEmissivity ------- " + mesh.material.emissivity);
+                System.out.println("\tSpecularity ------ " + mesh.material.specularity);
+                System.out.println("\tRefractive Index - " + mesh.material.refractiveIndex);
+                System.out.println("\tOpacity ---------- " + mesh.material.opacity);
+            }
+        }
     }
 }

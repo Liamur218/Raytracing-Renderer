@@ -1,6 +1,7 @@
 package mesh;
 
 import renderer.RaycastInfo;
+import util.Util;
 
 public class PlaneMesh extends Mesh {
 
@@ -12,16 +13,17 @@ public class PlaneMesh extends Mesh {
 
     public PlaneMesh(double refX, double refY, double refZ, double normalX, double normalY, double normalZ) {
         refPoint = new Vector(refX, refY, refZ);
-        normal = new Vector(normalX, normalY, normalZ);
+        normal = new Vector(normalX, normalY, normalZ).normalize();
     }
 
     @Override
     public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) {
         RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
 
-        Vector intersectionPoint = Vector.getPlaneIntersection(origin, ray, refPoint, normal);
+        Vector intersectionPoint = Util.getRayPlaneIntersection(origin, ray, refPoint, normal);
         if (intersectionPoint != null) {
-            raycastInfo.intersection = intersectionPoint;
+            raycastInfo.set(intersectionPoint, normal,
+                    this, material, Vector.distanceBetween(origin, intersectionPoint));
         }
 
         return raycastInfo;

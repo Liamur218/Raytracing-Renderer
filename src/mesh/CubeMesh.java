@@ -70,7 +70,5 @@ public class CubeMesh extends PolygonMesh {
         // Top
         addPolygon(frontTopLeft, backTopLeft, backTopRight);
         addPolygon(frontTopLeft, backTopRight, frontTopRight);
-
-        finalizeMesh();
     }
 }

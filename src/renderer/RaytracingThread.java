@@ -7,6 +7,7 @@ import util.ProgressBar;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Random;
 
 public class RaytracingThread implements Runnable, Serializable {
 
@@ -16,16 +17,18 @@ public class RaytracingThread implements Runnable, Serializable {
     Scene scene;
     ImageFragment imageFragment;
 
+    long startTime, stopTime;
+
+    private Random random;
+
     int id;
     static int idCounter = 0;
-
-    long startTime, stopTime;
 
     static ProgressBar progressBar;
 
     RaytracingThread(Vector origin, Vector startDir, Vector hStep, Vector vStep,
                      ImageFragment imageFragment,
-                     int recursionCount, Scene scene) {
+                     int recursionCount, Scene scene, int rngSeed) {
         this.origin = origin;
         this.startDir = startDir;
         this.hStep = hStep;
@@ -35,6 +38,8 @@ public class RaytracingThread implements Runnable, Serializable {
 
         this.recursionCount = recursionCount;
         this.scene = scene;
+
+        random = new Random(rngSeed);
 
         id = ++idCounter;
     }

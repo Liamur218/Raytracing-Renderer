@@ -5,8 +5,8 @@ import renderer.Renderer;
 
 public class SphereMesh extends Mesh {
 
-    Vector center;
-    double radius;
+    public Vector center;
+    public double radius;
 
     public SphereMesh(Vector center, double radius) {
         this(center.x, center.y, center.z, radius);

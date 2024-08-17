@@ -1,5 +1,8 @@
 package mesh;
 
+import renderer.Renderer;
+import util.Util;
+
 import java.util.Iterator;
 
 public class Polygon implements Iterable<Vector> {
@@ -7,6 +10,9 @@ public class Polygon implements Iterable<Vector> {
     Vector[] points;
     Vector normal;
     double area;
+
+    int id;
+    private static int ID_COUNTER = 0;
 
     Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
         this(new Vector(x1, y1, z1), new Vector(x2, y2, z2), new Vector(x3, y3, z3));
@@ -16,6 +22,7 @@ public class Polygon implements Iterable<Vector> {
         points = new Vector[]{v1, v2, v3};
         normal = Vector.cross(Vector.subtract(v1, v2), Vector.subtract(v1, v3)).normalize();
         area = Vector.cross(Vector.subtract(v1, v2), Vector.subtract(v1, v3)).magnitude() / 2;
+        id = ++ID_COUNTER;
     }
 
     Vector getCentroid() {
@@ -25,6 +32,20 @@ public class Polygon implements Iterable<Vector> {
                 points[0].z + points[1].z + points[2].z).divide(3);
     }
 
+    public Vector getIntersection(Vector origin, Vector dir) {
+        Vector intersection = Util.getRayPlaneIntersection(origin, dir, points[0], normal);
+        if (intersection != null) {
+            Vector PA = Vector.subtract(points[0], intersection);
+            Vector PB = Vector.subtract(points[1], intersection);
+            Vector PC = Vector.subtract(points[2], intersection);
+            double totalAngle = Vector.angleBetween(PA, PB) + Vector.angleBetween(PB, PC) + Vector.angleBetween(PC, PA);
+            if (360 - Renderer.POLYGON_ERROR < totalAngle && totalAngle < 360 + Renderer.POLYGON_ERROR) {
+                return intersection;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return points[0] + "-" + points[1] + "-" + points[2];
@@ -32,17 +53,8 @@ public class Polygon implements Iterable<Vector> {
 
     @Override
     public boolean equals(Object object) {
-        if (object instanceof Polygon polygon) {
-            for (int i = 0; i < points.length; i++) {
-                if (!points[i].equals(polygon.points[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
+        return object instanceof Polygon && ((Polygon) object).id == id;
     }
-
 
     @Override
     public Iterator<Vector> iterator() {

@@ -23,10 +23,11 @@ public abstract class Renderer {
 
     public static final double POLYGON_ERROR = 0.01;
     public static final double SPHERE_ERROR = 0.001;
-    public static final double ANGLE_ERROR = 0.001;
+    public static final double ANGLE_REFLECTION_ERROR = 0.001;
+
+    public static final double DEFAULT_REFRACTIVE_INDEX = 1;
 
     private static Random random;
-    public static final double DEFAULT_REFRACTIVE_INDEX = 1;
 
     public static Image render(Scene scene, int width, int height, int recursionCount, int frameCount) {
         return render(scene, width, height, recursionCount, frameCount, 1);
@@ -59,12 +60,12 @@ public abstract class Renderer {
         int threadCount = renderSettings.threadCount;
         int rngSeed = renderSettings.rngSeed;
 
-        Debug.logMsgLn("Starting renderer");
+        Debug.logMsgLn("\n * * * STARTING RENDERER * * *");
         Image image = new Image(width, height);
 
         // Variable setup
         Camera camera = scene.activeCamera;
-        long start, end, masterStart, masterEnd;
+        long sectionStart, masterStart;
         masterStart = System.nanoTime();
         random = new Random(rngSeed);
 
@@ -77,7 +78,7 @@ public abstract class Renderer {
          * C ---------------- X
          * */
         Debug.logMsg(Util.getCurrentTime() + " Setting up... ");
-        start = System.nanoTime();
+        sectionStart = System.nanoTime();
         Vector A = camera.dir.copy();
         A.rotate(camera.normal, camera.fov.width / 2f);
         A.rotate(camera.binormal, camera.fov.height / 2f);
@@ -95,10 +96,14 @@ public abstract class Renderer {
         // Thread stuff
         ArrayList<RaytracingThread> threads = new ArrayList<>();
         ArrayList<Future<?>> futures = new ArrayList<>();
-        ExecutorService threadPool = Executors.newFixedThreadPool(threadCount);
+        ExecutorService threadPool = (threadCount > 0) ?
+                Executors.newFixedThreadPool(threadCount) : Executors.newCachedThreadPool();
 
+        Debug.logMsgLn("Done");
+        Debug.logElapsedTime("-> Setup complete in: ", sectionStart);
         // Create threads
-        start = System.nanoTime();
+        Debug.logMsg("Creating Threads... ");
+        sectionStart = System.nanoTime();
         int frameSpaceID = 0;
         int fragsPerFrame = 0;
         for (int xPos = 0; xPos < width; xPos += ImageFragment.SECTION_SIZE.width) {
@@ -113,7 +118,7 @@ public abstract class Renderer {
                     ImageFragment imageFragment = new ImageFragment(
                             hStepCount, vStepCount, xPos, yPos, frameNumber, frameSpaceID);
                     RaytracingThread thread = new RaytracingThread(camera.pos, baseDir, hStep, vStep,
-                            imageFragment, recursionCount, scene);
+                            imageFragment, recursionCount, scene, random.nextInt());
 
                     threads.add(thread);
                 }
@@ -130,22 +135,28 @@ public abstract class Renderer {
         threads.sort(new RaytracingThread.ThreadComparator());
 
         // Misc setup stuff
-        RaytracingThread.setProgressBar(new ProgressBar("Threads", totalImgFragCount));
+        ProgressBar progressBar = new ProgressBar("Threads", totalImgFragCount);
+        RaytracingThread.setProgressBar(progressBar);
 
         Debug.logMsgLn("Done");
-        Debug.logElapsedTime("-> Setup complete in: ", start);
+        Debug.logElapsedTime("-> Thread creation complete in: ", sectionStart);
 
         // Start render * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-        Debug.logMsgLn(Util.getCurrentTime() + " Starting render:");
+        Debug.logMsgLn(Util.getCurrentTime() + " Starting render of " + scene + ":");
         Debug.logMsgLn("\tImage size -------- " + width + " x " + height);
         Debug.logMsgLn("\tFrames ------------ " + frameCount);
-        Debug.logMsgLn("\tThreads ----------- " + threadCount);
+        Debug.logMsgLn("\tThreads ----------- " + ((threadCount > 0) ? threadCount : "YES"));
         Debug.logMsgLn("\tMax recursion ----- " + recursionCount);
         Debug.logMsgLn("\tImage fragments --- " + totalImgFragCount);
         Debug.logMsgLn("\tFragments / frame - " + fragsPerFrame);
+        Debug.logMsgLn("\tSeed -------------- " + rngSeed);
+        if (threadCount > frameCount && threadCount > 0) {
+            Debug.logMsgLn("[WARNING] Settings specify threads than frames; excess threads will be unutilized");
+        }
 
         int currentFrameSpaceID = 0;
         while (!threads.isEmpty()) {
+            progressBar.setStatus("Rendering");
             // Pull and submit all threads for current frame-space
             RaytracingThread thread = threads.get(0);
             while (thread.imageFragment.frameSpaceID == currentFrameSpaceID) {
@@ -162,11 +173,15 @@ public abstract class Renderer {
             for (Future<?> future : futures) {
                 try {
                     future.get();
-                } catch (InterruptedException | ExecutionException ignored) {
+                } catch (InterruptedException ignored) {
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                    System.exit(1);
                 }
             }
 
             // Write image fragments to output image
+            progressBar.setStatus("Processing");
             int fragPosX = RETURN_BUFFER.get(0).posX;
             int fragPosY = RETURN_BUFFER.get(0).posY;
             Dimension fragSize = RETURN_BUFFER.get(0).size;
@@ -180,19 +195,25 @@ public abstract class Renderer {
                 }
             }
 
+            // End-of-loop stuff
             currentFrameSpaceID++;
-
-            // CLEAR RETURN BUFFER!!!!!!!!!!
             RETURN_BUFFER.clear();
         }
 
         threadPool.close();
-        Debug.logMsgLn("\n" + Util.getCurrentTime() + " Render complete");
-        Debug.logElapsedTime("-> Render complete in: ", start);
+        Debug.logMsgLn("\n\n" + Util.getCurrentTime() + " Render complete");
+        Debug.logElapsedTime("-> Render complete in: ", sectionStart);
 
-        masterEnd = System.nanoTime();
+        if (renderSettings.postProcessor != null) {
+            sectionStart = System.nanoTime();
+            Debug.logMsg("Postprocessing...");
+            renderSettings.postProcessor.postProcess(image);
+            Debug.logMsgLn("Done");
+            Debug.logElapsedTime("-> Postprocessing complete in: ", sectionStart);
+        }
+
         Debug.logMsgLn(Util.getCurrentTime() + " All done");
-        Debug.logElapsedTime("-> Total elapsed time: ", masterStart, masterEnd);
+        Debug.logElapsedTime("-> Total elapsed time: ", masterStart);
 
         return image;
     }
@@ -216,53 +237,23 @@ public abstract class Renderer {
             raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
             return raycast;
         } else if (bouncesToLive > 0) {
-            // Do raycast(s) to next surface(s)
-            RaycastInfo diffCast, specCast, refCast;
-
-            // Diffuse raycast
-            if (raycast.material.specularity == 1) {
-                diffCast = new RaycastInfo();
+            // Chose direction for next raycast
+            Vector nextDir;
+            RaycastInfo nextCast;
+            if (random.nextDouble() > raycast.material.specularity) {
+                // Diffuse raycast
+                nextDir = getDiffuseDirection(raycast.normal);
             } else {
-                Vector diffuseDir = new Vector(random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
-                if (Vector.angleBetween(diffuseDir, raycast.normal) > 90) {
-                    diffuseDir.multiply(-1);
-                } else if (Vector.angleBetween(diffuseDir, raycast.normal) > 90 - ANGLE_ERROR) {
-                    Vector binormal = Vector.cross(diffuseDir, raycast.normal);
-                    diffuseDir.rotate(binormal, Vector.angleBetween(diffuseDir, raycast.normal) / 2);
-                }
-                diffuseDir.normalize();
-                //diffuseDir.add(raycast.normal);
-                //diffuseDir.normalize();
-
-                diffCast = raycast(raycast.intersection, diffuseDir, bouncesToLive - 1, scene, raycast);
+                // Specular raycast
+                nextDir = getSpecularDirection(raycast.direction, raycast.normal);
+            }
+            if (random.nextDouble() > raycast.material.opacity) {
+                // Refracted direction
+                nextDir = getRefractedDirection(raycast, lastCast);
             }
 
-            // Specular raycast
-            if (raycast.material.specularity == 0) {
-                specCast = new RaycastInfo();
-            } else {
-                Vector specularDir = Vector.rotate(ray, raycast.normal, 180).multiply(-1);
-
-                specCast = raycast(raycast.intersection, specularDir, bouncesToLive - 1, scene, raycast);
-            }
-
-            // Refracted raycast
-            if (raycast.material.opacity == 1) {
-                refCast = new RaycastInfo();
-            } else {
-                // Shell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
-                // asin(n1/n2 * sin(ϴ1)) = ϴ2
-                double n1 = (lastCast == null) ? DEFAULT_REFRACTIVE_INDEX : lastCast.material.refractiveIndex;
-                double n2 = raycast.material.refractiveIndex;
-
-                Vector binormal = Vector.cross(raycast.direction, raycast.normal);
-                Vector newNormal = Vector.multiply(raycast.normal, -1);
-                double incomingAngle = Vector.angleBetween(newNormal, raycast.direction);
-                double outgoingAngle = Util.asind(n1 / n2 * Util.sind(incomingAngle));
-                Vector refDir = Vector.rotate(newNormal, binormal, outgoingAngle);
-
-                refCast = raycast(raycast.intersection, refDir, bouncesToLive - 1, scene, raycast);
-            }
+            // Do raycast
+            nextCast = raycast(raycast.intersection, nextDir, bouncesToLive - 1, scene, raycast);
 
             // Process raycast results and average colors
             // 1. Set color of this outgoing ray to color of incoming ray (for returning later)
@@ -271,21 +262,7 @@ public abstract class Renderer {
             // 4. Add the color of any light emitted by the next material to the ray's color
 
             // Step 1
-            // A. Reflected-reflected interpolation
-            if (raycast.material.specularity == 0) {
-                specCast.rayColor = diffCast.rayColor;
-            } else if (raycast.material.specularity == 1) {
-                diffCast.rayColor = specCast.rayColor;
-            }
-            raycast.rayColor = DoubleColor.interpolate(
-                    diffCast.rayColor, specCast.rayColor, raycast.material.specularity);
-
-            // B. Reflected-refracted interpolation
-            if (raycast.material.opacity == 1) {
-                refCast.rayColor = raycast.rayColor;
-            }
-            raycast.rayColor = DoubleColor.interpolate(refCast.rayColor, raycast.rayColor, raycast.material.opacity);
-
+            raycast.rayColor = nextCast.rayColor;
             // Steps 2 & 3
             raycast.rayColor.multiply(DoubleColor.multiply(raycast.material.color, raycast.material.reflectivity));
             // Step 4
@@ -373,5 +350,35 @@ public abstract class Renderer {
         }
 
         return raycast;
+    }
+
+    // Utility methods
+    private static Vector getDiffuseDirection(Vector polygonNormal) {
+        Vector diffuseDir;
+        do {
+            diffuseDir = new Vector(random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
+            if (Vector.angleBetween(diffuseDir, polygonNormal) > 90) {
+                diffuseDir.multiply(-1);
+            }
+        } while (Vector.angleBetween(diffuseDir, polygonNormal) > 90 - ANGLE_REFLECTION_ERROR);
+        diffuseDir.normalize();
+        return diffuseDir;
+    }
+
+    private static Vector getSpecularDirection(Vector raycastDir, Vector polygonNormal) {
+        return Vector.rotate(raycastDir, polygonNormal, 180).multiply(-1);
+    }
+
+    private static Vector getRefractedDirection(RaycastInfo thisCast, RaycastInfo lastCast) {
+        // Shell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
+        // asin(n1/n2 * sin(ϴ1)) = ϴ2
+        double n1 = (lastCast == null) ? DEFAULT_REFRACTIVE_INDEX : lastCast.material.refractiveIndex;
+        double n2 = thisCast.material.refractiveIndex;
+
+        Vector binormal = Vector.cross(thisCast.direction, thisCast.normal);
+        Vector newNormal = Vector.multiply(thisCast.normal, -1);
+        double incomingAngle = Vector.angleBetween(newNormal, thisCast.direction);
+        double outgoingAngle = Util.asind(n1 / n2 * Util.sind(incomingAngle));
+        return Vector.rotate(newNormal, binormal, outgoingAngle);
     }
 }

@@ -1,7 +1,6 @@
 package mesh;
 
 import renderer.RaycastInfo;
-import renderer.Renderer;
 import util.Debug;
 import util.Util;
 
@@ -14,7 +13,8 @@ public class PolygonMesh extends Mesh {
 
     public Polygon[] polygons;
 
-    private Vector center;
+    private BoundingBox boundingBox;
+    public boolean finalized;
 
     public PolygonMesh() {
         polygonArrayList = new ArrayList<>();
@@ -33,18 +33,20 @@ public class PolygonMesh extends Mesh {
         polygonArrayList.add(new Polygon(x1, y1, z1, x2, y2, z2, x3, y3, z3));
     }
 
-    public void finalizeMesh() {
+    public void finalizeMesh(boolean doBBoxCollChecking, boolean genBBoxAsBVH) {
         if (material == null) {
             material = DEFAULT_MATERIAL;
         }
         polygons = polygonArrayList.toArray(new Polygon[0]);
+        boundingBox = BoundingBox.newBoundingBox(this, doBBoxCollChecking, genBBoxAsBVH);
         polygonArrayList.clear();
+        finalized = true;
     }
 
     // For scene setup
     public PolygonMesh move(double dx, double dy, double dz) {
         for (Polygon polygon : polygonArrayList) {
-            for (Vector point : polygon.points) {
+            for (Vector point : polygon) {
                 point.add(dx, dy, dz);
             }
         }
@@ -83,75 +85,42 @@ public class PolygonMesh extends Mesh {
 
     // More complicated transformations
     public void setCenterAt(double x, double y, double z) {
-        Vector delta = Vector.subtract(new Vector(x, y, z), getCenter());
-        for (Polygon polygon : polygonArrayList) {
-            for (Vector vector : polygon) {
-                vector.add(delta);
-            }
-        }
+        setCenterAt(new Vector(x, y, z));
+    }
+
+    public void setCenterAt(Vector newCenter) {
+        Vector delta = Vector.subtract(newCenter, getCenter());
+        move(delta);
     }
 
     // For raytracing
     @Override
     public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) {
-        RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
         Polygon lastPolygon = (lastCast == null) ? null : lastCast.polygon;
-
-        // TODO: 8/14/24 Do bounding box stuff here
-        for (Polygon polygon : polygons) {
-
-            // Make sure a polygon is not collided with twice
-            if (polygon != lastPolygon) {
-
-                // Determine intersection point
-                double t = -Vector.componentMultiply(
-                        polygon.normal, Vector.subtract(origin, polygon.points[0])).sum() /
-                        Vector.componentMultiply(polygon.normal, ray).sum();
-                Vector intersection = origin.copy().add(Vector.multiply(ray, t));
-
-                // Check if intersection is in front of origin point
-                if (t > 0) {
-                    // Check if intersection in inside polygon
-                    Vector PA = Vector.subtract(polygon.points[0], intersection);
-                    Vector PB = Vector.subtract(polygon.points[1], intersection);
-                    Vector PC = Vector.subtract(polygon.points[2], intersection);
-                    double totalAngle = Vector.angleBetween(PA, PB) +
-                            Vector.angleBetween(PB, PC) + Vector.angleBetween(PC, PA);
-
-                    if (360 - Renderer.POLYGON_ERROR < totalAngle && totalAngle < 360 + Renderer.POLYGON_ERROR) {
-                        double distance = Vector.distanceBetween(origin, intersection);
-                        // Replace existing raycast info if this collision point is the closest intersection point
-                        if (raycastInfo.intersection == null || distance < raycastInfo.distance) {
-                            raycastInfo.intersection = intersection;
-                            raycastInfo.normal = (Vector.angleBetween(polygon.normal, ray) > 90) ?
-                                    polygon.normal : Vector.multiply(polygon.normal, -1);
-                            raycastInfo.mesh = this;
-                            raycastInfo.material = material;
-                            raycastInfo.polygon = polygon;
-                            raycastInfo.distance = distance;
-                        }
-                    }
-                }
-            }
-        }
-        return raycastInfo;
+        return boundingBox.getClosestIntersection(origin, ray, lastPolygon);
     }
 
     public static PolygonMesh loadMesh(String filepath) {
         String[] filepathArray = filepath.split("\\.");
+        PolygonMesh polygonMesh = new PolygonMesh();
         if (filepathArray.length == 1) {
-            Debug.logMsgLn("[ERROR] Unable to read file " + filepath + " - no file extension specified");
+            Debug.logMsgLn("[WARNING] Unable to read file " + filepath + " - no file extension specified");
+            return polygonMesh;
         } else {
             if (filepathArray[filepathArray.length - 1].equals("obj")) {
-                return loadObj(filepath);
+                polygonMesh = loadObj(filepath);
             } else if (filepathArray[filepathArray.length - 1].equals("stl")) {
-                return loadStl(filepath);
+                polygonMesh = loadStl(filepath);
             } else {
-                Debug.logMsgLn("[ERROR] Unable to load file " + filepath + " - unsupported file format");
+                Debug.logMsgLn("[WARNING] Unable to load file " + filepath + " - unsupported file format");
+                return polygonMesh;
             }
         }
 
-        return new PolygonMesh();
+        Vector[] centerAndSize = polygonMesh.getCenterAndSize();
+        Debug.logMsgLn(filepath + " successfully loaded @ " + centerAndSize[0] +
+                " w/ " + polygonMesh.polygonArrayList.size() + " polygons (Dim: " + centerAndSize[1] + ")");
+        return polygonMesh;
     }
 
     private static PolygonMesh loadStl(String filepath) {
@@ -248,35 +217,26 @@ public class PolygonMesh extends Mesh {
     }
 
     public Vector[] getMinMax() {
-        Vector min = Vector.MIN_VECTOR;
-        Vector max = Vector.MAX_VECTOR;
+        Vector min = new Vector(Double.MAX_VALUE);
+        Vector max = new Vector(-Double.MAX_VALUE);
         for (Polygon polygon : polygonArrayList) {
             for (Vector vector : polygon) {
-                vector.x = Math.max(vector.x, max.x);
-                vector.y = Math.max(vector.y, max.y);
-                vector.z = Math.max(vector.z, max.z);
-                vector.x = Math.min(vector.x, min.x);
-                vector.y = Math.min(vector.y, min.y);
-                vector.z = Math.min(vector.z, min.z);
+                min.x = Math.min(vector.x, min.x);
+                min.y = Math.min(vector.y, min.y);
+                min.z = Math.min(vector.z, min.z);
+                max.x = Math.max(vector.x, max.x);
+                max.y = Math.max(vector.y, max.y);
+                max.z = Math.max(vector.z, max.z);
             }
         }
-        return new Vector[]{ min, max };
+        return new Vector[]{min, max};
     }
 
     public Vector[] getCenterAndSize() {
-        Vector min = Vector.MIN_VECTOR;
-        Vector max = Vector.MAX_VECTOR;
-        for (Polygon polygon : polygonArrayList) {
-            for (Vector vector : polygon) {
-                vector.x = Math.max(vector.x, max.x);
-                vector.y = Math.max(vector.y, max.y);
-                vector.z = Math.max(vector.z, max.z);
-                vector.x = Math.min(vector.x, min.x);
-                vector.y = Math.min(vector.y, min.y);
-                vector.z = Math.min(vector.z, min.z);
-            }
-        }
-        return new Vector[]{ Vector.subtract(max, min), Vector.divide(Vector.add(max, min), 2) };
+        Vector[] minMax = getMinMax();
+        Vector min = minMax[0];
+        Vector max = minMax[1];
+        return new Vector[]{Vector.divide(Vector.add(min, max), 2), Vector.subtract(max, min)};
     }
 
     public Vector getSize() {
@@ -285,5 +245,13 @@ public class PolygonMesh extends Mesh {
 
     public Vector getCenter() {
         return getCenterAndSize()[0];
+    }
+
+    public ArrayList<Polygon> getPolygonArrayList() {
+        return polygonArrayList;
+    }
+
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
     }
 }

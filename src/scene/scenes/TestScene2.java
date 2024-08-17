@@ -26,21 +26,13 @@ public class TestScene2 extends Scene {
         PolygonMesh pMesh;
 
         // Floor
-        pMesh = new PolygonMesh();
-        pMesh.addPolygon(
-                new Vector(-1, 1, 0),
-                new Vector(1, -1, 0),
-                new Vector(1, 1, 0));
-        pMesh.addPolygon(
-                new Vector(-1, 1, 0),
-                new Vector(-1, -1, 0),
-                new Vector(1, -1, 0));
-        pMesh.setMaterial(Material.WHITE_MATERIAL);
-        addMesh(pMesh);
+        plMesh = new PlaneMesh(0, 0, 0, 0, 0, 1);
+        plMesh.setMaterial(Material.WHITE_MATERIAL);
+        addMesh(plMesh);
 
         // Central Cube
         cube = new CubeMesh(0, 0, 0.0625, 0.125, 0.125, 0.125);
-        cube.setMaterial(Material.WHITE_VERY_BRIGHT_EMISSIVE_MATERIAL);
+        cube.setMaterial(Material.WHITE_BRIGHT_EMISSIVE_MATERIAL);
         addMesh(cube);
 
         // Surrounding Cubes

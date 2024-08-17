@@ -23,6 +23,10 @@ public class Image extends BufferedImage {
     private static final Color COLOR_2 = new Color(0, 0, 0);
     private static final int SQUARES_PER_SHORT_SIDE = 10;
 
+    public Image(Dimension size) {
+        this(size.width, size.height);
+    }
+
     public Image(int width, int height) {
         super(width, height, IMAGE_TYPE);
 
@@ -100,6 +104,10 @@ public class Image extends BufferedImage {
         }
     }
 
+    public Dimension getSize() {
+        return new Dimension(getWidth(), getHeight());
+    }
+
     public void safeSetRGB(int x, int y, int rgb) {
         if (-1 < x && x < getWidth() && -1 < y && y < getHeight()) {
             setRGB(x, y, rgb);
@@ -112,6 +120,16 @@ public class Image extends BufferedImage {
 
     public void setRGB(int x, int y, double[] rgb) {
         setRGB(x, y, new DoubleColor(rgb[0], rgb[1], rgb[2]).getRGB());
+    }
+
+    public Image copy() {
+        Image image = new Image(getSize());
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                image.setRGB(i, j, getRGB(i, j));
+            }
+        }
+        return image;
     }
 
     public void includeInfo() {

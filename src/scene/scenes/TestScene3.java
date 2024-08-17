@@ -1,6 +1,8 @@
 package scene.scenes;
 
-import mesh.*;
+import mesh.Material;
+import mesh.PolygonMesh;
+import mesh.Vector;
 import scene.Camera;
 import scene.Scene;
 
@@ -63,10 +65,11 @@ public class TestScene3 extends Scene {
         addMesh(pMesh);
         // Knight
         pMesh = PolygonMesh.loadMesh("assets/KNIGHT.stl");
+        pMesh.setCenterAt(0, 0, 0);
         pMesh.scale(1.5 / 3.37);
         //pMesh.rotate(0, 0, 90 + 45);
         pMesh.setCenterAt(1.5, 0, -0.25);
         pMesh.setMaterial(Material.WHITE_MATERIAL);
-        addMesh(pMesh);
+        addMesh(pMesh, true, true);
     }
 }
