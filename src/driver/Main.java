@@ -1,11 +1,10 @@
 package driver;
 
 import renderer.Image;
-import renderer.PostProcessor;
 import renderer.RenderSettings;
 import renderer.Renderer;
 import scene.Scene;
-import scene.scenes.*;
+import scene.scenes.TestScene1;
 import util.Debug;
 
 import java.awt.*;
