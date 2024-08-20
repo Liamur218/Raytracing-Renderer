@@ -39,7 +39,7 @@ public class ProgressBar {
         long estTotalTime = (percent == 0) ? -1 : (long) ((lastUpdateTime - startTime) / percent);
         long estTimeRemaining = estTotalTime - (lastUpdateTime - startTime);
         progress = current + " / " + max + " (" + (int) (percent * 100) + "%) - Status: " + status +
-                " - ETR: " + TimeFormatter.timeToString(estTimeRemaining);
+                " - ETR: " + TimeFormatter.timeToString(estTimeRemaining, TimeFormatter.SECOND);
         msg = title + progress;
         Debug.printMsg(msg);
     }

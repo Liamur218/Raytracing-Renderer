@@ -24,6 +24,14 @@ public abstract class Debug {
         verbose = status;
     }
 
+    public static void logWarningMsg(String warningMsg) {
+        logMsgLn("[WARNING] " + warningMsg);
+    }
+
+    public static void logErrorMsg(String errorMsg) {
+        logMsgLn("[ERROR] " + errorMsg);
+    }
+
     public static void logMsgLn(String string) {
         log.append(string).append("\n");
         if (verbose) {

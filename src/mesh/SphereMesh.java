@@ -37,16 +37,16 @@ public class SphereMesh extends Mesh {
         if (discriminant >= 0) {
             double t1 = (-b + Math.sqrt(discriminant)) / (2 * a);
             double t2 = (-b - Math.sqrt(discriminant)) / (2 * a);
-            double distance;
+            double t;
             if (t1 > minDistance && t2 > minDistance) {
-                distance = Math.min(t1, t2);
+                t = Math.min(t1, t2);
             } else if (t1 > minDistance || t2 > minDistance) {
-                distance = (t1 > minDistance) ? t1 : t2;
+                t = (t1 > minDistance) ? t1 : t2;
             } else {
                 return raycastInfo;
             }
 
-            raycastInfo.intersection = new Vector(origin).add(Vector.multiply(ray, distance));
+            raycastInfo.intersection = Vector.add(origin, Vector.multiply(ray, t));
             raycastInfo.normal = Vector.subtract(raycastInfo.intersection, center);
             raycastInfo.mesh = this;
             raycastInfo.material = material;

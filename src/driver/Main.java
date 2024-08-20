@@ -16,7 +16,7 @@ public class Main {
         Scene scene = new TSObjects();
         Dimension imageSize = new Dimension(3024, 1964);
         int recursionCount = 15;
-        int frameCount = 150;
+        int frameCount = 30;
         int threadCount = -1;
 
         RenderSettings settings = new RenderSettings(scene);
@@ -26,7 +26,6 @@ public class Main {
         settings.setThreadCount(threadCount);
 
         Image image = Renderer.render(settings);
-        //Image image = Renderer.quickRender(scene);
         image.writeToFile(settings);
     }
 }

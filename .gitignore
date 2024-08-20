@@ -4,9 +4,8 @@
 # Directories
 assets/big_assets/
 renders/
-out/
 
 # IDE's
 .vscode
 .idea
-
+out/

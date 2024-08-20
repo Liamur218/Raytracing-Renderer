@@ -1,8 +1,6 @@
 package renderer;
 
-import mesh.DoubleColor;
-import mesh.Mesh;
-import mesh.Vector;
+import mesh.*;
 import scene.Camera;
 import scene.Scene;
 import util.Debug;
@@ -24,9 +22,7 @@ public abstract class Renderer {
 
     public static final double POLYGON_ERROR = 0.01;
     public static final double SPHERE_ERROR = 0.001;
-    public static final double ANGLE_REFLECTION_ERROR = 0.001;
-
-    public static final double DEFAULT_REFRACTIVE_INDEX = 1;
+    public static final double MIN_REFLECTION_ANGLE = 0.001;
 
     private static Random random;
 
@@ -53,6 +49,8 @@ public abstract class Renderer {
      * -Anakin Skywalker, right before the fun began
      * */
     public static Image render(RenderSettings renderSettings) {
+        ensureCorrectSettings(renderSettings);
+
         Scene scene = renderSettings.scene;
         int width = renderSettings.size.width;
         int height = renderSettings.size.height;
@@ -361,7 +359,7 @@ public abstract class Renderer {
             if (Vector.angleBetween(diffuseDir, polygonNormal) > 90) {
                 diffuseDir.multiply(-1);
             }
-        } while (Vector.angleBetween(diffuseDir, polygonNormal) > 90 - ANGLE_REFLECTION_ERROR);
+        } while (Vector.angleBetween(diffuseDir, polygonNormal) > 90 - MIN_REFLECTION_ANGLE);
         diffuseDir.normalize();
         return diffuseDir;
     }
@@ -373,7 +371,7 @@ public abstract class Renderer {
     private static Vector getRefractedDirection(RaycastInfo thisCast, RaycastInfo lastCast) {
         // Shell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
         // asin(n1/n2 * sin(ϴ1)) = ϴ2
-        double n1 = (lastCast == null) ? DEFAULT_REFRACTIVE_INDEX : lastCast.material.refractiveIndex;
+        double n1 = (lastCast == null) ? Material.DEFAULT_REFRACTIVE_INDEX : lastCast.material.refractiveIndex;
         double n2 = thisCast.material.refractiveIndex;
 
         Vector binormal = Vector.cross(thisCast.direction, thisCast.normal);
@@ -381,5 +379,49 @@ public abstract class Renderer {
         double incomingAngle = Vector.angleBetween(newNormal, thisCast.direction);
         double outgoingAngle = Util.asind(n1 / n2 * Util.sind(incomingAngle));
         return Vector.rotate(newNormal, binormal, outgoingAngle);
+    }
+
+    private static void ensureCorrectSettings(RenderSettings settings) {
+        if (settings.scene == null) {
+            Debug.logErrorMsg("Scene object is null");
+            System.exit(1);
+        } else {
+            boolean doExit = false;
+            for (Mesh mesh : settings.scene.meshes) {
+                if (mesh.material == null) {
+                    Debug.logErrorMsg("Material for mesh " + mesh + " is null");
+                    doExit = true;
+                }
+            }
+            if (doExit) {
+                System.exit(1);
+            }
+        }
+
+        if (settings.size.width <= 0 || settings.size.height <= 0) {
+            Debug.logErrorMsg("Image size contains invalid dimension (is " + settings.size + " must be > 0)");
+            System.exit(1);
+        }
+
+        if (settings.recursionCount < 0) {
+            Debug.logErrorMsg("Recursion count (" + settings.recursionCount + ") set to negative number");
+            System.exit(1);
+        }
+
+        if (settings.frameCount <= 0) {
+            Debug.logErrorMsg("Frame count (" + settings.frameCount + ") must be greater than 1");
+            System.exit(1);
+        }
+
+        if (settings.threadCount == 0) {
+            Debug.logWarningMsg("Thread count should not be 0. Using thread count of 1 instead.");
+            settings.threadCount = 1;
+        }
+
+        if (settings.sectionWidth < 1 || settings.sectionHeight < 1) {
+            Debug.logErrorMsg("Section size (" + settings.sectionWidth + " x " + settings.sectionHeight +
+                    ") contains invalid dimension must be > 0");
+            System.exit(1);
+        }
     }
 }
