@@ -6,9 +6,9 @@ import mesh.Vector;
 import scene.Camera;
 import scene.Scene;
 
-public class TestScene3 extends Scene {
-    public TestScene3() {
-        super("TSc3");
+public class TSKnight extends Scene {
+    public TSKnight() {
+        setName("Knight");
 
         Vector camPos = new Vector(0, 0, 0);
         Vector camDir = new Vector(1, 0, 0);
@@ -55,7 +55,7 @@ public class TestScene3 extends Scene {
         pMesh = new PolygonMesh();
         pMesh.addPolygon(frontRightTop, frontLeftTop, backRightTop);
         pMesh.addPolygon(backRightTop, frontLeftTop, backLeftTop);
-        pMesh.setMaterial(Material.WHITE_BRIGHT_EMISSIVE_MATERIAL);
+        pMesh.setMaterial(Material.WHITE_MATERIAL);
         addMesh(pMesh);
         // Front Wall
         pMesh = new PolygonMesh();
@@ -69,7 +69,7 @@ public class TestScene3 extends Scene {
         pMesh.scale(1.5 / 3.37);
         //pMesh.rotate(0, 0, 90 + 45);
         pMesh.setCenterAt(1.5, 0, -0.25);
-        pMesh.setMaterial(Material.WHITE_MATERIAL);
+        pMesh.setMaterial(Material.WHITE_EMISSIVE_MATERIAL);
         addMesh(pMesh, true, true);
     }
 }

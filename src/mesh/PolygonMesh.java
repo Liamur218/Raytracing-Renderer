@@ -44,20 +44,19 @@ public class PolygonMesh extends Mesh {
     }
 
     // For scene setup
-    public PolygonMesh move(double dx, double dy, double dz) {
+    public void move(double dx, double dy, double dz) {
         for (Polygon polygon : polygonArrayList) {
             for (Vector point : polygon) {
                 point.add(dx, dy, dz);
             }
         }
-        return this;
     }
 
-    public PolygonMesh move(Vector delta) {
-        return move(delta.x, delta.y, delta.z);
+    public void move(Vector delta) {
+        move(delta.x, delta.y, delta.z);
     }
 
-    public PolygonMesh rotate(double dxDeg, double dyDeg, double dzDeg) {
+    public void rotate(double dxDeg, double dyDeg, double dzDeg) {
         for (Polygon polygon : polygonArrayList) {
             for (Vector point : polygon) {
                 point.rotate(Vector.X_AXIS, dxDeg);
@@ -65,14 +64,9 @@ public class PolygonMesh extends Mesh {
                 point.rotate(Vector.Z_AXIS, dzDeg);
             }
         }
-        return this;
     }
 
-    public PolygonMesh scale(double a) {
-        return scale(a, a, a);
-    }
-
-    public PolygonMesh scale(double x, double y, double z) {
+    public void scale(double x, double y, double z) {
         for (Polygon polygon : polygonArrayList) {
             for (Vector point : polygon) {
                 point.x *= x;
@@ -80,7 +74,6 @@ public class PolygonMesh extends Mesh {
                 point.z *= z;
             }
         }
-        return this;
     }
 
     // More complicated transformations

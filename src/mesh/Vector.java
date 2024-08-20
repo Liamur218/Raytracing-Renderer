@@ -194,6 +194,31 @@ public class Vector {
         return (x > y && x > z) ? Vector.X_AXIS : ((y > x && y > z) ? Vector.Y_AXIS : Vector.Z_AXIS);
     }
 
+    // Collision Logic
+    public static Vector getRayPlaneIntersection(Vector origin, Vector dir, Vector planePos, Vector planeNormal) {
+        /*
+         * Equation for a plane in 3-space:
+         *     a(x - x0) + b(y - y0) + c(z - z0) = 0
+         *         n = <a, b, c>  (normal vector)
+         *     ax + by + cz = ax0 + by0 + cz0
+         * Equation for a line in 3-space:
+         *     <X, Y, Z> = mt + <X0, Y0, Z0>
+         *     X = (m_X)t + X0
+         *     Y = (m_Y)t + Y0
+         *     Z = (m_Z)t + Z0
+         *         m = slope (i.e. direction)
+         * Combined:
+         *     a((m_X)t + X0) + b((m_Y)t + Y0) + c((m_Z)t + Z0) = ax0 + by0 + cz0
+         *     a(m_X)t + aX0 + b(m_Y)t + bY0 + c(m_Z)t + cZ0 = ax0 + by0 + cz0
+         *     a(m_X)t + b(m_Y)t + c(m_Z)t = a(x0 - X0) + b(y0 - Y0) + c(z0 - Z0)
+         *     t(a(m_X) + b(m_Y) + c(m_Z)) = a(x0 - X0) + b(y0 - Y0) + c(z0 - Z0)
+         *     t = (a(x0 - X0) + b(y0 - Y0) + c(z0 - Z0)) / (a(m_X) + b(m_Y) + c(m_Z))
+         * */
+
+        double t = Vector.dot(planeNormal, Vector.subtract(planePos, origin)) / Vector.dot(planeNormal, dir);
+        return (t > 0) ? Vector.add(Vector.multiply(dir, t), origin) : null;
+    }
+
     // Other Methods
     @Override
     public String toString() {

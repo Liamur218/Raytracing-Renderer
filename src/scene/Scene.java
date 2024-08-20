@@ -17,14 +17,14 @@ public class Scene {
     String sceneName;
 
     public Scene() {
-        this("");
-    }
-
-    public Scene(String sceneName) {
         meshes = new ArrayList<>();
         cameras = new ArrayList<>();
         backgroundColor = DEFAULT_BACKGROUND_COLOR;
 
+        setName(getClass().getName());
+    }
+
+    public void setName(String sceneName) {
         this.sceneName = sceneName;
     }
 
@@ -82,6 +82,24 @@ public class Scene {
 
     public void setBackgroundColor(DoubleColor color) {
         backgroundColor = color;
+    }
+
+    public void scale(double scaleX, double scaleY, double scaleZ) {
+        for (Mesh mesh : meshes) {
+            mesh.scale(scaleX, scaleY, scaleZ);
+        }
+        Vector scale = new Vector(scaleX, scaleY, scaleZ);
+        for (Camera camera : cameras) {
+            camera.pos.set(Vector.componentMultiply(camera.pos, scale));
+        }
+    }
+
+    public void scale(double scale) {
+        scale(scale, scale, scale);
+    }
+
+    public void scale(Vector scale) {
+        scale(scale.getX(), scale.getY(), scale.getZ());
     }
 
     // Printing stuff

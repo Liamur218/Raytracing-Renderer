@@ -14,11 +14,11 @@ public class Material {
     public double refractiveIndex;
 
     // Defaults
-    private static final double DEFAULT_EMISSIVITY = 0;
-    private static final double DEFAULT_REFLECTIVITY = 1;
-    private static final double DEFAULT_SPECULARITY = 0;
-    private static final double DEFAULT_OPACITY = 1;
-    private static final double DEFAULT_REFRACTIVE_INDEX = 1;
+    public static final double DEFAULT_EMISSIVITY = 0;
+    public static final double DEFAULT_REFLECTIVITY = 1;
+    public static final double DEFAULT_SPECULARITY = 0;
+    public static final double DEFAULT_OPACITY = 1;
+    public static final double DEFAULT_REFRACTIVE_INDEX = 1;
 
     // Basic materials
     public static final Material WHITE_MATERIAL = new Material(DoubleColor.WHITE);

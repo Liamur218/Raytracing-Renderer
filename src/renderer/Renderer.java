@@ -7,6 +7,7 @@ import scene.Camera;
 import scene.Scene;
 import util.Debug;
 import util.ProgressBar;
+import util.TimeFormatter;
 import util.Util;
 
 import java.awt.*;
@@ -328,7 +329,7 @@ public abstract class Renderer {
 
         long end = System.nanoTime();
         Debug.logMsgLn("\nRender complete");
-        Debug.logMsgLn("Elapsed time: " + ((end - start) / 1E9) + " sec");
+        Debug.logMsgLn("Elapsed time: " + TimeFormatter.timeToString(end - start));
         return image;
     }
 

@@ -60,4 +60,10 @@ public class SphereMesh extends Mesh {
     public void setCenterAt(double x, double y, double z) {
         center.set(x, y, z);
     }
+
+    @Override
+    public void scale(double scaleX, double scaleY, double scaleZ) {
+        center.set(Vector.componentMultiply(center, new Vector(scaleX, scaleY, scaleZ)));
+        radius *= Math.min(scaleX, Math.min(scaleY, scaleZ));
+    }
 }

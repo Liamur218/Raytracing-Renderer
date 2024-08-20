@@ -1,14 +1,10 @@
 # General
 .DS_Store
 
-# Holding directory
-holding_dir/
-
-# Big assets folder, for things that are too big to push to GitHub
+# Directories
 assets/big_assets/
-
-# Image output directory
 renders/
+out/
 
 # IDE's
 .vscode

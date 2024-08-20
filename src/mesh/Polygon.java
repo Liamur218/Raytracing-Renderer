@@ -33,7 +33,7 @@ public class Polygon implements Iterable<Vector> {
     }
 
     public Vector getIntersection(Vector origin, Vector dir) {
-        Vector intersection = Util.getRayPlaneIntersection(origin, dir, points[0], normal);
+        Vector intersection = Vector.getRayPlaneIntersection(origin, dir, points[0], normal);
         if (intersection != null) {
             Vector PA = Vector.subtract(points[0], intersection);
             Vector PB = Vector.subtract(points[1], intersection);

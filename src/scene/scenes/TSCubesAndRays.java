@@ -4,9 +4,9 @@ import mesh.*;
 import scene.Camera;
 import scene.Scene;
 
-public class TestScene2 extends Scene {
-    public TestScene2() {
-        super("TSc2");
+public class TSCubesAndRays extends Scene {
+    public TSCubesAndRays() {
+        setName("Cubes and Rays");
 
         Vector camPos = new Vector(-0.375, -0.375, 0.5);
         Vector camDir = new Vector(1, 1, -1);

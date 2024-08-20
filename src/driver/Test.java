@@ -1,10 +1,10 @@
 package driver;
 
-import scene.Scene;
-import scene.scenes.TestScene1;
+import util.TimeFormatter;
 
 public class Test {
     public static void main(String[] args) {
-        Scene scene = new TestScene1();
+        long time = 174831289;
+        System.out.println(TimeFormatter.timeToString(time));
     }
 }

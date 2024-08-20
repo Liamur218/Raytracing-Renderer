@@ -6,6 +6,7 @@ import renderer.Renderer;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public abstract class Util {
 
@@ -46,30 +47,6 @@ public abstract class Util {
     public static boolean isPointInside2DBox(double pointC1, double pointC2,
                                              double boxMinC1, double boxMinC2, double boxMaxC1, double boxMaxC2) {
         return boxMinC1 <= pointC1 && pointC1 <= boxMaxC1 && boxMinC2 <= pointC2 && pointC2 <= boxMaxC2;
-    }
-
-    public static Vector getRayPlaneIntersection(Vector origin, Vector dir, Vector planePos, Vector planeNormal) {
-        /*
-         * Equation for a plane in 3-space:
-         *     a(x - x0) + b(y - y0) + c(z - z0) = 0
-         *         n = <a, b, c>  (normal vector)
-         *     ax + by + cz = ax0 + by0 + cz0
-         * Equation for a line in 3-space:
-         *     <X, Y, Z> = mt + <X0, Y0, Z0>
-         *     X = (m_X)t + X0
-         *     Y = (m_Y)t + Y0
-         *     Z = (m_Z)t + Z0
-         *         m = slope (i.e. direction)
-         * Combined:
-         *     a((m_X)t + X0) + b((m_Y)t + Y0) + c((m_Z)t + Z0) = ax0 + by0 + cz0
-         *     a(m_X)t + aX0 + b(m_Y)t + bY0 + c(m_Z)t + cZ0 = ax0 + by0 + cz0
-         *     a(m_X)t + b(m_Y)t + c(m_Z)t = a(x0 - X0) + b(y0 - Y0) + c(z0 - Z0)
-         *     t(a(m_X) + b(m_Y) + c(m_Z)) = a(x0 - X0) + b(y0 - Y0) + c(z0 - Z0)
-         *     t = (a(x0 - X0) + b(y0 - Y0) + c(z0 - Z0)) / (a(m_X) + b(m_Y) + c(m_Z))
-         * */
-
-        double t = Vector.dot(planeNormal, Vector.subtract(planePos, origin)) / Vector.dot(planeNormal, dir);
-        return (t > 0) ? Vector.add(Vector.multiply(dir, t), origin) : null;
     }
 
     // Byte shaboingery

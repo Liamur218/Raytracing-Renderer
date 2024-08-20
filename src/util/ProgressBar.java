@@ -3,7 +3,7 @@ package util;
 public class ProgressBar {
     
     long current, max;
-    long lastUpdateTime;
+    long startTime, lastUpdateTime;
 
     String title, progress, msg;
     String status;
@@ -16,8 +16,9 @@ public class ProgressBar {
         title = (name.isBlank()) ? name : name + ": ";
         this.max = max;
         msg = "";
-        lastUpdateTime = System.nanoTime();
         status = "";
+        startTime = System.nanoTime();
+        lastUpdateTime = startTime;
     }
 
     public synchronized void setStatus(String status) {
@@ -28,13 +29,17 @@ public class ProgressBar {
     public synchronized void increment(long amount) {
         long time = System.nanoTime();
         current += amount;
-        print();
         lastUpdateTime = time;
+        print();
     }
 
     private void print() {
         for (int i = 0; i < msg.length(); i++) { Debug.printMsg("\b"); }
-        progress = current + " / " + max + " (" + (int) (((double) current * 100) / max) + "%) - Status: " + status;
+        double percent = ((double) current / max);
+        long estTotalTime = (percent == 0) ? -1 : (long) ((lastUpdateTime - startTime) / percent);
+        long estTimeRemaining = estTotalTime - (lastUpdateTime - startTime);
+        progress = current + " / " + max + " (" + (int) (percent * 100) + "%) - Status: " + status +
+                " - ETR: " + TimeFormatter.timeToString(estTimeRemaining);
         msg = title + progress;
         Debug.printMsg(msg);
     }

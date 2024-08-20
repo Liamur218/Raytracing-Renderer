@@ -20,7 +20,7 @@ public class PlaneMesh extends Mesh {
     public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) {
         RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
 
-        Vector intersectionPoint = Util.getRayPlaneIntersection(origin, ray, refPoint, normal);
+        Vector intersectionPoint = Vector.getRayPlaneIntersection(origin, ray, refPoint, normal);
         if (intersectionPoint != null) {
             raycastInfo.set(intersectionPoint, normal,
                     this, material, Vector.distanceBetween(origin, intersectionPoint));
@@ -32,5 +32,10 @@ public class PlaneMesh extends Mesh {
     @Override
     public void setCenterAt(double x, double y, double z) {
         refPoint.set(x, y, z);
+    }
+
+    @Override
+    public void scale(double scaleX, double scaleY, double scaleZ) {
+        refPoint.set(Vector.componentMultiply(refPoint, new Vector(scaleX, scaleY, scaleZ)));
     }
 }

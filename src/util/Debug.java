@@ -61,7 +61,7 @@ public abstract class Debug {
     }
 
     public static void logElapsedTime(String title, long startTime, long endTime) {
-        String elapsedTime = getElapsedTime(title, startTime, endTime);
+        String elapsedTime = getElapsedTime(title, startTime, endTime) + "\n";
         log.append(elapsedTime);
         if (verbose) {
             print(elapsedTime);
@@ -69,15 +69,16 @@ public abstract class Debug {
     }
 
     private static String getElapsedTime(String title, long startTime, long endTime) {
-        StringBuilder stringBuilder = new StringBuilder();
-        double time = (endTime - startTime) / 1E9;
-        stringBuilder.append(title).append(DF.format(time)).append(" sec").append("\n");
-        if (time > 60) {
-            stringBuilder.append(" ".repeat(title.length()));
-            stringBuilder.append(((int) time / 60)).append(" min ").append(DF.format(time % 60)).append(" sec");
-            stringBuilder.append("\n");
-        }
-        return stringBuilder.toString();
+//        StringBuilder stringBuilder = new StringBuilder();
+//        double time = (endTime - startTime) / 1E9;
+//        stringBuilder.append(title).append(DF.format(time)).append(" sec").append("\n");
+//        if (time > 60) {
+//            stringBuilder.append(" ".repeat(title.length()));
+//            stringBuilder.append(((int) time / 60)).append(" min ").append(DF.format(time % 60)).append(" sec");
+//            stringBuilder.append("\n");
+//        }
+//        return stringBuilder.toString();
+        return title + TimeFormatter.timeToString(endTime - startTime);
     }
 
     public static void writeLogsToFile(RenderSettings settings) {
