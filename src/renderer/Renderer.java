@@ -1,20 +1,14 @@
 package renderer;
 
 import mesh.*;
+import mesh.Vector;
 import scene.Camera;
 import scene.Scene;
-import util.Debug;
-import util.ProgressBar;
-import util.TimeFormatter;
-import util.Util;
+import util.*;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.*;
+import java.util.concurrent.*;
 
 public abstract class Renderer {
 
