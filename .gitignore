@@ -5,8 +5,8 @@
 assets/big_assets/
 renders/
 
-# Testing
-driver/*
+# Drivers
+driver/
 
 # IDE's
 .vscode
