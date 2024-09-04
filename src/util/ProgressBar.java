@@ -36,10 +36,12 @@ public class ProgressBar {
     private void print() {
         for (int i = 0; i < msg.length(); i++) { Debug.printMsg("\b"); }
         double percent = ((double) current / max);
-        long estTotalTime = (percent == 0) ? -1 : (long) ((lastUpdateTime - startTime) / percent);
+        long elapsedTime = lastUpdateTime - startTime;
+        long estTotalTime = (percent == 0) ? -1 : (long) (elapsedTime / percent);
         long estTimeRemaining = estTotalTime - (lastUpdateTime - startTime);
         progress = current + " / " + max + " (" + (int) (percent * 100) + "%) - Status: " + status +
-                " - ETR: " + TimeFormatter.timeToString(estTimeRemaining, TimeFormatter.SECOND);
+                " - Elapsed: " + TimeFormatter.timeToString(elapsedTime, TimeFormatter.SECOND) +
+                " - Remaining: " + TimeFormatter.timeToString(estTimeRemaining, TimeFormatter.SECOND);
         msg = title + progress;
         Debug.printMsg(msg);
     }
