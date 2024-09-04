@@ -19,7 +19,7 @@ public class Camera {
     }
 
     public Camera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
-           double normalX, double normalY, double normalZ) {
+                  double normalX, double normalY, double normalZ) {
         pos = new Vector(posX, posY, posZ);
         dir = new Vector(dirX, dirY, dirZ).normalize();
         normal = new Vector(normalX, normalY, normalZ).normalize();
@@ -42,7 +42,7 @@ public class Camera {
     }
 
     public Camera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
-           double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
+                  double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
         this(new Vector(posX, posY, posZ),
                 new Vector(dirX, dirY, dirZ),
                 new Vector(normalX, normalY, normalZ),

@@ -2,10 +2,7 @@ package util;
 
 import renderer.RenderSettings;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.DecimalFormat;
 
 public abstract class Debug {
@@ -61,7 +58,7 @@ public abstract class Debug {
     private static void print(String msg) {
         System.out.print(msg.replace(
                 "ERROR", ConsoleColors.RED + "ERROR" + ConsoleColors.RESET).replace(
-                        "WARNING", ConsoleColors.YELLOW + "WARNING" + ConsoleColors.YELLOW));
+                "WARNING", ConsoleColors.YELLOW + "WARNING" + ConsoleColors.YELLOW));
     }
 
     public static void logElapsedTime(String title, long startTime) {

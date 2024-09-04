@@ -1,15 +1,12 @@
 package renderer;
 
 import mesh.DoubleColor;
-import util.Debug;
-import util.TextRenderer;
-import util.Util;
+import util.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Image extends BufferedImage {

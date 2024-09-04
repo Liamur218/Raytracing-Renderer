@@ -1,8 +1,7 @@
 package scene.scenes;
 
 import mesh.*;
-import scene.Camera;
-import scene.Scene;
+import scene.*;
 
 public class TSBasicEnvironment extends Scene {
 

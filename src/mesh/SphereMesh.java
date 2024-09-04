@@ -1,7 +1,6 @@
 package mesh;
 
 import renderer.RaycastInfo;
-import renderer.Renderer;
 import util.Util;
 
 public class SphereMesh extends Mesh {

@@ -1,8 +1,7 @@
 package mesh;
 
 import renderer.RaycastInfo;
-import util.Debug;
-import util.Util;
+import util.*;
 
 import java.io.*;
 import java.util.ArrayList;

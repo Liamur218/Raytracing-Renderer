@@ -1,7 +1,6 @@
 package mesh;
 
 import renderer.RaycastInfo;
-import util.Util;
 
 public class PlaneMesh extends Mesh {
 

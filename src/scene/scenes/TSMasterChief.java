@@ -1,9 +1,6 @@
 package scene.scenes;
 
-import mesh.CubeMesh;
-import mesh.DoubleColor;
-import mesh.Material;
-import mesh.PolygonMesh;
+import mesh.*;
 
 import java.awt.*;
 

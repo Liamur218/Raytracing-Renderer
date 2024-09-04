@@ -1,8 +1,6 @@
 package driver;
 
-import renderer.Image;
-import renderer.RenderSettings;
-import renderer.Renderer;
+import renderer.*;
 import scene.Scene;
 import scene.scenes.TSObjects;
 import util.Debug;

@@ -1,7 +1,7 @@
 package renderer;
 
-import mesh.*;
 import mesh.Vector;
+import mesh.*;
 import scene.*;
 import util.*;
 

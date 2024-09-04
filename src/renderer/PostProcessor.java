@@ -2,8 +2,6 @@ package renderer;
 
 import mesh.DoubleColor;
 
-import javax.swing.plaf.IconUIResource;
-
 public class PostProcessor {
 
     boolean doAntiAliasing;

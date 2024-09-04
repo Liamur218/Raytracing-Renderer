@@ -1,12 +1,9 @@
 package renderer;
 
 import mesh.DoubleColor;
-import util.ConsoleColors;
-import util.Debug;
 
 import java.awt.*;
-import java.io.*;
-import java.util.ArrayList;
+import java.io.Serializable;
 
 public class ImageFragment implements Serializable {
 

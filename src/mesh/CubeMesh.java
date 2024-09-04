@@ -1,6 +1,6 @@
 package mesh;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class CubeMesh extends PolygonMesh {
 

@@ -1,10 +1,7 @@
 package scene.scenes;
 
-import mesh.Material;
-import mesh.PolygonMesh;
-import mesh.Vector;
-import scene.Camera;
-import scene.Scene;
+import mesh.*;
+import scene.*;
 
 public class TSKnight extends Scene {
     public TSKnight() {

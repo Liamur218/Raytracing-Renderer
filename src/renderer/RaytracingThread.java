@@ -1,13 +1,12 @@
 package renderer;
 
-import mesh.DoubleColor;
 import mesh.Vector;
+import mesh.*;
 import scene.Scene;
 import util.ProgressBar;
 
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 public class RaytracingThread implements Runnable, Serializable {
 
@@ -58,7 +57,9 @@ public class RaytracingThread implements Runnable, Serializable {
         }
 
         Renderer.returnImageFragment(imageFragment);
-        if (progressBar != null) { progressBar.increment(1); }
+        if (progressBar != null) {
+            progressBar.increment(1);
+        }
 
         stopTime = System.nanoTime();
     }

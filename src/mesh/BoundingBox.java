@@ -3,9 +3,7 @@ package mesh;
 import renderer.RaycastInfo;
 import util.Util;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.*;
 
 public class BoundingBox implements Iterable<Polygon> {
 
@@ -46,7 +44,7 @@ public class BoundingBox implements Iterable<Polygon> {
     }
 
     private static BoundingBox newBoundingBox(PolygonMesh mesh, int currentDepth, int maxDepth, int maxPolygonsPerBox,
-                                       int arrayStartIndex, int polygonCount, boolean doCollChecking, boolean isBVH) {
+                                              int arrayStartIndex, int polygonCount, boolean doCollChecking, boolean isBVH) {
         // Find long axis to divide polygons along
         Vector longestAxis = mesh.getCenterAndSize()[1].getLongestDimension();
 

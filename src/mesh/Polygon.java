@@ -1,7 +1,6 @@
 package mesh;
 
 import renderer.Renderer;
-import util.Util;
 
 import java.util.Iterator;
 

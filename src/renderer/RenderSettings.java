@@ -23,6 +23,7 @@ public class RenderSettings {
 
     // Default settings
     public static final RenderSettings DEFAULT_SETTINGS = new RenderSettings();
+
     static {
         DEFAULT_SETTINGS.setSize(1920, 1080);
         DEFAULT_SETTINGS.setRecursionCount(15);
@@ -35,6 +36,7 @@ public class RenderSettings {
     // Other settings
     public static final RenderSettings FANCY_SETTINGS = new RenderSettings(DEFAULT_SETTINGS);
     public static final RenderSettings ULTRA_SETTINGS = new RenderSettings(DEFAULT_SETTINGS);
+
     static {
         FANCY_SETTINGS.setRecursionCount(15);
         FANCY_SETTINGS.setRecursionCount(150);
@@ -44,7 +46,8 @@ public class RenderSettings {
         ULTRA_SETTINGS.setFrameCount(300);
     }
 
-    private RenderSettings() {}
+    private RenderSettings() {
+    }
 
     public RenderSettings(Scene scene) {
         this(DEFAULT_SETTINGS);

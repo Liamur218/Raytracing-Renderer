@@ -90,7 +90,7 @@ public class DoubleColor implements Serializable {
     }
 
     public double[] toDoubleArray() {
-        return new double[]{ r, g, b };
+        return new double[]{r, g, b};
     }
 
     public DoubleColor add(DoubleColor color) {
