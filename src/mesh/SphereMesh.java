@@ -2,6 +2,7 @@ package mesh;
 
 import renderer.RaycastInfo;
 import renderer.Renderer;
+import util.Util;
 
 public class SphereMesh extends Mesh {
 
@@ -20,7 +21,7 @@ public class SphereMesh extends Mesh {
     @Override
     public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) {
         RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
-        double minDistance = (lastCast != null && lastCast.sphere == this) ? Renderer.SPHERE_ERROR : 0;
+        double minDistance = (lastCast != null && lastCast.sphere == this) ? Util.getIEEE754Error(0) : 0;
         // P = origin
         // U = direction
         // C = center

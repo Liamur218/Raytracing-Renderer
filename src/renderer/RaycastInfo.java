@@ -17,8 +17,6 @@ public class RaycastInfo {
     // Carries color info back to camera
     DoubleColor rayColor;
 
-    public RaycastInfo() {}
-
     public RaycastInfo(Vector origin, Vector direction) {
         this.origin = origin;
         this.direction = direction;

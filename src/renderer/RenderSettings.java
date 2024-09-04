@@ -22,7 +22,7 @@ public class RenderSettings {
     PostProcessor postProcessor;
 
     // Default settings
-    static final RenderSettings DEFAULT_SETTINGS = new RenderSettings();
+    public static final RenderSettings DEFAULT_SETTINGS = new RenderSettings();
     static {
         DEFAULT_SETTINGS.setSize(1920, 1080);
         DEFAULT_SETTINGS.setRecursionCount(15);
@@ -30,6 +30,18 @@ public class RenderSettings {
         DEFAULT_SETTINGS.setThreadCount(25);
         DEFAULT_SETTINGS.setSectionSize(500, 500);
         DEFAULT_SETTINGS.setRngSeed(new Random().nextInt());
+    }
+
+    // Other settings
+    public static final RenderSettings FANCY_SETTINGS = new RenderSettings(DEFAULT_SETTINGS);
+    public static final RenderSettings ULTRA_SETTINGS = new RenderSettings(DEFAULT_SETTINGS);
+    static {
+        FANCY_SETTINGS.setRecursionCount(15);
+        FANCY_SETTINGS.setRecursionCount(150);
+
+        ULTRA_SETTINGS.setSize(3024, 1964);
+        ULTRA_SETTINGS.setRecursionCount(30);
+        ULTRA_SETTINGS.setFrameCount(300);
     }
 
     private RenderSettings() {}
@@ -50,45 +62,60 @@ public class RenderSettings {
         rngSeed = settings.rngSeed;
     }
 
-    public void setSize(Dimension size) {
+    public RenderSettings setScene(Scene scene) {
+        this.scene = scene;
+        return this;
+    }
+
+    public RenderSettings setSize(Dimension size) {
         this.size = size;
+        return this;
     }
 
-    public void setSize(int width, int height) {
-        size = new Dimension(width, height);
+    public RenderSettings setSize(int width, int height) {
+        setSize(new Dimension(width, height));
+        return this;
     }
 
-    public void setRecursionCount(int recursionCount) {
+    public RenderSettings setRecursionCount(int recursionCount) {
         this.recursionCount = recursionCount;
+        return this;
     }
 
-    public void setFrameCount(int frameCount) {
+    public RenderSettings setFrameCount(int frameCount) {
         this.frameCount = frameCount;
+        return this;
     }
 
-    public void setThreadCount(int threadCount) {
+    public RenderSettings setThreadCount(int threadCount) {
         this.threadCount = threadCount;
+        return this;
     }
 
-    public void setSectionWidth(int sectionWidth) {
+    public RenderSettings setSectionWidth(int sectionWidth) {
         this.sectionWidth = sectionWidth;
+        return this;
     }
 
-    public void setSectionHeight(int sectionHeight) {
+    public RenderSettings setSectionHeight(int sectionHeight) {
         this.sectionHeight = sectionHeight;
+        return this;
     }
 
-    public void setSectionSize(int sectionWidth, int sectionHeight) {
+    public RenderSettings setSectionSize(int sectionWidth, int sectionHeight) {
         setSectionWidth(sectionWidth);
         setSectionHeight(sectionHeight);
+        return this;
     }
 
-    public void setRngSeed(int rngSeed) {
+    public RenderSettings setRngSeed(int rngSeed) {
         this.rngSeed = rngSeed;
+        return this;
     }
 
-    public void setPostProcessor(PostProcessor postProcessor) {
+    public RenderSettings setPostProcessor(PostProcessor postProcessor) {
         this.postProcessor = postProcessor;
+        return this;
     }
 
     @Override

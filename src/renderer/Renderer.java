@@ -2,8 +2,7 @@ package renderer;
 
 import mesh.*;
 import mesh.Vector;
-import scene.Camera;
-import scene.Scene;
+import scene.*;
 import util.*;
 
 import java.awt.*;
@@ -15,7 +14,6 @@ public abstract class Renderer {
     private static final ArrayList<ImageFragment> RETURN_BUFFER = new ArrayList<>();
 
     public static final double POLYGON_ERROR = 0.01;
-    public static final double SPHERE_ERROR = 0.001;
     public static final double MIN_REFLECTION_ANGLE = 0.001;
 
     private static Random random;
@@ -233,16 +231,16 @@ public abstract class Renderer {
             // Chose direction for next raycast
             Vector nextDir;
             RaycastInfo nextCast;
-            if (random.nextDouble() > raycast.material.specularity) {
+            if (false/*random.nextDouble() > raycast.material.opacity*/) {
+                // Refracted direction
+                // TODO: 9/4/24 Refraction
+                nextDir = getRefractedDirection(raycast, lastCast);
+            } else if (random.nextDouble() > raycast.material.specularity) {
                 // Diffuse raycast
                 nextDir = getDiffuseDirection(raycast.normal);
             } else {
                 // Specular raycast
                 nextDir = getSpecularDirection(raycast.direction, raycast.normal);
-            }
-            if (random.nextDouble() > raycast.material.opacity) {
-                // Refracted direction
-                nextDir = getRefractedDirection(raycast, lastCast);
             }
 
             // Do raycast

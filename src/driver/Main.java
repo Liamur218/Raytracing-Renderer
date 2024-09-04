@@ -7,23 +7,14 @@ import scene.Scene;
 import scene.scenes.TSObjects;
 import util.Debug;
 
-import java.awt.*;
-
 public class Main {
     public static void main(String[] args) {
         Debug.setPrintLogs(true);
 
         Scene scene = new TSObjects();
-        Dimension imageSize = new Dimension(3024, 1964);
-        int recursionCount = 15;
-        int frameCount = 30;
-        int threadCount = -1;
 
-        RenderSettings settings = new RenderSettings(scene);
-        //settings.setSize(imageSize);
-        settings.setRecursionCount(recursionCount);
-        settings.setFrameCount(frameCount);
-        settings.setThreadCount(threadCount);
+        RenderSettings settings = new RenderSettings(RenderSettings.DEFAULT_SETTINGS);
+        settings.setScene(scene);
 
         Image image = Renderer.render(settings);
         image.writeToFile(settings);

@@ -1,12 +1,8 @@
 package util;
 
-import mesh.Vector;
-import renderer.Renderer;
-
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public abstract class Util {
 
@@ -41,9 +37,9 @@ public abstract class Util {
 
     // Collision logic
     /*
-    * Using c1 and c2 instead of x and y here because it makes IntelliJ happy
-    * (It doesn't like me passing in y as x in certain scenarios)
-    * */
+     * Using c1 and c2 instead of x and y here because it makes IntelliJ happy
+     * (It doesn't like me passing in y as x in certain scenarios)
+     * */
     public static boolean isPointInside2DBox(double pointC1, double pointC2,
                                              double boxMinC1, double boxMinC2, double boxMaxC1, double boxMaxC2) {
         return boxMinC1 <= pointC1 && pointC1 <= boxMaxC1 && boxMinC2 <= pointC2 && pointC2 <= boxMaxC2;
@@ -67,23 +63,31 @@ public abstract class Util {
 
     public static int intFromByteArray(byte[] array, boolean littleEndian) {
         return ByteBuffer.wrap((littleEndian) ? Util.flip(array) : array).getInt();
-//        int out = 0;
-//        if (littleEndian) { array = flip(array); }
-//        for (int i = 0; i < 4; i++) {
-//            byte b = array[i];
-//            out <<= 8;
-//            if (b < 0) {
-//                b &= 0b01111111;
-//                out |= b;
-//                out += 0b10000000;
-//            } else {
-//                out |= b;
-//            }
-//        }
-//        return out;
     }
 
     public static float floatFromByteArray(byte[] array, boolean littleEndian) {
         return ByteBuffer.wrap((littleEndian) ? Util.flip(array) : array).getFloat();
+    }
+
+    public static double getIEEE754Error(double d) {
+        return 0b0_01111111111_0000000000000000000000000000000000000000000000000001L;
+    }
+
+    public static void printBits(int x) {
+        int filter = 0b10000000_00000000_00000000_00000000;
+        for (int i = 0; i < 32; i++) {
+            System.out.print(((x & filter) > 0) ? "1" : "0");
+            filter >>>= 1;
+        }
+        System.out.println();
+    }
+
+    public static void printBits(long x) {
+        long filter = 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000L;
+        for (int i = 0; i < 64; i++) {
+            System.out.print(((x & filter) > 0) ? "1" : "0");
+            filter >>>= 1;
+        }
+        System.out.println();
     }
 }
