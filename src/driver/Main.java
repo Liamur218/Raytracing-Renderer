@@ -11,7 +11,7 @@ public class Main {
 
         Scene scene = new TSObjects();
 
-        RenderSettings settings = new RenderSettings(RenderSettings.DEFAULT_SETTINGS);
+        RenderSettings settings = new RenderSettings(RenderSettings.FANCY_SETTINGS).setThreadCount(25);
         settings.setScene(scene);
 
         Image image = Renderer.render(settings);

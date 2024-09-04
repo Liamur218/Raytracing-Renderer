@@ -6,7 +6,7 @@ assets/big_assets/
 renders/
 
 # Testing
-driver/Test.java
+driver/*
 
 # IDE's
 .vscode

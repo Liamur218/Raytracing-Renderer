@@ -38,8 +38,7 @@ public class RenderSettings {
     public static final RenderSettings ULTRA_SETTINGS = new RenderSettings(DEFAULT_SETTINGS);
 
     static {
-        FANCY_SETTINGS.setRecursionCount(15);
-        FANCY_SETTINGS.setRecursionCount(150);
+        FANCY_SETTINGS.setFrameCount(150);
 
         ULTRA_SETTINGS.setSize(3024, 1964);
         ULTRA_SETTINGS.setRecursionCount(30);
