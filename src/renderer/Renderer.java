@@ -122,7 +122,7 @@ public abstract class Renderer {
         RETURN_BUFFER.clear();
         int totalImgFragCount = threads.size();
 
-        // Sort threads however we feel like today
+        // Sort threads by position (they should be sorted this way already, we're just making sure)
         threads.sort(new RaytracingThread.ThreadComparator());
 
         // Misc setup stuff
@@ -148,7 +148,7 @@ public abstract class Renderer {
         int currentFrameSpaceID = 0;
         while (!threads.isEmpty()) {
             progressBar.setStatus("Rendering");
-            // Pull and submit all threads for current frame-space
+            // Pull and submit all threads for current frame section
             RaytracingThread thread = threads.get(0);
             while (thread.imageFragment.frameSpaceID == currentFrameSpaceID) {
                 futures.add(threadPool.submit(thread));
@@ -248,15 +248,11 @@ public abstract class Renderer {
 
             // Process raycast results and average colors
             // 1. Set color of this outgoing ray to color of incoming ray (for returning later)
+            raycast.rayColor = nextCast.rayColor;
             // 2. Scale the brightness of the reflected light by the reflectivity of this material
             // 3. Tint color of this ray by the color of the material this ray is reflected from
-            // 4. Add the color of any light emitted by the next material to the ray's color
-
-            // Step 1
-            raycast.rayColor = nextCast.rayColor;
-            // Steps 2 & 3
             raycast.rayColor.multiply(DoubleColor.multiply(raycast.material.color, raycast.material.reflectivity));
-            // Step 4
+            // 4. Add the color of any light emitted by the next material to the ray's color
             raycast.rayColor.add(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
         } else {
             raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
@@ -343,7 +339,7 @@ public abstract class Renderer {
         return raycast;
     }
 
-    // Utility methods
+    // Raycast direction methods
     private static Vector getDiffuseDirection(Vector polygonNormal) {
         Vector diffuseDir;
         do {
@@ -373,6 +369,7 @@ public abstract class Renderer {
         return Vector.rotate(newNormal, binormal, outgoingAngle);
     }
 
+    // Make sure user didn't screw up
     private static void ensureCorrectSettings(RenderSettings settings) {
         if (settings.scene == null) {
             Debug.logErrorMsg("Scene object is null");

@@ -143,7 +143,15 @@ public class PolygonMesh extends Mesh {
              *    unsigned int   – Attribute byte count  (02 bytes)  <- No idea
              **/
             for (int triangleIndex = 0; triangleIndex < numTriangles; triangleIndex++) {
-                // TODO: 10/7/24 Make this a loop at some point
+                // TODO: 10/8/24 Test this and switch to looping method @ some point
+//                Vector[] vectorArray = new Vector[4];
+//                for (int i = 0; i < vectorArray.length; i++) {
+//                    vectorArray[i] = new Vector();
+//                    for (int j = 0; j < Vector.LENGTH; j++) {
+//                        vectorArray[i].set(j,
+//                                Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true));
+//                    }
+//                }
                 Vector normal = new Vector(
                         Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),
                         Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),

@@ -31,8 +31,8 @@ public class Polygon implements Iterable<Vector> {
         id = ++ID_COUNTER;
     }
 
-    Polygon(Vector[] vectors) {
-        this(vectors[0], vectors[1], vectors[2], vectors[3]);
+    Polygon(Vector[] stlVectorArray) {
+        this(stlVectorArray[0], stlVectorArray[1], stlVectorArray[2], stlVectorArray[3]);
     }
 
     Polygon setNormal(Vector normal) {
