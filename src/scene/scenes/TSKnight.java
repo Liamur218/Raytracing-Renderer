@@ -2,6 +2,7 @@ package scene.scenes;
 
 import mesh.*;
 import scene.*;
+import util.ModelLoader;
 
 public class TSKnight extends Scene {
     public TSKnight() {
@@ -61,7 +62,7 @@ public class TSKnight extends Scene {
         pMesh.setMaterial(Material.WHITE_MAT);
         addMesh(pMesh);
         // Knight
-        pMesh = PolygonMesh.loadMesh("assets/KNIGHT.stl");
+        pMesh = ModelLoader.loadMesh("assets/KNIGHT.stl");
         pMesh.setCenterAt(0, 0, 0);
         pMesh.scale(1.5 / 3.37);
         //pMesh.rotate(0, 0, 90 + 45);

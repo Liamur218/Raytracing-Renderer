@@ -13,25 +13,25 @@ public class Polygon implements Iterable<Vector> {
     int id;
     private static int ID_COUNTER = 0;
 
-    Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
+    public Polygon(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
         this(new Vector(x1, y1, z1), new Vector(x2, y2, z2), new Vector(x3, y3, z3));
     }
 
-    Polygon(Vector v1, Vector v2, Vector v3) {
+    public Polygon(Vector v1, Vector v2, Vector v3) {
         points = new Vector[]{v1, v2, v3};
         normal = Vector.cross(Vector.subtract(v1, v2), Vector.subtract(v1, v3)).normalize();
         area = Vector.cross(Vector.subtract(v1, v2), Vector.subtract(v1, v3)).magnitude() / 2;
         id = ++ID_COUNTER;
     }
 
-    Polygon(Vector v1, Vector v2, Vector v3, Vector normal) {
+    public Polygon(Vector v1, Vector v2, Vector v3, Vector normal) {
         points = new Vector[]{v1, v2, v3};
         this.normal = normal;
         area = Vector.cross(Vector.subtract(v1, v2), Vector.subtract(v1, v3)).magnitude() / 2;
         id = ++ID_COUNTER;
     }
 
-    Polygon(Vector[] stlVectorArray) {
+    public Polygon(Vector[] stlVectorArray) {
         this(stlVectorArray[0], stlVectorArray[1], stlVectorArray[2], stlVectorArray[3]);
     }
 
