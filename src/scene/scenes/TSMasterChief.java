@@ -11,8 +11,8 @@ public class TSMasterChief extends TSBasicEnvironment {
         // Materials
         DoubleColor helmetColor = new DoubleColor(new Color(40, 50, 20));
         DoubleColor visorColor = new DoubleColor(new Color(200, 180, 80));
-        Material helmetMat = new Material(helmetColor, 1, 0, 0, 1, Material.DEFAULT_REFRACTIVE_INDEX);
-        Material visorMat = new Material(visorColor, 1, 0, 0.8, 1, Material.DEFAULT_REFRACTIVE_INDEX);
+        Material helmetMat = new Material(helmetColor).setSpecularity(0);
+        Material visorMat = new Material(visorColor).setSpecularity(0.8);
 
         // Helmet
         PolygonMesh helmet = PolygonMesh.loadMesh("assets/big_assets/master_chief/helmet_19K.stl");

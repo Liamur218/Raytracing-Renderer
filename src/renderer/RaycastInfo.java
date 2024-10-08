@@ -9,7 +9,7 @@ public class RaycastInfo {
     public Vector direction;
     public Vector intersection, normal;
     public Mesh mesh;
-    public Material material;
+    public Material material, medium;
     public Polygon polygon;
     public SphereMesh sphere;
     public double distance;

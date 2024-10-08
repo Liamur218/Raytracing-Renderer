@@ -27,6 +27,10 @@ public class PolygonMesh extends Mesh {
         addPolygon(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z);
     }
 
+    public void addPolygon(Vector[] vectors) {
+        addPolygon(vectors[0], vectors[1], vectors[2]);
+    }
+
     public void addPolygon(double x1, double y1, double z1, double x2, double y2, double z2,
                            double x3, double y3, double z3) {
         polygonArrayList.add(new Polygon(x1, y1, z1, x2, y2, z2, x3, y3, z3));
@@ -118,7 +122,6 @@ public class PolygonMesh extends Mesh {
     private static PolygonMesh loadStl(String filepath) {
         File file = new File(filepath);
         FileInputStream input = null;
-        BufferedReader in = null;
         PolygonMesh polygonMesh = new PolygonMesh();
         try {
             final int HEADER_SIZE = 80;
@@ -133,14 +136,18 @@ public class PolygonMesh extends Mesh {
 
             /*
              * Triangle  (50 bytes):
-             *    (signed) float – Normal vector         (12 bytes)  <- Unnecessary
+             *    (signed) float – Normal vector         (12 bytes)  <- This is actually important
              *    (signed) float – Vertex 1              (12 bytes)  |
-             *    (signed) float – Vertex 2              (12 bytes)  | This is what we need
+             *    (signed) float – Vertex 2              (12 bytes)  | This is what we mainly need
              *    (signed) float – Vertex 3              (12 bytes)  |
              *    unsigned int   – Attribute byte count  (02 bytes)  <- No idea
              **/
             for (int triangleIndex = 0; triangleIndex < numTriangles; triangleIndex++) {
-                input.skip(12);  // Skip normal vector (we'll calculate this manually later)
+                // TODO: 10/7/24 Make this a loop at some point
+                Vector normal = new Vector(
+                        Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),
+                        Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),
+                        Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true));
                 Vector v1 = new Vector(
                         Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),
                         Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),
@@ -153,7 +160,7 @@ public class PolygonMesh extends Mesh {
                         Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),
                         Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true),
                         Util.floatFromByteArray(input.readNBytes(BYTES_PER_FLOAT), true));
-                polygonMesh.addPolygon(v1, v2, v3);
+                polygonMesh.addPolygon(new Polygon(v1, v2, v3, normal));
                 input.skip(2);  // Skip last two bytes to keep the next 50 bytes the correct 50 bytes
             }
         } catch (IOException e) {

@@ -26,12 +26,12 @@ public class TSCubesAndRays extends Scene {
 
         // Floor
         plMesh = new PlaneMesh(0, 0, 0, 0, 0, 1);
-        plMesh.setMaterial(Material.WHITE_MATERIAL);
+        plMesh.setMaterial(Material.WHITE_MAT);
         addMesh(plMesh);
 
         // Central Cube
         cube = new CubeMesh(0, 0, 0.0625, 0.125, 0.125, 0.125);
-        cube.setMaterial(Material.WHITE_BRIGHT_EMISSIVE_MATERIAL);
+        cube.setMaterial(Material.WHITE_BE_MAT);
         addMesh(cube);
 
         // Surrounding Cubes
@@ -44,7 +44,7 @@ public class TSCubesAndRays extends Scene {
                 new CubeMesh(-cubeSpacing, cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer, cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer)
         };
         for (CubeMesh cubeMesh : cubes) {
-            cubeMesh.setMaterial(Material.CYAN_MATERIAL);
+            cubeMesh.setMaterial(Material.CYAN_MAT);
             addMesh(cubeMesh);
         }
     }

@@ -62,11 +62,11 @@ public abstract class Util {
     }
 
     public static int intFromByteArray(byte[] array, boolean littleEndian) {
-        return ByteBuffer.wrap((littleEndian) ? Util.flip(array) : array).getInt();
+        return ByteBuffer.wrap((littleEndian) ? flip(array) : array).getInt();
     }
 
     public static float floatFromByteArray(byte[] array, boolean littleEndian) {
-        return ByteBuffer.wrap((littleEndian) ? Util.flip(array) : array).getFloat();
+        return ByteBuffer.wrap((littleEndian) ? flip(array) : array).getFloat();
     }
 
     public static double getIEEE754Error(double d) {

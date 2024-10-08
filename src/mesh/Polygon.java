@@ -24,6 +24,22 @@ public class Polygon implements Iterable<Vector> {
         id = ++ID_COUNTER;
     }
 
+    Polygon(Vector v1, Vector v2, Vector v3, Vector normal) {
+        points = new Vector[]{v1, v2, v3};
+        this.normal = normal;
+        area = Vector.cross(Vector.subtract(v1, v2), Vector.subtract(v1, v3)).magnitude() / 2;
+        id = ++ID_COUNTER;
+    }
+
+    Polygon(Vector[] vectors) {
+        this(vectors[0], vectors[1], vectors[2], vectors[3]);
+    }
+
+    Polygon setNormal(Vector normal) {
+        this.normal = normal;
+        return this;
+    }
+
     Vector getCentroid() {
         return new Vector(
                 points[0].x + points[1].x + points[2].x,

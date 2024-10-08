@@ -36,37 +36,37 @@ public class TSBasicEnvironment extends Scene {
         backWall = new PolygonMesh();
         backWall.addPolygon(backLeftBottom, backRightTop, backRightBottom);
         backWall.addPolygon(backLeftBottom, backLeftTop, backRightTop);
-        backWall.setMaterial(Material.WHITE_MATERIAL);
+        backWall.setMaterial(Material.WHITE_MAT);
         addMesh(backWall);
         // Left Wall
         leftWall = new PolygonMesh();
         leftWall.addPolygon(frontLeftBottom, backLeftBottom, backLeftTop);
         leftWall.addPolygon(backLeftTop, frontLeftTop, frontLeftBottom);
-        leftWall.setMaterial(Material.RED_MATERIAL);
+        leftWall.setMaterial(Material.RED_MAT);
         addMesh(leftWall);
         // Right Wall
         rightWall = new PolygonMesh();
         rightWall.addPolygon(backRightBottom, frontRightBottom, backRightTop);
         rightWall.addPolygon(frontRightBottom, frontRightTop, backRightTop);
-        rightWall.setMaterial(Material.BLUE_MATERIAL);
+        rightWall.setMaterial(Material.BLUE_MAT);
         addMesh(rightWall);
         // Floor
         floor = new PolygonMesh();
         floor.addPolygon(frontLeftBottom, frontRightBottom, backRightBottom);
         floor.addPolygon(backRightBottom, backLeftBottom, frontLeftBottom);
-        floor.setMaterial(Material.GREEN_MATERIAL);
+        floor.setMaterial(Material.GREEN_MAT);
         addMesh(floor);
         // Ceiling
         ceiling = new PolygonMesh();
         ceiling.addPolygon(frontRightTop, frontLeftTop, backRightTop);
         ceiling.addPolygon(backRightTop, frontLeftTop, backLeftTop);
-        ceiling.setMaterial(Material.WHITE_EMISSIVE_MATERIAL);
+        ceiling.setMaterial(Material.WHITE_E_MAT);
         addMesh(ceiling);
         // Front Wall
         frontWall = new PolygonMesh();
         frontWall.addPolygon(frontLeftBottom, frontRightTop, frontRightBottom);
         frontWall.addPolygon(frontLeftBottom, frontLeftTop, frontRightTop);
-        frontWall.setMaterial(Material.WHITE_MATERIAL);
+        frontWall.setMaterial(Material.WHITE_MAT);
         addMesh(frontWall);
     }
 }

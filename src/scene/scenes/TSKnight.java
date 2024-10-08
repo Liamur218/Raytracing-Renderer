@@ -28,37 +28,37 @@ public class TSKnight extends Scene {
         pMesh = new PolygonMesh();
         pMesh.addPolygon(backLeftBottom, backRightTop, backRightBottom);
         pMesh.addPolygon(backLeftBottom, backLeftTop, backRightTop);
-        pMesh.setMaterial(Material.GRAY_MATERIAL);
+        pMesh.setMaterial(Material.GRAY_MAT);
         addMesh(pMesh);
         // Left Wall
         pMesh = new PolygonMesh();
         pMesh.addPolygon(frontLeftBottom, backLeftBottom, backLeftTop);
         pMesh.addPolygon(backLeftTop, frontLeftTop, frontLeftBottom);
-        pMesh.setMaterial(Material.RED_MATERIAL);
+        pMesh.setMaterial(Material.RED_MAT);
         addMesh(pMesh);
         // Right Wall
         pMesh = new PolygonMesh();
         pMesh.addPolygon(backRightBottom, frontRightBottom, backRightTop);
         pMesh.addPolygon(frontRightBottom, frontRightTop, backRightTop);
-        pMesh.setMaterial(Material.BLUE_MATERIAL);
+        pMesh.setMaterial(Material.BLUE_MAT);
         addMesh(pMesh);
         // Floor
         pMesh = new PolygonMesh();
         pMesh.addPolygon(frontLeftBottom, frontRightBottom, backRightBottom);
         pMesh.addPolygon(backRightBottom, backLeftBottom, frontLeftBottom);
-        pMesh.setMaterial(Material.GREEN_MATERIAL);
+        pMesh.setMaterial(Material.GREEN_MAT);
         addMesh(pMesh);
         // Ceiling
         pMesh = new PolygonMesh();
         pMesh.addPolygon(frontRightTop, frontLeftTop, backRightTop);
         pMesh.addPolygon(backRightTop, frontLeftTop, backLeftTop);
-        pMesh.setMaterial(Material.WHITE_MATERIAL);
+        pMesh.setMaterial(Material.WHITE_E_MAT);
         addMesh(pMesh);
         // Front Wall
         pMesh = new PolygonMesh();
         pMesh.addPolygon(frontLeftBottom, frontRightTop, frontRightBottom);
         pMesh.addPolygon(frontLeftBottom, frontLeftTop, frontRightTop);
-        pMesh.setMaterial(Material.WHITE_MATERIAL);
+        pMesh.setMaterial(Material.WHITE_MAT);
         addMesh(pMesh);
         // Knight
         pMesh = PolygonMesh.loadMesh("assets/KNIGHT.stl");
@@ -66,7 +66,7 @@ public class TSKnight extends Scene {
         pMesh.scale(1.5 / 3.37);
         //pMesh.rotate(0, 0, 90 + 45);
         pMesh.setCenterAt(1.5, 0, -0.25);
-        pMesh.setMaterial(Material.WHITE_EMISSIVE_MATERIAL);
+        pMesh.setMaterial(Material.WHITE_MAT);
         addMesh(pMesh, true, true);
     }
 }
