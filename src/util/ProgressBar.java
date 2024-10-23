@@ -34,7 +34,7 @@ public class ProgressBar {
     }
 
     private void print() {
-        for (int i = 0; i < msg.length(); i++) { Debug.printMsg("\b"); }
+        for (int i = 0; i < msg.length(); i++) { Logger.printMsg("\b"); }
         double percent = ((double) current / max);
         long elapsedTime = lastUpdateTime - startTime;
         long estTotalTime = (percent == 0) ? -1 : (long) (elapsedTime / percent);
@@ -43,6 +43,6 @@ public class ProgressBar {
                 " - Elapsed: " + TimeFormatter.timeToString(elapsedTime, TimeFormatter.SECOND) +
                 " - Remaining: " + TimeFormatter.timeToString(estTimeRemaining, TimeFormatter.SECOND);
         msg = title + progress;
-        Debug.printMsg(msg);
+        Logger.printMsg(msg);
     }
 }

@@ -7,7 +7,7 @@ import util.*;
 
 import java.awt.*;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.Stack;
 
 public abstract class Renderer {
 
@@ -51,7 +51,7 @@ public abstract class Renderer {
         int threadCount = renderSettings.threadCount;
         int rngSeed = renderSettings.rngSeed;
 
-        Debug.logMsgLn("\n * * * STARTING RENDERER * * *");
+        Logger.logMsgLn("\n * * * STARTING RENDERER * * *");
         Image image = new Image(width, height);
 
         // Variable setup
@@ -68,7 +68,7 @@ public abstract class Renderer {
          * |                  |
          * C ---------------- X
          * */
-        Debug.logMsg(Util.getCurrentTime() + " Setting up... ");
+        Logger.newLogSection("Setup", "Setting up");
         sectionStart = System.nanoTime();
         Vector A = camera.dir.copy();
         A.rotate(camera.normal, camera.fov.width / 2f);
@@ -86,14 +86,10 @@ public abstract class Renderer {
 
         // Thread stuff
         ArrayList<RaytracingThread> threads = new ArrayList<>();
-        ArrayList<Future<?>> futures = new ArrayList<>();
-        ExecutorService threadPool = (threadCount > 0) ?
-                Executors.newFixedThreadPool(threadCount) : Executors.newCachedThreadPool();
+        ThreadPool threadPool = new ThreadPool(threadCount, false);
 
-        Debug.logMsgLn("Done");
-        Debug.logElapsedTime("-> Setup complete in: ", sectionStart);
         // Create threads
-        Debug.logMsg("Creating Threads... ");
+        Logger.newLogSection("Thread Creation", "Creating Threads");
         sectionStart = System.nanoTime();
         int frameSpaceID = 0;
         int fragsPerFrame = 0;
@@ -129,47 +125,37 @@ public abstract class Renderer {
         ProgressBar progressBar = new ProgressBar("Threads", totalImgFragCount);
         RaytracingThread.setProgressBar(progressBar);
 
-        Debug.logMsgLn("Done");
-        Debug.logElapsedTime("-> Thread creation complete in: ", sectionStart);
-
         // Start render * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-        Debug.logMsgLn(Util.getCurrentTime() + " Starting render of " + scene + ":");
-        Debug.logMsgLn("\tImage size -------- " + width + " x " + height);
-        Debug.logMsgLn("\tFrames ------------ " + frameCount);
-        Debug.logMsgLn("\tThreads ----------- " + ((threadCount > 0) ? threadCount : "YES"));
-        Debug.logMsgLn("\tMax recursion ----- " + recursionCount);
-        Debug.logMsgLn("\tImage fragments --- " + totalImgFragCount);
-        Debug.logMsgLn("\tFragments / frame - " + fragsPerFrame);
-        Debug.logMsgLn("\tSeed -------------- " + rngSeed);
+        Logger.newLogSection("Render", "Starting render of " + scene);
+        Logger.logMsg("\n");
+        Logger.logMsgLn("\tImage size -------- " + width + " x " + height);
+        Logger.logMsgLn("\tFrames ------------ " + frameCount);
+        Logger.logMsgLn("\tThreads ----------- " + ((threadCount > 0) ? threadCount : "YES"));
+        Logger.logMsgLn("\tMax recursion ----- " + recursionCount);
+        Logger.logMsgLn("\tImage fragments --- " + totalImgFragCount);
+        Logger.logMsgLn("\tFragments / frame - " + fragsPerFrame);
+        Logger.logMsgLn("\tSeed -------------- " + rngSeed);
         if (threadCount > frameCount && threadCount > 0) {
-            Debug.logMsgLn("[WARNING] Settings specify threads than frames; excess threads will be unutilized");
+            Logger.logWarningMsg("Settings specify more threads than frames; excess threads will not be used");
         }
 
         int currentFrameSpaceID = 0;
         while (!threads.isEmpty()) {
             progressBar.setStatus("Rendering");
             // Pull and submit all threads for current frame section
-            RaytracingThread thread = threads.get(0);
-            while (thread.imageFragment.frameSpaceID == currentFrameSpaceID) {
-                futures.add(threadPool.submit(thread));
-                threads.remove(thread);
+            RaytracingThread rtThread = threads.get(0);
+            while (rtThread.imageFragment.frameSpaceID == currentFrameSpaceID) {
+                threadPool.execute(rtThread);
+                threads.remove(0);
                 if (!threads.isEmpty()) {
-                    thread = threads.get(0);
+                    rtThread = threads.get(0);
                 } else {
                     break;
                 }
             }
 
             // Wait for all current threads to finish
-            for (Future<?> future : futures) {
-                try {
-                    future.get();
-                } catch (InterruptedException ignored) {
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                }
-            }
+            threadPool.waitForAllToFinish();
 
             // Write image fragments to output image
             progressBar.setStatus("Processing");
@@ -191,20 +177,19 @@ public abstract class Renderer {
             RETURN_BUFFER.clear();
         }
 
-        threadPool.close();
-        Debug.logMsgLn("\n\n" + Util.getCurrentTime() + " Render complete");
-        Debug.logElapsedTime("-> Render complete in: ", sectionStart);
+        threadPool.commitDie();
+        Logger.endLogSection();
 
         if (renderSettings.postProcessor != null) {
             sectionStart = System.nanoTime();
-            Debug.logMsg("Postprocessing...");
+            Logger.logMsg("Postprocessing...");
             renderSettings.postProcessor.postProcess(image);
-            Debug.logMsgLn("Done");
-            Debug.logElapsedTime("-> Postprocessing complete in: ", sectionStart);
+            Logger.logMsgLn("Done");
+            Logger.logElapsedTime("-> Postprocessing complete in: ", sectionStart);
         }
 
-        Debug.logMsgLn(Util.getCurrentTime() + " All done");
-        Debug.logElapsedTime("-> Total elapsed time: ", masterStart);
+        Logger.logMsgLn(Util.getCurrentTime() + " All done");
+        Logger.logElapsedTime("-> Total elapsed time: ", masterStart);
 
         return image;
     }
@@ -220,6 +205,20 @@ public abstract class Renderer {
             }
         }
 
+        // Create new mesh stack for first raycast and fill it with air, or
+        //      grab stack of previous materials from the last raycast we just did
+        if (lastCast == null) {
+            Stack<Mesh> meshStack = new Stack<>();
+            meshStack.add(new Mesh() {
+                @Override public RaycastInfo getClosestIntersection(Vector o, Vector v, RaycastInfo lC) { return null; }
+                @Override public void setCenterAt(double x, double y, double z) {}
+                @Override public void scale(double scaleX, double scaleY, double scaleZ) {}
+            }.setMaterial(Material.AIR));
+            raycast.meshStack = meshStack;
+        } else {
+            raycast.meshStack = lastCast.meshStack;
+        }
+
         // Recursive step
         if (raycast.intersection == null) {
             raycast.rayColor.set(scene.backgroundColor);
@@ -228,13 +227,19 @@ public abstract class Renderer {
             raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
             return raycast;
         } else if (bouncesToLive > 0) {
+            // Set medium of the next raycast we are about to do
+            if (Vector.angleBetween(raycast.direction, raycast.normal) > 90) {  // Entering material
+                raycast.meshStack.add(raycast.mesh);
+            } else {  // Exiting material
+                raycast.meshStack.remove(raycast.mesh);
+            }
+
             // Chose direction for next raycast
             Vector nextDir;
             RaycastInfo nextCast;
             if (false/*random.nextDouble() > raycast.material.opacity*/) {
                 // Refracted direction
-                // TODO: 9/4/24 Refraction
-                nextDir = getRefractedDirection(raycast, lastCast);
+                nextDir = getRefractedDirection(raycast);
             } else if (random.nextDouble() > raycast.material.specularity) {
                 // Diffuse raycast
                 nextDir = getDiffuseDirection(raycast.normal);
@@ -273,7 +278,7 @@ public abstract class Renderer {
     }
 
     public static Image quickRender(Scene scene, int width, int height) {
-        Debug.logMsgLn("Beginning quick render");
+        Logger.logMsgLn("Beginning quick render");
         Image image = new Image(width, height);
 
         // Variable setup
@@ -287,7 +292,7 @@ public abstract class Renderer {
          * |                  |
          * C ---------------- X
          * */
-        Debug.logMsg("Setting up... ");
+        Logger.logMsg("Setting up... ");
         Vector A = camera.dir.copy();
         A.rotate(camera.normal, camera.fov.width / 2f);
         A.rotate(camera.binormal, camera.fov.height / 2f);
@@ -301,10 +306,10 @@ public abstract class Renderer {
         Vector rBA = Vector.subtract(B, A);
         Vector hStep = Vector.divide(rBA, width);
         Vector vStep = Vector.divide(rCA, height);
-        Debug.logMsgLn("Done");
+        Logger.logMsgLn("Done");
 
         // Raytracing loop
-        Debug.logMsgLn("Starting render");
+        Logger.logMsgLn("Starting render");
         long start = System.nanoTime();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -314,8 +319,8 @@ public abstract class Renderer {
         }
 
         long end = System.nanoTime();
-        Debug.logMsgLn("\nRender complete");
-        Debug.logMsgLn("Elapsed time: " + TimeFormatter.timeToString(end - start));
+        Logger.logMsgLn("\nRender complete");
+        Logger.logMsgLn("Elapsed time: " + TimeFormatter.timeToString(end - start));
         return image;
     }
 
@@ -356,15 +361,15 @@ public abstract class Renderer {
         return Vector.rotate(raycastDir, polygonNormal, 180).multiply(-1);
     }
 
-    private static Vector getRefractedDirection(RaycastInfo thisCast, RaycastInfo lastCast) {
+    private static Vector getRefractedDirection(RaycastInfo raycast) {
         // Shell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
         // asin(n1/n2 * sin(ϴ1)) = ϴ2
-        double n1 = (lastCast == null) ? Material.DEFAULT_REFRACTIVE_INDEX : lastCast.material.refractiveIndex;
-        double n2 = thisCast.material.refractiveIndex;
+        double n1 = raycast.meshStack.get(0).material.refractiveIndex;
+        double n2 = raycast.meshStack.get(1).material.refractiveIndex;
 
-        Vector binormal = Vector.cross(thisCast.direction, thisCast.normal);
-        Vector newNormal = Vector.multiply(thisCast.normal, -1);
-        double incomingAngle = Vector.angleBetween(newNormal, thisCast.direction);
+        Vector binormal = Vector.cross(raycast.direction, raycast.normal);
+        Vector newNormal = Vector.multiply(raycast.normal, -1);
+        double incomingAngle = Vector.angleBetween(newNormal, raycast.direction);
         double outgoingAngle = Util.asind(n1 / n2 * Util.sind(incomingAngle));
         return Vector.rotate(newNormal, binormal, outgoingAngle);
     }
@@ -372,13 +377,13 @@ public abstract class Renderer {
     // Make sure user didn't screw up
     private static void ensureCorrectSettings(RenderSettings settings) {
         if (settings.scene == null) {
-            Debug.logErrorMsg("Scene object is null");
+            Logger.logErrorMsg("Scene object is null");
             System.exit(1);
         } else {
             boolean doExit = false;
             for (Mesh mesh : settings.scene.meshes) {
                 if (mesh.material == null) {
-                    Debug.logErrorMsg("Material for mesh " + mesh + " is null");
+                    Logger.logErrorMsg("Material for mesh " + mesh + " is null");
                     doExit = true;
                 }
             }
@@ -388,27 +393,27 @@ public abstract class Renderer {
         }
 
         if (settings.size.width <= 0 || settings.size.height <= 0) {
-            Debug.logErrorMsg("Image size contains invalid dimension (is " + settings.size + " must be > 0)");
+            Logger.logErrorMsg("Image size contains invalid dimension (is " + settings.size + " must be > 0)");
             System.exit(1);
         }
 
         if (settings.recursionCount < 0) {
-            Debug.logErrorMsg("Recursion count (" + settings.recursionCount + ") set to negative number");
+            Logger.logErrorMsg("Recursion count (" + settings.recursionCount + ") set to negative number");
             System.exit(1);
         }
 
         if (settings.frameCount <= 0) {
-            Debug.logErrorMsg("Frame count (" + settings.frameCount + ") must be greater than 1");
+            Logger.logErrorMsg("Frame count (" + settings.frameCount + ") must be greater than 1");
             System.exit(1);
         }
 
         if (settings.threadCount == 0) {
-            Debug.logWarningMsg("Thread count should not be 0. Using thread count of 1 instead.");
+            Logger.logWarningMsg("Thread count should not be 0. Using thread count of 1 instead.");
             settings.threadCount = 1;
         }
 
         if (settings.sectionWidth < 1 || settings.sectionHeight < 1) {
-            Debug.logErrorMsg("Section size (" + settings.sectionWidth + " x " + settings.sectionHeight +
+            Logger.logErrorMsg("Section size (" + settings.sectionWidth + " x " + settings.sectionHeight +
                     ") contains invalid dimension must be > 0");
             System.exit(1);
         }

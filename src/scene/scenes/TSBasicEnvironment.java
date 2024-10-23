@@ -3,24 +3,24 @@ package scene.scenes;
 import mesh.*;
 import scene.*;
 
-public class TSBasicEnvironment extends Scene {
+public abstract class TSBasicEnvironment {
+    public static Scene newScene() {
+        Vector camPos, camDir, camNormal;
+        Camera camera;
 
-    Vector camPos, camDir, camNormal;
-    Camera camera;
+        PolygonMesh backWall, leftWall, rightWall, floor, ceiling, frontWall;
 
-    PolygonMesh backWall, leftWall, rightWall, floor, ceiling, frontWall;
+        Vector backLeftTop, backRightTop, backLeftBottom, backRightBottom;
+        Vector frontLeftTop, frontRightTop, frontLeftBottom, frontRightBottom;
 
-    Vector backLeftTop, backRightTop, backLeftBottom, backRightBottom;
-    Vector frontLeftTop, frontRightTop, frontLeftBottom, frontRightBottom;
-
-    TSBasicEnvironment() {
-        setName("Basic Environment");
+        Scene scene = new Scene();
+        scene.setName("Basic Environment");
 
         camPos = new Vector(0, 0, 0);
         camDir = new Vector(1, 0, 0);
         camNormal = new Vector(0, 0, 1);
         camera = new Camera(camPos, camDir, camNormal);
-        addActiveCamera(camera);
+        scene.addActiveCamera(camera);
 
         // Vectors
         backLeftTop = new Vector(2, 1, 1);
@@ -37,36 +37,38 @@ public class TSBasicEnvironment extends Scene {
         backWall.addPolygon(backLeftBottom, backRightTop, backRightBottom);
         backWall.addPolygon(backLeftBottom, backLeftTop, backRightTop);
         backWall.setMaterial(Material.WHITE_MAT);
-        addMesh(backWall);
+        scene.addMesh(backWall);
         // Left Wall
         leftWall = new PolygonMesh();
         leftWall.addPolygon(frontLeftBottom, backLeftBottom, backLeftTop);
         leftWall.addPolygon(backLeftTop, frontLeftTop, frontLeftBottom);
         leftWall.setMaterial(Material.RED_MAT);
-        addMesh(leftWall);
+        scene.addMesh(leftWall);
         // Right Wall
         rightWall = new PolygonMesh();
         rightWall.addPolygon(backRightBottom, frontRightBottom, backRightTop);
         rightWall.addPolygon(frontRightBottom, frontRightTop, backRightTop);
         rightWall.setMaterial(Material.BLUE_MAT);
-        addMesh(rightWall);
+        scene.addMesh(rightWall);
         // Floor
         floor = new PolygonMesh();
         floor.addPolygon(frontLeftBottom, frontRightBottom, backRightBottom);
         floor.addPolygon(backRightBottom, backLeftBottom, frontLeftBottom);
         floor.setMaterial(Material.GREEN_MAT);
-        addMesh(floor);
+        scene.addMesh(floor);
         // Ceiling
         ceiling = new PolygonMesh();
         ceiling.addPolygon(frontRightTop, frontLeftTop, backRightTop);
         ceiling.addPolygon(backRightTop, frontLeftTop, backLeftTop);
         ceiling.setMaterial(Material.WHITE_E_MAT);
-        addMesh(ceiling);
+        scene.addMesh(ceiling);
         // Front Wall
         frontWall = new PolygonMesh();
         frontWall.addPolygon(frontLeftBottom, frontRightTop, frontRightBottom);
         frontWall.addPolygon(frontLeftBottom, frontLeftTop, frontRightTop);
         frontWall.setMaterial(Material.WHITE_MAT);
-        addMesh(frontWall);
+        scene.addMesh(frontWall);
+
+        return scene;
     }
 }

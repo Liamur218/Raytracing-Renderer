@@ -61,13 +61,13 @@ public class Image extends BufferedImage {
             writeStrOnImage("Threads: " + renderSettings.threadCount, 3, 3);
         }
         try {
-            Debug.logMsg(Util.getCurrentTime() + " Writing image to file " + filename + "... ");
+            Logger.logMsg(Util.getCurrentTime() + " Writing image to file " + filename + "... ");
             long start = System.nanoTime();
             String filepath = "renders/" + filename;
             File file = new File(filepath.endsWith(".png") ? filepath : filepath + ".png");
             ImageIO.write(this, "png", file);
-            Debug.logMsgLn("Done");
-            Debug.logElapsedTime("-> Write to file complete in: ", start);
+            Logger.logMsgLn("Done");
+            Logger.logElapsedTime("-> Write to file complete in: ", start);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,12 +111,16 @@ public class Image extends BufferedImage {
         }
     }
 
-    public DoubleColor getNormColor(int x, int y) {
-        return new DoubleColor();
-    }
-
     public void setRGB(int x, int y, double[] rgb) {
         setRGB(x, y, new DoubleColor(rgb[0], rgb[1], rgb[2]).getRGB());
+    }
+
+    public void setRGB(int x, int y, DoubleColor color) {
+        setRGB(x, y, color.getRGB());
+    }
+
+    public DoubleColor getDoubleColor(int x, int y) {
+        return new DoubleColor();
     }
 
     public Image copy() {
@@ -139,7 +143,7 @@ public class Image extends BufferedImage {
         for (int i = 0; i < imageList.get(0).getWidth(); i++) {
             for (int j = 0; j < imageList.get(0).getHeight(); j++) {
                 for (int k = 0; k < imageList.size(); k++) {
-                    colors[k] = imageList.get(k).getNormColor(i, j);
+                    colors[k] = imageList.get(k).getDoubleColor(i, j);
                 }
                 average.setRGB(i, j, DoubleColor.average(colors).getRGB());
             }

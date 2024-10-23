@@ -22,7 +22,8 @@ public abstract class Mesh {
         scale(scale.x, scale.y, scale.z);
     }
 
-    public void setMaterial(Material material) {
+    public Mesh setMaterial(Material material) {
         this.material = material;
+        return this;
     }
 }

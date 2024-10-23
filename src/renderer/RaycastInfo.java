@@ -1,6 +1,9 @@
 package renderer;
 
+import mesh.Vector;
 import mesh.*;
+
+import java.util.*;
 
 public class RaycastInfo {
 
@@ -9,13 +12,16 @@ public class RaycastInfo {
     public Vector direction;
     public Vector intersection, normal;
     public Mesh mesh;
-    public Material material, medium;
+    public Material material;
     public Polygon polygon;
     public SphereMesh sphere;
     public double distance;
 
     // Carries color info back to camera
-    DoubleColor rayColor;
+    public DoubleColor rayColor;
+
+    // Carries info forward along successive raycasts
+    public Stack<Mesh> meshStack;
 
     public RaycastInfo(Vector origin, Vector direction) {
         this.origin = origin;

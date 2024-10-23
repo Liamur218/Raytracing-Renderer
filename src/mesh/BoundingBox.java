@@ -69,7 +69,7 @@ public class BoundingBox implements Iterable<Polygon> {
         return boundingBox;
     }
 
-    public RaycastInfo getClosestIntersection(Vector origin, Vector direction, Polygon polygonToIgnore) {
+    public RaycastInfo getIntersectedPolygon(Vector origin, Vector direction, Polygon polygonToIgnore) {
         RaycastInfo raycastInfo = new RaycastInfo(origin, direction);
         if (!doCollChecking || intersectedBy(origin, direction)) {
             if (leftChild == null) {
@@ -88,8 +88,8 @@ public class BoundingBox implements Iterable<Polygon> {
                     }
                 }
             } else {
-                RaycastInfo leftColl = leftChild.getClosestIntersection(origin, direction, polygonToIgnore);
-                RaycastInfo rightColl = rightChild.getClosestIntersection(origin, direction, polygonToIgnore);
+                RaycastInfo leftColl = leftChild.getIntersectedPolygon(origin, direction, polygonToIgnore);
+                RaycastInfo rightColl = rightChild.getIntersectedPolygon(origin, direction, polygonToIgnore);
                 raycastInfo = (leftColl.distance < rightColl.distance) ? leftColl : rightColl;
             }
         }

@@ -1,13 +1,15 @@
 package scene.scenes;
 
 import mesh.*;
+import scene.Scene;
 import util.ModelLoader;
 
 import java.awt.*;
 
-public class TSMasterChief extends TSBasicEnvironment {
-    public TSMasterChief() {
-        setName("Master Chief");
+public abstract class TSMasterChief {
+    public Scene TSMasterChief() {
+        Scene scene = TSBasicEnvironment.newScene();
+        scene.setName("Master Chief");
 
         // Materials
         DoubleColor helmetColor = new DoubleColor(new Color(40, 50, 20));
@@ -19,9 +21,10 @@ public class TSMasterChief extends TSBasicEnvironment {
         PolygonMesh helmet = ModelLoader.loadMesh("assets/big_assets/master_chief/helmet_19K.stl");
         helmet.setMaterial(helmetMat);
         helmet.scale(5);
-        addMesh(helmet, true, true);
+        scene.addMesh(helmet, true, true);
 
         // Visor
 
+        return scene;
     }
 }

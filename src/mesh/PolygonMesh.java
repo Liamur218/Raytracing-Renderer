@@ -87,7 +87,7 @@ public class PolygonMesh extends Mesh {
     @Override
     public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) {
         Polygon lastPolygon = (lastCast == null) ? null : lastCast.polygon;
-        return boundingBox.getClosestIntersection(origin, ray, lastPolygon);
+        return boundingBox.getIntersectedPolygon(origin, ray, lastPolygon);
     }
 
     public Vector[] getMinMax() {

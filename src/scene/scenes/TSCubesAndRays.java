@@ -3,17 +3,18 @@ package scene.scenes;
 import mesh.*;
 import scene.*;
 
-public class TSCubesAndRays extends Scene {
-    public TSCubesAndRays() {
-        setName("Cubes and Rays");
+public abstract class TSCubesAndRays {
+    public static Scene newScene() {
+        Scene scene = new Scene();
+        scene.setName("Cubes and Rays");
 
         Vector camPos = new Vector(-0.375, -0.375, 0.5);
         Vector camDir = new Vector(1, 1, -1);
         Vector camNormal = new Vector(0, 0, 1);
         Camera camera = new Camera(camPos, camDir, camNormal);
 
-        addActiveCamera(camera);
-        setBackgroundColor(DoubleColor.BLACK);
+        scene.addActiveCamera(camera);
+        scene.setBackgroundColor(DoubleColor.BLACK);
 
         // Variables
         double cubeBuffer = 0.0625;
@@ -27,12 +28,12 @@ public class TSCubesAndRays extends Scene {
         // Floor
         plMesh = new PlaneMesh(0, 0, 0, 0, 0, 1);
         plMesh.setMaterial(Material.WHITE_MAT);
-        addMesh(plMesh);
+        scene.addMesh(plMesh);
 
         // Central Cube
         cube = new CubeMesh(0, 0, 0.0625, 0.125, 0.125, 0.125);
-        cube.setMaterial(Material.WHITE_BE_MAT);
-        addMesh(cube);
+        cube.setMaterial(Material.WHITE_E_MAT);
+        scene.addMesh(cube);
 
         // Surrounding Cubes
         CubeMesh[] cubes = new CubeMesh[]{
@@ -45,7 +46,9 @@ public class TSCubesAndRays extends Scene {
         };
         for (CubeMesh cubeMesh : cubes) {
             cubeMesh.setMaterial(Material.CYAN_MAT);
-            addMesh(cubeMesh);
+            scene.addMesh(cubeMesh);
         }
+
+        return scene;
     }
 }

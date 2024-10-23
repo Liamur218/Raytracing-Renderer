@@ -10,7 +10,7 @@ public abstract class ModelLoader {
         String[] filepathArray = filepath.split("\\.");
         PolygonMesh polygonMesh = new PolygonMesh();
         if (filepathArray.length == 1) {
-            Debug.logMsgLn("[WARNING] Unable to read file " + filepath + " - no file extension specified");
+            Logger.logMsgLn("[WARNING] Unable to read file " + filepath + " - no file extension specified");
             return polygonMesh;
         } else {
             if (filepathArray[filepathArray.length - 1].equals("obj")) {
@@ -18,13 +18,13 @@ public abstract class ModelLoader {
             } else if (filepathArray[filepathArray.length - 1].equals("stl")) {
                 polygonMesh = loadStl(filepath);
             } else {
-                Debug.logMsgLn("[WARNING] Unable to load file " + filepath + " - unsupported file format");
+                Logger.logMsgLn("[WARNING] Unable to load file " + filepath + " - unsupported file format");
                 return polygonMesh;
             }
         }
 
         Vector[] centerAndSize = polygonMesh.getCenterAndSize();
-        Debug.logMsgLn(filepath + " successfully loaded @ " + centerAndSize[0] +
+        Logger.logMsgLn(filepath + " successfully loaded @ " + centerAndSize[0] +
                 " w/ " + polygonMesh.getPolygonArrayList().size() + " polygons (Dim: " + centerAndSize[1] + ")");
         return polygonMesh;
     }

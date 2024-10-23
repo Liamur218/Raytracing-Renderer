@@ -1,13 +1,22 @@
 package renderer;
 
 import mesh.DoubleColor;
+import util.Util;
 
 public class PostProcessor {
 
     boolean doAntiAliasing;
 
-    public PostProcessor(boolean doAntiAliasing) {
+    boolean doEnhance;
+    double enhancementFactor;
+
+    public void doAntiAliasing(boolean doAntiAliasing) {
         this.doAntiAliasing = doAntiAliasing;
+    }
+
+    public void doLighten(boolean doEnhance, double enhancementFactor) {
+        this.doEnhance = doEnhance;
+        this.enhancementFactor = enhancementFactor;
     }
 
     void postProcess(Image image) {
@@ -25,6 +34,15 @@ public class PostProcessor {
                     }
                     //color.add(new DoubleColor(original.getRGB(pixelX, pixelY)));
                     image.setRGB(pixelX, pixelY, color.multiply(1.0 / pixelsInSample).getRGB());
+                }
+            }
+        }
+        if (doEnhance) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                for (int j = 0; j < image.getHeight(); j++) {
+                    DoubleColor color = image.getDoubleColor(i, j);
+                    color.multiply(enhancementFactor);
+                    image.setRGB(i, j, color);
                 }
             }
         }
