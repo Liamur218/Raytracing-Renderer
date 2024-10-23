@@ -181,11 +181,9 @@ public abstract class Renderer {
         Logger.endLogSection();
 
         if (renderSettings.postProcessor != null) {
-            sectionStart = System.nanoTime();
-            Logger.logMsg("Postprocessing...");
+            Logger.newLogSection("Postprocessing", "Postprocessing");
             renderSettings.postProcessor.postProcess(image);
-            Logger.logMsgLn("Done");
-            Logger.logElapsedTime("-> Postprocessing complete in: ", sectionStart);
+            Logger.endLogSection();
         }
 
         Logger.logMsgLn(Util.getCurrentTime() + " All done");

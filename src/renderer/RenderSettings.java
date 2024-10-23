@@ -122,17 +122,17 @@ public class RenderSettings {
 
     @Override
     public String toString() {
-        return scene + "_" +
-                size.width + "x" + size.height + "_" +
-                "R" + recursionCount + "_" +
-                "F" + frameCount + "_" +
+        return scene + " " +
+                size.width + "x" + size.height + " " +
+                "R" + recursionCount + " " +
+                "F" + frameCount + " " +
                 "T" + threadCount;
     }
 
     public String toFilenameString() {
-        return scene + "_" +
-                size.width + "x" + size.height + "_" +
-                "R" + recursionCount + "_" +
+        return scene + " " +
+                size.width + "x" + size.height + " " +
+                "R" + recursionCount + " " +
                 "F" + frameCount;
     }
 }

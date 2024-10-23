@@ -14,10 +14,6 @@ public class Main {
         RenderSettings settings = new RenderSettings(RenderSettings.FANCY_SETTINGS).setThreadCount(25);
         settings.setScene(scene);
 
-        PostProcessor postProcessor = new PostProcessor();
-        postProcessor.doLighten(true, 1.5);
-        settings.setPostProcessor(postProcessor);
-
         Image image = Renderer.render(settings);
         image.writeToFile(settings);
     }
