@@ -14,7 +14,7 @@ public class Scene {
 
     private static final DoubleColor DEFAULT_BACKGROUND_COLOR = new DoubleColor(new Color(0, 164, 200));
 
-    String sceneName;
+    public String name;
 
     public Scene() {
         meshes = new ArrayList<>();
@@ -25,7 +25,7 @@ public class Scene {
     }
 
     public void setName(String sceneName) {
-        this.sceneName = sceneName;
+        this.name = sceneName;
     }
 
     // Setup
@@ -105,7 +105,7 @@ public class Scene {
     // Printing stuff
     @Override
     public String toString() {
-        return sceneName;
+        return name;
     }
 
     public void printAllObjects(boolean detailMaterials) {

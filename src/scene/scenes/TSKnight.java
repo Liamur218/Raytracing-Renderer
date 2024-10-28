@@ -63,7 +63,7 @@ public abstract class TSKnight {
         pMesh.setMaterial(Material.WHITE_MAT);
         scene.addMesh(pMesh);
         // Knight
-        pMesh = ModelLoader.loadMesh("assets/KNIGHT.stl");
+        pMesh = ModelLoader.loadStl("assets/KNIGHT.stl");
         pMesh.setCenterAt(0, 0, 0);
         pMesh.scale(1.5 / 3.37);
         //pMesh.rotate(0, 0, 90 + 45);

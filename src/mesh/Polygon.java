@@ -35,7 +35,7 @@ public class Polygon implements Iterable<Vector> {
         this(stlVectorArray[0], stlVectorArray[1], stlVectorArray[2], stlVectorArray[3]);
     }
 
-    Polygon setNormal(Vector normal) {
+    public Polygon setNormal(Vector normal) {
         this.normal = normal;
         return this;
     }

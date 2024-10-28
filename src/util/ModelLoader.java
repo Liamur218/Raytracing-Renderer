@@ -6,30 +6,15 @@ import java.io.*;
 import java.util.ArrayList;
 
 public abstract class ModelLoader {
-    public static PolygonMesh loadMesh(String filepath) {
-        String[] filepathArray = filepath.split("\\.");
-        PolygonMesh polygonMesh = new PolygonMesh();
-        if (filepathArray.length == 1) {
-            Logger.logMsgLn("[WARNING] Unable to read file " + filepath + " - no file extension specified");
-            return polygonMesh;
-        } else {
-            if (filepathArray[filepathArray.length - 1].equals("obj")) {
-                polygonMesh = loadObj(filepath);
-            } else if (filepathArray[filepathArray.length - 1].equals("stl")) {
-                polygonMesh = loadStl(filepath);
-            } else {
-                Logger.logMsgLn("[WARNING] Unable to load file " + filepath + " - unsupported file format");
-                return polygonMesh;
-            }
-        }
-
-        Vector[] centerAndSize = polygonMesh.getCenterAndSize();
-        Logger.logMsgLn(filepath + " successfully loaded @ " + centerAndSize[0] +
-                " w/ " + polygonMesh.getPolygonArrayList().size() + " polygons (Dim: " + centerAndSize[1] + ")");
-        return polygonMesh;
+    public static PolygonMesh loadStl(String filepath) {
+        return loadStl(filepath, false);
     }
 
-    public static PolygonMesh loadStl(String filepath) {
+    public static PolygonMesh loadAsciiStl(String filepath) {
+        return loadAsciiStl(filepath, false);
+    }
+
+    public static PolygonMesh loadStl(String filepath, boolean normalize) {
         File file = new File(filepath);
         FileInputStream input = null;
         PolygonMesh polygonMesh = new PolygonMesh();
@@ -88,6 +73,44 @@ public abstract class ModelLoader {
                 input.close();
             } catch (IOException | NullPointerException ignored) {
             }
+        }
+
+        if (normalize) {
+            polygonMesh.normalize();
+        }
+
+        return polygonMesh;
+    }
+
+    public static PolygonMesh loadAsciiStl(String filename, boolean normalize) {
+        PolygonMesh polygonMesh = new PolygonMesh();
+        try (BufferedReader inputStream = new BufferedReader(new FileReader(filename))) {
+            Vector normal = null;
+            Polygon polygon;
+            for (String line = inputStream.readLine(); line != null; line = inputStream.readLine()) {
+                if (line.contains("facet")) {
+                    String[] array = line.trim().split(" ");
+                    double x = Double.parseDouble(array[2]);
+                    double y = Double.parseDouble(array[3]);
+                    double z = Double.parseDouble(array[4]);
+                    normal = new Vector(x, y, z);
+                } else if (line.contains("loop")) {
+                    String point1 = inputStream.readLine().replace("vertex", "").trim();
+                    String point2 = inputStream.readLine().replace("vertex", "").trim();
+                    String point3 = inputStream.readLine().replace("vertex", "").trim();
+                    polygon = new Polygon(new Vector(point1), new Vector(point2), new Vector(point3));
+                    polygon.setNormal(normal);
+                    polygonMesh.addPolygon(polygon);
+                    inputStream.readLine();
+                    inputStream.readLine();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (normalize) {
+            polygonMesh.normalize();
         }
 
         return polygonMesh;

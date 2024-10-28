@@ -13,6 +13,7 @@ public class PlaneMesh extends Mesh {
     public PlaneMesh(double refX, double refY, double refZ, double normalX, double normalY, double normalZ) {
         refPoint = new Vector(refX, refY, refZ);
         normal = new Vector(normalX, normalY, normalZ).normalize();
+        setID();
     }
 
     @Override

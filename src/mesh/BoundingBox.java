@@ -46,7 +46,7 @@ public class BoundingBox implements Iterable<Polygon> {
     private static BoundingBox newBoundingBox(PolygonMesh mesh, int currentDepth, int maxDepth, int maxPolygonsPerBox,
                                               int arrayStartIndex, int polygonCount, boolean doCollChecking, boolean isBVH) {
         // Find long axis to divide polygons along
-        Vector longestAxis = mesh.getCenterAndSize()[1].getLongestDimension();
+        Vector longestAxis = mesh.getCenterAndSize()[1].getLongestAxis();
 
         // Sort polygon array based on polygon position along longest axis of bounding box
         Arrays.sort(mesh.polygons, arrayStartIndex, arrayStartIndex + polygonCount - 1,

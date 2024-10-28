@@ -15,6 +15,10 @@ public class Material {
     public double opacity;
     public double refractiveIndex;
 
+    // ID
+    public int ID;
+    private static int ID_COUNTER = 0;
+
     // Defaults
     public static final double DEFAULT_EMISSIVITY = 0;
     public static final double DEFAULT_REFLECTIVITY = 1;
@@ -134,6 +138,8 @@ public class Material {
         setSpecularity(DEFAULT_SPECULARITY);
         setOpacity(DEFAULT_OPACITY);
         setRefractiveIndex(DEFAULT_REFRACTIVE_INDEX);
+
+        ID = ID_COUNTER++;
     }
 
     public Material(Material material) {
@@ -143,6 +149,8 @@ public class Material {
         specularity = material.specularity;
         opacity = material.opacity;
         refractiveIndex = material.refractiveIndex;
+
+        ID = ID_COUNTER++;
     }
 
     public Material setColor(DoubleColor color) {
@@ -178,9 +186,7 @@ public class Material {
     @Override
     public boolean equals(Object object) {
         if (object instanceof Material material) {
-            return material.color == color && material.reflectivity == reflectivity &&
-                    material.emissivity == emissivity && material.specularity == specularity &&
-                    material.opacity == opacity && material.refractiveIndex == refractiveIndex;
+            return ID == material.ID;
         }
         return false;
     }

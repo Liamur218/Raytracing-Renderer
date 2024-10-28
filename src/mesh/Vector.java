@@ -30,6 +30,14 @@ public class Vector {
         this(a, a, a);
     }
 
+    public Vector(String[] points) {
+        this(Double.parseDouble(points[0]), Double.parseDouble(points[1]), Double.parseDouble(points[2]));
+    }
+
+    public Vector(String listedPoints) {
+        this(listedPoints.split(" "));
+    }
+
     public Vector set(double x, double y, double z) {
         this.x = x;
         this.y = y;
@@ -190,7 +198,11 @@ public class Vector {
         return cross(new Vector(this).rotate(X_AXIS, 90).rotate(Y_AXIS, 90), this).normalize();
     }
 
-    public Vector getLongestDimension() {
+    public double getLargestComponent() {
+        return (x > y && x > z) ? x : ((y > x && y > z) ? y : z);
+    }
+
+    public Vector getLongestAxis() {
         return (x > y && x > z) ? Vector.X_AXIS : ((y > x && y > z) ? Vector.Y_AXIS : Vector.Z_AXIS);
     }
 

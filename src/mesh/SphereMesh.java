@@ -15,6 +15,7 @@ public class SphereMesh extends Mesh {
     public SphereMesh(double posX, double posY, double posZ, double radius) {
         center = new Vector(posX, posY, posZ);
         this.radius = Math.max(radius, 0);
+        setID();
     }
 
     @Override

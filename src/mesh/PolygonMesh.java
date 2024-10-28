@@ -15,6 +15,7 @@ public class PolygonMesh extends Mesh {
 
     public PolygonMesh() {
         polygonArrayList = new ArrayList<>();
+        setID();
     }
 
     public void addPolygon(Polygon polygon) {
@@ -119,6 +120,11 @@ public class PolygonMesh extends Mesh {
 
     public Vector getCenter() {
         return getCenterAndSize()[0];
+    }
+
+    public void normalize() {
+        setCenterAt(Vector.ZERO_VECTOR);
+        scale(1 / (getSize().getLargestComponent() / 2));
     }
 
     public ArrayList<Polygon> getPolygonArrayList() {
