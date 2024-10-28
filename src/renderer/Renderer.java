@@ -89,8 +89,7 @@ public abstract class Renderer {
         ThreadPool threadPool = new ThreadPool(threadCount, false);
 
         // Create threads
-        Logger.newLogSection("Thread Creation", "Creating Threads");
-        sectionStart = System.nanoTime();
+        Logger.newLogSection("Thread creation", "Creating Threads");
         int frameSpaceID = 0;
         int fragsPerFrame = 0;
         for (int xPos = 0; xPos < width; xPos += ImageFragment.SECTION_SIZE.width) {

@@ -30,13 +30,9 @@ public class Scene {
 
     // Setup
     public void addMesh(Mesh mesh) {
-        addMesh(mesh, BoundingBox.DEFAULT_DO_COLL_CHECKING, BoundingBox.DEFAULT_IS_BVH);
-    }
-
-    public void addMesh(Mesh mesh, boolean doBBoxCollChecking, boolean genBBoxAsBVH) {
         if (mesh instanceof PolygonMesh pMesh) {
             if (!pMesh.finalized) {
-                pMesh.finalizeMesh(doBBoxCollChecking, genBBoxAsBVH);
+                pMesh.finalizeMesh();
             }
         }
         meshes.add(mesh);

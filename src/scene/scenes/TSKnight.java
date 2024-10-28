@@ -9,67 +9,13 @@ public abstract class TSKnight {
         Scene scene = TSBasicEnvironment.newScene();
         scene.setName("Knight");
 
-        Vector camPos = new Vector(0, 0, 0);
-        Vector camDir = new Vector(1, 0, 0);
-        Vector camNormal = new Vector(0, 0, 1);
-        Camera camera = new Camera(camPos, camDir, camNormal);
-        scene.addActiveCamera(camera);
-
-        // Vectors
-        Vector backLeftTop = new Vector(2, 1, 1);
-        Vector backRightTop = new Vector(2, -1, 1);
-        Vector backLeftBottom = new Vector(2, 1, -1);
-        Vector backRightBottom = new Vector(2, -1, -1);
-        Vector frontLeftTop = new Vector(-0.1, 1, 1);
-        Vector frontRightTop = new Vector(-0.1, -1, 1);
-        Vector frontLeftBottom = new Vector(-0.1, 1, -1);
-        Vector frontRightBottom = new Vector(-0.1, -1, -1);
-
-        PolygonMesh pMesh;
-        // Back Wall
-        pMesh = new PolygonMesh();
-        pMesh.addPolygon(backLeftBottom, backRightTop, backRightBottom);
-        pMesh.addPolygon(backLeftBottom, backLeftTop, backRightTop);
-        pMesh.setMaterial(Material.GRAY_MAT);
-        scene.addMesh(pMesh);
-        // Left Wall
-        pMesh = new PolygonMesh();
-        pMesh.addPolygon(frontLeftBottom, backLeftBottom, backLeftTop);
-        pMesh.addPolygon(backLeftTop, frontLeftTop, frontLeftBottom);
-        pMesh.setMaterial(Material.RED_MAT);
-        scene.addMesh(pMesh);
-        // Right Wall
-        pMesh = new PolygonMesh();
-        pMesh.addPolygon(backRightBottom, frontRightBottom, backRightTop);
-        pMesh.addPolygon(frontRightBottom, frontRightTop, backRightTop);
-        pMesh.setMaterial(Material.BLUE_MAT);
-        scene.addMesh(pMesh);
-        // Floor
-        pMesh = new PolygonMesh();
-        pMesh.addPolygon(frontLeftBottom, frontRightBottom, backRightBottom);
-        pMesh.addPolygon(backRightBottom, backLeftBottom, frontLeftBottom);
-        pMesh.setMaterial(Material.GREEN_MAT);
-        scene.addMesh(pMesh);
-        // Ceiling
-        pMesh = new PolygonMesh();
-        pMesh.addPolygon(frontRightTop, frontLeftTop, backRightTop);
-        pMesh.addPolygon(backRightTop, frontLeftTop, backLeftTop);
-        pMesh.setMaterial(Material.WHITE_E_MAT);
-        scene.addMesh(pMesh);
-        // Front Wall
-        pMesh = new PolygonMesh();
-        pMesh.addPolygon(frontLeftBottom, frontRightTop, frontRightBottom);
-        pMesh.addPolygon(frontLeftBottom, frontLeftTop, frontRightTop);
-        pMesh.setMaterial(Material.WHITE_MAT);
-        scene.addMesh(pMesh);
-        // Knight
-        pMesh = ModelLoader.loadStl("assets/KNIGHT.stl");
-        pMesh.setCenterAt(0, 0, 0);
-        pMesh.scale(1.5 / 3.37);
-        //pMesh.rotate(0, 0, 90 + 45);
-        pMesh.setCenterAt(1.5, 0, -0.25);
-        pMesh.setMaterial(Material.WHITE_MAT);
-        scene.addMesh(pMesh, true, true);
+        PolygonMesh polygonMesh = ModelLoader.loadStl("assets/KNIGHT.stl");
+        polygonMesh.setCenterAt(0, 0, 0);
+        polygonMesh.scale(1.5 / 3.37);
+        polygonMesh.rotate(0, 0, 180 + 45);
+        polygonMesh.setCenterAt(1.5, 0, -0.25);
+        polygonMesh.setMaterial(Material.WHITE_MAT);
+        scene.addMesh(polygonMesh);
 
         return scene;
     }

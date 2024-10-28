@@ -21,7 +21,7 @@ public abstract class TSMasterChief {
         PolygonMesh helmet = ModelLoader.loadStl("assets/big_assets/master_chief/helmet_19K.stl");
         helmet.setMaterial(helmetMat);
         helmet.scale(5);
-        scene.addMesh(helmet, true, true);
+        scene.addMesh(helmet);
 
         // Visor
 

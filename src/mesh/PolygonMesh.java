@@ -31,12 +31,13 @@ public class PolygonMesh extends Mesh {
         polygonArrayList.add(new Polygon(x1, y1, z1, x2, y2, z2, x3, y3, z3));
     }
 
-    public void finalizeMesh(boolean doBBoxCollChecking, boolean genBBoxAsBVH) {
+    public void finalizeMesh() {
         if (material == null) {
             material = DEFAULT_MATERIAL;
         }
         polygons = polygonArrayList.toArray(new Polygon[0]);
-        boundingBox = BoundingBox.newBoundingBox(this, doBBoxCollChecking, genBBoxAsBVH);
+        boundingBox = BoundingBox.newBoundingBox(this,
+                polygons.length > BoundingBox.DEFAULT_MAX_POLYGONS_PER_BOX);
         polygonArrayList.clear();
         finalized = true;
     }
@@ -61,6 +62,9 @@ public class PolygonMesh extends Mesh {
                 point.rotate(Vector.Y_AXIS, dyDeg);
                 point.rotate(Vector.Z_AXIS, dzDeg);
             }
+            polygon.normal.rotate(Vector.X_AXIS, dxDeg);
+            polygon.normal.rotate(Vector.Y_AXIS, dyDeg);
+            polygon.normal.rotate(Vector.Z_AXIS, dzDeg);
         }
     }
 

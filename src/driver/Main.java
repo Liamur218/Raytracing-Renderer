@@ -9,9 +9,9 @@ public class Main {
     public static void main(String[] args) {
         Logger.setPrintLogs(true);
 
-        Scene scene = TSTeapot.newScene();
+        Scene scene = TSKnight.newScene();
 
-        RenderSettings settings = new RenderSettings(RenderSettings.FANCY_SETTINGS).setThreadCount(25);
+        RenderSettings settings = new RenderSettings(RenderSettings.DEFAULT_SETTINGS).setThreadCount(25);
         settings.setScene(scene);
 
         Image image = Renderer.render(settings);

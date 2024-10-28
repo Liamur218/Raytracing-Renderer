@@ -16,11 +16,8 @@ public class BoundingBox implements Iterable<Polygon> {
 
     public BoundingBox leftChild, rightChild;
 
-    private static final int DEFAULT_MAX_DEPTH = 32;
-    private static final int DEFAULT_MAX_POLYGONS_PER_BOX = 32;
-
-    public static final boolean DEFAULT_DO_COLL_CHECKING = false;
-    public static final boolean DEFAULT_IS_BVH = false;
+    public static final int DEFAULT_MAX_DEPTH = 32;
+    public static final int DEFAULT_MAX_POLYGONS_PER_BOX = 32;
 
     private BoundingBox(int arrayStartIndex, int polygonCount, PolygonMesh mesh, boolean doCollChecking, int depth) {
         this.arrayStartIndex = arrayStartIndex;
@@ -44,7 +41,8 @@ public class BoundingBox implements Iterable<Polygon> {
     }
 
     private static BoundingBox newBoundingBox(PolygonMesh mesh, int currentDepth, int maxDepth, int maxPolygonsPerBox,
-                                              int arrayStartIndex, int polygonCount, boolean doCollChecking, boolean isBVH) {
+                                              int arrayStartIndex, int polygonCount,
+                                              boolean doCollChecking, boolean isBVH) {
         // Find long axis to divide polygons along
         Vector longestAxis = mesh.getCenterAndSize()[1].getLongestAxis();
 
@@ -159,19 +157,14 @@ public class BoundingBox implements Iterable<Polygon> {
     }
 
     // public newBoundingBox methods
-    public static BoundingBox newBoundingBox(PolygonMesh mesh, boolean isBVH, int maxDepth, int maxPolygonsPerBox,
-                                             boolean doCollChecking) {
+    public static BoundingBox newBoundingBox(PolygonMesh mesh, boolean isBVH) {
+        return newBoundingBox(mesh, isBVH, DEFAULT_MAX_DEPTH, DEFAULT_MAX_POLYGONS_PER_BOX, true);
+    }
+
+    public static BoundingBox newBoundingBox(PolygonMesh mesh, boolean isBVH,
+                                             int maxDepth, int maxPolygonsPerBox, boolean doCollChecking) {
         return newBoundingBox(mesh, 0, maxDepth, maxPolygonsPerBox, 0,
                 mesh.polygons.length, doCollChecking, isBVH);
-    }
-
-    public static BoundingBox newBoundingBox(PolygonMesh mesh, boolean doCollChecking, boolean isBVH) {
-        return newBoundingBox(mesh, isBVH, DEFAULT_MAX_DEPTH, DEFAULT_MAX_POLYGONS_PER_BOX, doCollChecking);
-    }
-
-    public static BoundingBox newBoundingBox(PolygonMesh mesh) {
-        return newBoundingBox(mesh, DEFAULT_IS_BVH,
-                DEFAULT_MAX_DEPTH, DEFAULT_MAX_POLYGONS_PER_BOX, DEFAULT_DO_COLL_CHECKING);
     }
 
     // Iterable methods

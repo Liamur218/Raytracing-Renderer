@@ -62,6 +62,7 @@ public class RenderSettings {
         sectionWidth = settings.sectionWidth;
         sectionHeight = settings.sectionHeight;
         rngSeed = settings.rngSeed;
+        postProcessor = settings.postProcessor;
     }
 
     public RenderSettings setScene(Scene scene) {

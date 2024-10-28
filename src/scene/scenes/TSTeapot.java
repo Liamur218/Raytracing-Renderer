@@ -11,8 +11,9 @@ public abstract class TSTeapot {
 
         PolygonMesh polygonMesh = ModelLoader.loadAsciiStl("assets/utah_teapot.stl");
         polygonMesh.normalize();
-        polygonMesh.scale(0.75);
-        polygonMesh.setCenterAt(1, 0, -0.125);
+        polygonMesh.scale(0.5);
+        polygonMesh.setCenterAt(1, 0, -0.25);
+        scene.addMesh(polygonMesh);
 
         return scene;
     }
