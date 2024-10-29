@@ -49,7 +49,7 @@ public abstract class Renderer {
         int recursionCount = renderSettings.recursionCount;
         int frameCount = renderSettings.frameCount;
         int threadCount = renderSettings.threadCount;
-        int rngSeed = renderSettings.rngSeed;
+        int rngSeed = renderSettings.seed;
 
         Logger.logMsgLn("\n * * * STARTING RENDERER * * *");
         Image image = new Image(width, height);

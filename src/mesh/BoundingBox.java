@@ -16,10 +16,11 @@ public class BoundingBox implements Iterable<Polygon> {
 
     public BoundingBox leftChild, rightChild;
 
-    public static final int DEFAULT_MAX_DEPTH = 32;
-    public static final int DEFAULT_MAX_POLYGONS_PER_BOX = 32;
+    public static final int MAX_DEPTH = 32;
+    public static final int MAX_POLYGONS_PER_BOX = 32;
+    public static final int MIN_POLYGONS_FOR_BOX = MAX_POLYGONS_PER_BOX / 8;
 
-    private BoundingBox(int arrayStartIndex, int polygonCount, PolygonMesh mesh, boolean doCollChecking, int depth) {
+    private BoundingBox(int arrayStartIndex, int polygonCount, PolygonMesh mesh, int depth, boolean doCollChecking) {
         this.arrayStartIndex = arrayStartIndex;
         this.polygonCount = polygonCount;
         this.mesh = mesh;
@@ -41,8 +42,7 @@ public class BoundingBox implements Iterable<Polygon> {
     }
 
     private static BoundingBox newBoundingBox(PolygonMesh mesh, int currentDepth, int maxDepth, int maxPolygonsPerBox,
-                                              int arrayStartIndex, int polygonCount,
-                                              boolean doCollChecking, boolean isBVH) {
+                                              int arrayStartIndex, int polygonCount, boolean genFullBox) {
         // Find long axis to divide polygons along
         Vector longestAxis = mesh.getCenterAndSize()[1].getLongestAxis();
 
@@ -51,22 +51,30 @@ public class BoundingBox implements Iterable<Polygon> {
                 new PolygonSorter(longestAxis));
 
         // Create bounding box
-        BoundingBox boundingBox = new BoundingBox(arrayStartIndex, polygonCount, mesh, doCollChecking, currentDepth);
+        BoundingBox boundingBox = new BoundingBox(arrayStartIndex, polygonCount, mesh, currentDepth, genFullBox);
 
         // Create children if there are enough polygons in current bounding box and max depth has not been reached
-        if (isBVH && polygonCount > maxPolygonsPerBox && currentDepth < maxDepth) {
+        if (genFullBox && polygonCount > maxPolygonsPerBox && currentDepth < maxDepth) {
             int midpoint = arrayStartIndex + polygonCount / 2;
             int leftPolygonCount = midpoint - arrayStartIndex;
             int rightPolygonCount = polygonCount - leftPolygonCount;
             boundingBox.leftChild = newBoundingBox(mesh, currentDepth + 1, maxDepth,
-                    maxPolygonsPerBox, arrayStartIndex, leftPolygonCount, doCollChecking, true);
+                    maxPolygonsPerBox, arrayStartIndex, leftPolygonCount, true);
             boundingBox.rightChild = newBoundingBox(mesh, currentDepth + 1, maxDepth,
-                    maxPolygonsPerBox, midpoint, rightPolygonCount, doCollChecking, true);
+                    maxPolygonsPerBox, midpoint, rightPolygonCount, true);
         }
 
         return boundingBox;
     }
 
+    // public newBoundingBox methods
+    public static BoundingBox newBoundingBox(PolygonMesh mesh) {
+        return newBoundingBox(mesh, 0, MAX_DEPTH, MAX_POLYGONS_PER_BOX,
+                0, mesh.polygons.length,
+                mesh.polygons.length > MIN_POLYGONS_FOR_BOX);
+    }
+
+    // Intersection methods
     public RaycastInfo getIntersectedPolygon(Vector origin, Vector direction, Polygon polygonToIgnore) {
         RaycastInfo raycastInfo = new RaycastInfo(origin, direction);
         if (!doCollChecking || intersectedBy(origin, direction)) {
@@ -94,7 +102,7 @@ public class BoundingBox implements Iterable<Polygon> {
         return raycastInfo;
     }
 
-    private boolean intersectedBy(Vector origin, Vector dir) {
+    public boolean intersectedBy(Vector origin, Vector dir) {
         double tLow, tHigh;
         boolean intersectsLow, intersectsHigh;
 
@@ -156,18 +164,7 @@ public class BoundingBox implements Iterable<Polygon> {
         }
     }
 
-    // public newBoundingBox methods
-    public static BoundingBox newBoundingBox(PolygonMesh mesh, boolean isBVH) {
-        return newBoundingBox(mesh, isBVH, DEFAULT_MAX_DEPTH, DEFAULT_MAX_POLYGONS_PER_BOX, true);
-    }
-
-    public static BoundingBox newBoundingBox(PolygonMesh mesh, boolean isBVH,
-                                             int maxDepth, int maxPolygonsPerBox, boolean doCollChecking) {
-        return newBoundingBox(mesh, 0, maxDepth, maxPolygonsPerBox, 0,
-                mesh.polygons.length, doCollChecking, isBVH);
-    }
-
-    // Iterable methods
+    // Iteration methods
     @Override
     public Iterator<Polygon> iterator() {
         return new BBoxIterator();
@@ -189,6 +186,44 @@ public class BoundingBox implements Iterable<Polygon> {
         @Override
         public Polygon next() {
             return mesh.polygons[current++];
+        }
+    }
+
+    public void print() {
+        print("");
+    }
+
+    private void print(String prefix) {
+        System.out.println(prefix + "Lvl " + depth + ": " + polygonCount);
+        if (leftChild != null) {
+            leftChild.print(prefix + "\t");
+        }
+        if (rightChild != null) {
+            rightChild.print(prefix + "\t");
+        }
+    }
+
+    public int getMaxDepth() {
+        if (leftChild == null) {
+            return 0;
+        } else {
+            return Math.max(leftChild.getMaxDepth(), rightChild.getMaxDepth()) + 1;
+        }
+    }
+
+    public int getMinPolygonsPerBox() {
+        if (leftChild == null) {
+            return polygonCount;
+        } else {
+            return Math.min(leftChild.getMinPolygonsPerBox(), rightChild.getMinPolygonsPerBox());
+        }
+    }
+
+    public int getMaxPolygonsPerBox() {
+        if (leftChild == null) {
+            return polygonCount;
+        } else {
+            return Math.max(leftChild.getMaxPolygonsPerBox(), rightChild.getMaxPolygonsPerBox());
         }
     }
 }

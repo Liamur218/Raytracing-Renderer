@@ -17,7 +17,7 @@ public class RenderSettings {
     int threadCount;
     int sectionWidth, sectionHeight;
 
-    int rngSeed;
+    int seed;
 
     PostProcessor postProcessor;
 
@@ -30,7 +30,7 @@ public class RenderSettings {
         DEFAULT_SETTINGS.setFrameCount(30);
         DEFAULT_SETTINGS.setThreadCount(25);
         DEFAULT_SETTINGS.setSectionSize(500, 500);
-        DEFAULT_SETTINGS.setRngSeed(new Random().nextInt());
+        DEFAULT_SETTINGS.setSeed(new Random().nextInt());
     }
 
     // Other settings
@@ -61,7 +61,7 @@ public class RenderSettings {
         threadCount = settings.threadCount;
         sectionWidth = settings.sectionWidth;
         sectionHeight = settings.sectionHeight;
-        rngSeed = settings.rngSeed;
+        seed = settings.seed;
         postProcessor = settings.postProcessor;
     }
 
@@ -111,8 +111,8 @@ public class RenderSettings {
         return this;
     }
 
-    public RenderSettings setRngSeed(int rngSeed) {
-        this.rngSeed = rngSeed;
+    public RenderSettings setSeed(int rngSeed) {
+        this.seed = rngSeed;
         return this;
     }
 

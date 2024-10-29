@@ -36,8 +36,7 @@ public class PolygonMesh extends Mesh {
             material = DEFAULT_MATERIAL;
         }
         polygons = polygonArrayList.toArray(new Polygon[0]);
-        boundingBox = BoundingBox.newBoundingBox(this,
-                polygons.length > BoundingBox.DEFAULT_MAX_POLYGONS_PER_BOX);
+        boundingBox = BoundingBox.newBoundingBox(this);
         polygonArrayList.clear();
         finalized = true;
     }
@@ -131,8 +130,8 @@ public class PolygonMesh extends Mesh {
         scale(1 / (getSize().getLargestComponent() / 2));
     }
 
-    public ArrayList<Polygon> getPolygonArrayList() {
-        return polygonArrayList;
+    public int getPolygonCount() {
+        return (finalized) ? polygons.length : polygonArrayList.size();
     }
 
     public BoundingBox getBoundingBox() {
