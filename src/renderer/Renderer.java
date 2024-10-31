@@ -3,15 +3,15 @@ package renderer;
 import mesh.Vector;
 import mesh.*;
 import scene.*;
+import threading.*;
 import util.*;
 
 import java.awt.*;
 import java.util.*;
-import java.util.Stack;
 
 public abstract class Renderer {
 
-    private static final ArrayList<ImageFragment> RETURN_BUFFER = new ArrayList<>();
+    private static final ArrayList<ImageFragment> renderedImageFragments = new ArrayList<>();
 
     public static final double POLYGON_ERROR = 0.01;
     public static final double MIN_REFLECTION_ANGLE = 0.001;
@@ -56,8 +56,7 @@ public abstract class Renderer {
 
         // Variable setup
         Camera camera = scene.activeCamera;
-        long sectionStart, masterStart;
-        masterStart = System.nanoTime();
+        long masterStart = System.nanoTime();
         random = new Random(rngSeed);
 
         // Vector setup
@@ -69,7 +68,6 @@ public abstract class Renderer {
          * C ---------------- X
          * */
         Logger.newLogSection("Setup", "Setting up");
-        sectionStart = System.nanoTime();
         Vector A = camera.dir.copy();
         A.rotate(camera.normal, camera.fov.width / 2f);
         A.rotate(camera.binormal, camera.fov.height / 2f);
@@ -86,7 +84,9 @@ public abstract class Renderer {
 
         // Thread stuff
         ArrayList<RaytracingThread> threads = new ArrayList<>();
-        ThreadPool threadPool = new ThreadPool(threadCount, false);
+        ThreadPool threadPool = (renderSettings.distributed) ?
+                new DistributedThreadPool() : new LocalThreadPool(threadCount);
+        threadPool.start();
 
         // Create threads
         Logger.newLogSection("Thread creation", "Creating Threads");
@@ -114,7 +114,7 @@ public abstract class Renderer {
         }
 
         // Frames
-        RETURN_BUFFER.clear();
+        renderedImageFragments.clear();
         int totalImgFragCount = threads.size();
 
         // Sort threads by position (they should be sorted this way already, we're just making sure)
@@ -144,7 +144,7 @@ public abstract class Renderer {
             // Pull and submit all threads for current frame section
             RaytracingThread rtThread = threads.get(0);
             while (rtThread.imageFragment.frameSpaceID == currentFrameSpaceID) {
-                threadPool.execute(rtThread);
+                threadPool.addJob(rtThread);
                 threads.remove(0);
                 if (!threads.isEmpty()) {
                     rtThread = threads.get(0);
@@ -153,19 +153,23 @@ public abstract class Renderer {
                 }
             }
 
-            // Wait for all current threads to finish
+            // Wait for all current threads to finish, then copy their imageFragments to an array list for processing
             threadPool.waitForAllToFinish();
+            for (Runnable runnable : threadPool.exportCompletedTasks()) {
+                RaytracingThread trThread = (RaytracingThread) runnable;
+                renderedImageFragments.add(trThread.imageFragment);
+            }
 
             // Write image fragments to output image
             progressBar.setStatus("Processing");
-            int fragPosX = RETURN_BUFFER.get(0).posX;
-            int fragPosY = RETURN_BUFFER.get(0).posY;
-            Dimension fragSize = RETURN_BUFFER.get(0).size;
+            int fragPosX = renderedImageFragments.get(0).posX;
+            int fragPosY = renderedImageFragments.get(0).posY;
+            Dimension fragSize = renderedImageFragments.get(0).size;
             for (int localX = 0; localX < fragSize.width; localX++) {
                 for (int localY = 0; localY < fragSize.height; localY++) {
-                    DoubleColor[] colors = new DoubleColor[RETURN_BUFFER.size()];
+                    DoubleColor[] colors = new DoubleColor[renderedImageFragments.size()];
                     for (int frameNumber = 0; frameNumber < colors.length; frameNumber++) {
-                        colors[frameNumber] = RETURN_BUFFER.get(frameNumber).array[localX][localY];
+                        colors[frameNumber] = renderedImageFragments.get(frameNumber).array[localX][localY];
                     }
                     image.setRGB(fragPosX + localX, fragPosY + localY, DoubleColor.average(colors).getRGB());
                 }
@@ -173,10 +177,10 @@ public abstract class Renderer {
 
             // End-of-loop stuff
             currentFrameSpaceID++;
-            RETURN_BUFFER.clear();
+            renderedImageFragments.clear();
         }
 
-        threadPool.commitDie();
+        threadPool.halt();
         Logger.endLogSection();
 
         if (renderSettings.postProcessor != null) {
@@ -205,7 +209,7 @@ public abstract class Renderer {
         // Create new mesh stack for first raycast and fill it with air, or
         //      grab stack of previous materials from the last raycast we just did
         if (lastCast == null) {
-            Stack<Mesh> meshStack = new Stack<>();
+            YetAnotherStack<Mesh> meshStack = new YetAnotherStack<>();
             meshStack.add(new Mesh() {
                 @Override public RaycastInfo getClosestIntersection(Vector o, Vector v, RaycastInfo lC) { return null; }
                 @Override public void setCenterAt(double x, double y, double z) {}
@@ -224,24 +228,20 @@ public abstract class Renderer {
             raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
             return raycast;
         } else if (bouncesToLive > 0) {
-            // Set medium of the next raycast we are about to do
-            if (Vector.angleBetween(raycast.direction, raycast.normal) > 90) {  // Entering material
-                raycast.meshStack.add(raycast.mesh);
-            } else {  // Exiting material
-                raycast.meshStack.remove(raycast.mesh);
-            }
-
             // Chose direction for next raycast
             Vector nextDir;
             RaycastInfo nextCast;
             if (false/*random.nextDouble() > raycast.material.opacity*/) {
-                // Refracted direction
-                nextDir = getRefractedDirection(raycast);
+                if (Vector.angleBetween(raycast.direction, raycast.normal) > 90) {
+                    raycast.meshStack.add(raycast.mesh);
+                    nextDir = getRefractedDirection(raycast);
+                } else {
+                    nextDir = getRefractedDirection(raycast);
+                    raycast.meshStack.removeLast(raycast.mesh);
+                }
             } else if (random.nextDouble() > raycast.material.specularity) {
-                // Diffuse raycast
                 nextDir = getDiffuseDirection(raycast.normal);
             } else {
-                // Specular raycast
                 nextDir = getSpecularDirection(raycast.direction, raycast.normal);
             }
 
@@ -263,7 +263,7 @@ public abstract class Renderer {
     }
 
     static synchronized void returnImageFragment(ImageFragment imageFragment) {
-        RETURN_BUFFER.add(imageFragment);
+        renderedImageFragments.add(imageFragment);
     }
 
     public static Image quickRender(Scene scene) {
@@ -361,8 +361,8 @@ public abstract class Renderer {
     private static Vector getRefractedDirection(RaycastInfo raycast) {
         // Shell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
         // asin(n1/n2 * sin(ϴ1)) = ϴ2
-        double n1 = raycast.meshStack.get(0).material.refractiveIndex;
-        double n2 = raycast.meshStack.get(1).material.refractiveIndex;
+        double n1 = raycast.meshStack.getFromEnd(0).material.refractiveIndex;
+        double n2 = raycast.meshStack.getFromEnd(1).material.refractiveIndex;
 
         Vector binormal = Vector.cross(raycast.direction, raycast.normal);
         Vector newNormal = Vector.multiply(raycast.normal, -1);

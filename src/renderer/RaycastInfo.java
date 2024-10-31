@@ -2,8 +2,7 @@ package renderer;
 
 import mesh.Vector;
 import mesh.*;
-
-import java.util.*;
+import util.YetAnotherStack;
 
 public class RaycastInfo {
 
@@ -21,7 +20,7 @@ public class RaycastInfo {
     public DoubleColor rayColor;
 
     // Carries info forward along successive raycasts
-    public Stack<Mesh> meshStack;
+    public YetAnotherStack<Mesh> meshStack;
 
     public RaycastInfo(Vector origin, Vector direction) {
         this.origin = origin;

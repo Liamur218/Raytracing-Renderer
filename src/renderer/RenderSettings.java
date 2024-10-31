@@ -15,6 +15,8 @@ public class RenderSettings {
     int recursionCount, frameCount;
 
     int threadCount;
+    boolean distributed;
+
     int sectionWidth, sectionHeight;
 
     int seed;
@@ -92,6 +94,11 @@ public class RenderSettings {
 
     public RenderSettings setThreadCount(int threadCount) {
         this.threadCount = threadCount;
+        return this;
+    }
+
+    public RenderSettings setDistributed(boolean distributed) {
+        this.distributed = distributed;
         return this;
     }
 
