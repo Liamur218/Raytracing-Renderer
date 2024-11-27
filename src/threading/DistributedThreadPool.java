@@ -10,6 +10,11 @@ public class DistributedThreadPool extends ThreadPool {
     }
 
     @Override
+    protected boolean isAllWorkDone() {
+        return false;
+    }
+
+    @Override
     public void waitForAllToFinish() {
 
     }

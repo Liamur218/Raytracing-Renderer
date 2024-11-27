@@ -50,8 +50,9 @@ public abstract class Renderer {
         int frameCount = renderSettings.frameCount;
         int threadCount = renderSettings.threadCount;
         int rngSeed = renderSettings.seed;
+        Logger logger = renderSettings.logger;
 
-        Logger.logMsgLn("\n * * * STARTING RENDERER * * *");
+        logger.logMsgLn("\n * * * STARTING RENDERER * * *");
         Image image = new Image(width, height);
 
         // Variable setup
@@ -67,7 +68,7 @@ public abstract class Renderer {
          * |                  |
          * C ---------------- X
          * */
-        Logger.newLogSection("Setup", "Setting up");
+        logger.newLogSection("Setup", "Setting up");
         Vector A = camera.dir.copy();
         A.rotate(camera.normal, camera.fov.width / 2f);
         A.rotate(camera.binormal, camera.fov.height / 2f);
@@ -83,13 +84,17 @@ public abstract class Renderer {
         Vector vStep = Vector.divide(rCA, height);
 
         // Thread stuff
+        int totalImgFragCount = ((image.getWidth() - 1) / ImageFragment.SECTION_SIZE.width + 1) *
+                ((image.getHeight() - 1) / ImageFragment.SECTION_SIZE.height + 1) * frameCount;
+        ProgressBar progressBar = new ProgressBar("Threads", totalImgFragCount, logger);
         ArrayList<RaytracingThread> threads = new ArrayList<>();
         ThreadPool threadPool = (renderSettings.distributed) ?
                 new DistributedThreadPool() : new LocalThreadPool(threadCount);
+        threadPool.setProgressBar(progressBar);
         threadPool.start();
 
         // Create threads
-        Logger.newLogSection("Thread creation", "Creating Threads");
+        logger.newLogSection("Thread creation", "Creating Threads");
         int frameSpaceID = 0;
         int fragsPerFrame = 0;
         for (int xPos = 0; xPos < width; xPos += ImageFragment.SECTION_SIZE.width) {
@@ -115,27 +120,22 @@ public abstract class Renderer {
 
         // Frames
         renderedImageFragments.clear();
-        int totalImgFragCount = threads.size();
 
         // Sort threads by position (they should be sorted this way already, we're just making sure)
         threads.sort(new RaytracingThread.ThreadComparator());
 
-        // Misc setup stuff
-        ProgressBar progressBar = new ProgressBar("Threads", totalImgFragCount);
-        RaytracingThread.setProgressBar(progressBar);
-
         // Start render * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-        Logger.newLogSection("Render", "Starting render of " + scene);
-        Logger.logMsg("\n");
-        Logger.logMsgLn("\tImage size -------- " + width + " x " + height);
-        Logger.logMsgLn("\tFrames ------------ " + frameCount);
-        Logger.logMsgLn("\tThreads ----------- " + ((threadCount > 0) ? threadCount : "YES"));
-        Logger.logMsgLn("\tMax recursion ----- " + recursionCount);
-        Logger.logMsgLn("\tImage fragments --- " + totalImgFragCount);
-        Logger.logMsgLn("\tFragments / frame - " + fragsPerFrame);
-        Logger.logMsgLn("\tSeed -------------- " + rngSeed);
+        logger.newLogSection("Render", "Starting render of " + scene);
+        logger.logMsg("\n");
+        logger.logMsgLn("\tImage size -------- " + width + " x " + height);
+        logger.logMsgLn("\tFrames ------------ " + frameCount);
+        logger.logMsgLn("\tThreads ----------- " + ((threadCount > 0) ? threadCount : "YES"));
+        logger.logMsgLn("\tMax recursion ----- " + recursionCount);
+        logger.logMsgLn("\tImage fragments --- " + totalImgFragCount);
+        logger.logMsgLn("\tFragments / frame - " + fragsPerFrame);
+        logger.logMsgLn("\tSeed -------------- " + rngSeed);
         if (threadCount > frameCount && threadCount > 0) {
-            Logger.logWarningMsg("Settings specify more threads than frames; excess threads will not be used");
+            logger.logWarningMsg("Settings specify more threads than frames; excess threads will not be used");
         }
 
         int currentFrameSpaceID = 0;
@@ -145,7 +145,7 @@ public abstract class Renderer {
             RaytracingThread rtThread = threads.get(0);
             while (rtThread.imageFragment.frameSpaceID == currentFrameSpaceID) {
                 threadPool.addJob(rtThread);
-                threads.remove(0);
+                threads.remove(rtThread);
                 if (!threads.isEmpty()) {
                     rtThread = threads.get(0);
                 } else {
@@ -181,16 +181,17 @@ public abstract class Renderer {
         }
 
         threadPool.halt();
-        Logger.endLogSection();
+        logger.logMsg("\n");
+        logger.endLogSection();
 
         if (renderSettings.postProcessor != null) {
-            Logger.newLogSection("Postprocessing", "Postprocessing");
+            logger.newLogSection("Postprocessing", "Postprocessing");
             renderSettings.postProcessor.postProcess(image);
-            Logger.endLogSection();
+            logger.endLogSection();
         }
 
-        Logger.logMsgLn(Util.getCurrentTime() + " All done");
-        Logger.logElapsedTime("-> Total elapsed time: ", masterStart);
+        logger.logMsgLn(Util.getCurrentTime() + " All done");
+        logger.logElapsedTime("-> Total elapsed time: ", masterStart);
 
         return image;
     }
@@ -222,7 +223,14 @@ public abstract class Renderer {
 
         // Recursive step
         if (raycast.intersection == null) {
-            raycast.rayColor.set(scene.backgroundColor);
+            if (lastCast == null) {
+                raycast.rayColor.set(scene.enviroColor);
+            } else {
+                double directionalIntensity = 1 / (0.5 * Vector.angleBetween(raycast.direction, scene.dirLightDir) + 1);
+                DoubleColor dirLight = DoubleColor.multiply(scene.dirLight, directionalIntensity);
+                raycast.rayColor.set(DoubleColor.add(scene.ambientLight, dirLight));
+            }
+            raycast.rayColor.set((lastCast == null) ? scene.enviroColor : scene.ambientLight);
             return raycast;
         } else if (raycast.material.reflectivity == 0) {
             raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
@@ -275,7 +283,8 @@ public abstract class Renderer {
     }
 
     public static Image quickRender(Scene scene, int width, int height) {
-        Logger.logMsgLn("Beginning quick render");
+        Logger logger = new Logger();
+        logger.logMsgLn("Beginning quick render");
         Image image = new Image(width, height);
 
         // Variable setup
@@ -289,7 +298,7 @@ public abstract class Renderer {
          * |                  |
          * C ---------------- X
          * */
-        Logger.logMsg("Setting up... ");
+        logger.logMsg("Setting up... ");
         Vector A = camera.dir.copy();
         A.rotate(camera.normal, camera.fov.width / 2f);
         A.rotate(camera.binormal, camera.fov.height / 2f);
@@ -303,10 +312,10 @@ public abstract class Renderer {
         Vector rBA = Vector.subtract(B, A);
         Vector hStep = Vector.divide(rBA, width);
         Vector vStep = Vector.divide(rCA, height);
-        Logger.logMsgLn("Done");
+        logger.logMsgLn("Done");
 
         // Raytracing loop
-        Logger.logMsgLn("Starting render");
+        logger.logMsgLn("Starting render");
         long start = System.nanoTime();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -316,8 +325,8 @@ public abstract class Renderer {
         }
 
         long end = System.nanoTime();
-        Logger.logMsgLn("\nRender complete");
-        Logger.logMsgLn("Elapsed time: " + TimeFormatter.timeToString(end - start));
+        logger.logMsgLn("\nRender complete");
+        logger.logMsgLn("Elapsed time: " + TimeFormatter.timeToString(end - start));
         return image;
     }
 
@@ -373,45 +382,48 @@ public abstract class Renderer {
 
     // Make sure user didn't screw up
     private static void ensureCorrectSettings(RenderSettings settings) {
+        Logger logger = settings.logger;
+
+        boolean doExit = false;
         if (settings.scene == null) {
-            Logger.logErrorMsg("Scene object is null");
+            logger.logErrorMsg("Scene object is null");
             System.exit(1);
         } else {
-            boolean doExit = false;
             for (Mesh mesh : settings.scene.meshes) {
                 if (mesh.material == null) {
-                    Logger.logErrorMsg("Material for mesh " + mesh + " is null");
+                    logger.logErrorMsg("Material for mesh " + mesh + " is null");
                     doExit = true;
                 }
-            }
-            if (doExit) {
-                System.exit(1);
             }
         }
 
         if (settings.size.width <= 0 || settings.size.height <= 0) {
-            Logger.logErrorMsg("Image size contains invalid dimension (is " + settings.size + " must be > 0)");
-            System.exit(1);
+            logger.logErrorMsg("Image size contains invalid dimension (is " + settings.size + " must be > 0)");
+            doExit = true;
         }
 
         if (settings.recursionCount < 0) {
-            Logger.logErrorMsg("Recursion count (" + settings.recursionCount + ") set to negative number");
-            System.exit(1);
+            logger.logErrorMsg("Recursion count (" + settings.recursionCount + ") set to negative number");
+            doExit = true;
         }
 
         if (settings.frameCount <= 0) {
-            Logger.logErrorMsg("Frame count (" + settings.frameCount + ") must be greater than 1");
-            System.exit(1);
+            logger.logErrorMsg("Frame count (" + settings.frameCount + ") must be greater than 1");
+            doExit = true;
         }
 
         if (settings.threadCount == 0) {
-            Logger.logWarningMsg("Thread count should not be 0. Using thread count of 1 instead.");
+            logger.logWarningMsg("Thread count should not be 0. Using thread count of 1 instead.");
             settings.threadCount = 1;
         }
 
         if (settings.sectionWidth < 1 || settings.sectionHeight < 1) {
-            Logger.logErrorMsg("Section size (" + settings.sectionWidth + " x " + settings.sectionHeight +
+            logger.logErrorMsg("Section size (" + settings.sectionWidth + " x " + settings.sectionHeight +
                     ") contains invalid dimension must be > 0");
+            doExit = true;
+        }
+
+        if (doExit) {
             System.exit(1);
         }
     }

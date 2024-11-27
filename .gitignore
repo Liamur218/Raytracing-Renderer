@@ -3,7 +3,7 @@
 
 # Directories
 assets/big_assets/
-renders/
+output/
 
 # Drivers
 driver/

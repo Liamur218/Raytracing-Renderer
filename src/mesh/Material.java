@@ -153,6 +153,10 @@ public class Material {
         ID = ID_COUNTER++;
     }
 
+    public Material copy() {
+        return new Material(this);
+    }
+
     public Material setColor(DoubleColor color) {
         this.color = color;
         return this;

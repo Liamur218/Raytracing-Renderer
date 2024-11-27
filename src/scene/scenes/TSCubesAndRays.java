@@ -12,9 +12,7 @@ public abstract class TSCubesAndRays {
         Vector camDir = new Vector(1, 1, -1);
         Vector camNormal = new Vector(0, 0, 1);
         Camera camera = new Camera(camPos, camDir, camNormal);
-
-        scene.addActiveCamera(camera);
-        scene.setBackgroundColor(DoubleColor.BLACK);
+        scene.setActiveCamera(camera);
 
         // Variables
         double cubeBuffer = 0.0625;
@@ -23,7 +21,6 @@ public abstract class TSCubesAndRays {
 
         CubeMesh cube;
         PlaneMesh plMesh;
-        PolygonMesh pMesh;
 
         // Floor
         plMesh = new PlaneMesh(0, 0, 0, 0, 0, 1);
@@ -38,11 +35,15 @@ public abstract class TSCubesAndRays {
         // Surrounding Cubes
         CubeMesh[] cubes = new CubeMesh[]{
                 new CubeMesh(0, cubeSpacing, cubeSize / 2 - cubeBuffer, cubeSize - cubeBuffer),
-                new CubeMesh(cubeSpacing, cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer, cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer),
-                new CubeMesh(cubeSpacing, -cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer, cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer),
+                new CubeMesh(cubeSpacing, cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer,
+                        cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer),
+                new CubeMesh(cubeSpacing, -cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer,
+                        cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer),
                 new CubeMesh(0, -cubeSpacing, cubeSize / 2 - cubeBuffer, cubeSize - cubeBuffer),
-                new CubeMesh(-cubeSpacing, -cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer, cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer),
-                new CubeMesh(-cubeSpacing, cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer, cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer)
+                new CubeMesh(-cubeSpacing, -cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer,
+                        cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer),
+                new CubeMesh(-cubeSpacing, cubeSize * 3 / 4, cubeSize / 2 - cubeBuffer,
+                        cubeSize - cubeBuffer, cubeSize * 1.5 - cubeBuffer, cubeSize - cubeBuffer)
         };
         for (CubeMesh cubeMesh : cubes) {
             cubeMesh.setMaterial(Material.CYAN_MAT);

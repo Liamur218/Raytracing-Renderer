@@ -5,66 +5,68 @@ import renderer.RenderSettings;
 import java.io.*;
 import java.text.DecimalFormat;
 
-public abstract class Logger {
+public class Logger {
 
-    private static boolean verbose = false;
+    private boolean verbose;
 
-    private static final DecimalFormat DF = new DecimalFormat("###.###");
+    private final DecimalFormat DF = new DecimalFormat("###.###");
 
-    private static final StringBuilder log;
+    private final StringBuilder log;
+    private LogSection currentSection = null;
 
-    private static LogSection currentSection = null;
+    private static final String OUTPUT_DIR = "output/logs/";
 
-    static {
+    public Logger() {
         log = new StringBuilder();
+        setVerbose(true);
     }
 
-    public static void setPrintLogs(boolean status) {
-        verbose = status;
+    public void setVerbose(boolean verbose) {
+        this.verbose = verbose;
     }
 
-    public static void logWarningMsg(String warningMsg) {
+    public void logWarningMsg(String warningMsg) {
         logMsgLn("[WARNING] " + warningMsg);
     }
 
-    public static void logErrorMsg(String errorMsg) {
+    public void logErrorMsg(String errorMsg) {
         logMsgLn("[ERROR] " + errorMsg);
     }
 
-    public static void logMsgLn(String string) {
+    public void logMsgLn(String string) {
         log.append(string).append("\n");
         if (verbose) {
             print(string + "\n");
         }
     }
 
-    public static void logMsg(String string) {
+    public void logMsg(String string) {
         log.append(string);
         if (verbose) {
             print(string);
         }
     }
 
-    public static void printMsgLn(String string) {
+    public void printMsgLn(String string) {
         if (verbose) {
             print(string + "\n");
         }
     }
 
-    public static void printMsg(String string) {
+    public void printMsg(String string) {
         if (verbose) {
             print(string);
         }
     }
 
-    private static void print(String msg) {
+    private void print(String msg) {
         System.out.print(msg.replace(
                 "ERROR", ConsoleColors.RED + "ERROR" + ConsoleColors.RESET).replace(
                 "WARNING", ConsoleColors.YELLOW + "WARNING" + ConsoleColors.YELLOW));
     }
 
     // Sections
-    public static void newLogSection(String sectionName, String startMsg) {
+    public void newLogSection(String sectionName, String startMsg) {
         if (currentSection != null) {
             endLogSection();
         }
@@ -72,18 +74,18 @@ public abstract class Logger {
         currentSection = new LogSection(sectionName, System.nanoTime());
     }
 
-    public static void endLogSection() {
+    public void endLogSection() {
         logMsgLn("Done");
         logElapsedTime("-> " + currentSection.name + " complete in: ", currentSection.startTime);
         currentSection = null;
     }
 
     // Time logging
-    public static void logElapsedTime(String title, long startTime) {
+    public void logElapsedTime(String title, long startTime) {
         logElapsedTime(title, startTime, System.nanoTime());
     }
 
-    public static void logElapsedTime(String title, long startTime, long endTime) {
+    public void logElapsedTime(String title, long startTime, long endTime) {
         String elapsedTime = getElapsedTime(title, startTime, endTime) + "\n";
         log.append(elapsedTime);
         if (verbose) {
@@ -91,7 +93,7 @@ public abstract class Logger {
         }
     }
 
-    private static String getElapsedTime(String title, long startTime, long endTime) {
+    private String getElapsedTime(String title, long startTime, long endTime) {
 //        StringBuilder stringBuilder = new StringBuilder();
 //        double time = (endTime - startTime) / 1E9;
 //        stringBuilder.append(title).append(DF.format(time)).append(" sec").append("\n");
@@ -105,15 +107,15 @@ public abstract class Logger {
     }
 
     public static void writeLogsToFile(RenderSettings settings) {
-        writeLogsToFile(settings.toFilenameString() + ".txt");
+        settings.logger.writeLogsToFile(settings.toFilenameString() + ".txt");
     }
 
-    public static void writeLogsToFile(String filepath) {
-        String filename = "renders/" + filepath;
+    public void writeLogsToFile(String filepath) {
+        String filename = OUTPUT_DIR + filepath;
         PrintWriter out = null;
         try {
             out = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
-            out.println(log.toString());
+            out.println(log);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -126,8 +128,8 @@ public abstract class Logger {
 
     private static class LogSection {
 
-        private String name;
-        private long startTime;
+        private final String name;
+        private final long startTime;
 
         LogSection(String name, long startTime) {
             this.name = name;

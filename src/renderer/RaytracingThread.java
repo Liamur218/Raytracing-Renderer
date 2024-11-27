@@ -3,7 +3,6 @@ package renderer;
 import mesh.Vector;
 import mesh.*;
 import scene.Scene;
-import util.ProgressBar;
 
 import java.io.Serializable;
 import java.util.*;
@@ -22,8 +21,6 @@ public class RaytracingThread implements Runnable, Serializable {
 
     int id;
     static int idCounter = 0;
-
-    static ProgressBar progressBar;
 
     RaytracingThread(Vector origin, Vector startDir, Vector hStep, Vector vStep,
                      ImageFragment imageFragment,
@@ -57,19 +54,12 @@ public class RaytracingThread implements Runnable, Serializable {
         }
 
         Renderer.returnImageFragment(imageFragment);
-        if (progressBar != null) {
-            progressBar.increment(1);
-        }
 
         stopTime = System.nanoTime();
     }
 
     public static int getTotalCreatedThreads() {
         return idCounter;
-    }
-
-    public static void setProgressBar(ProgressBar progressBar) {
-        RaytracingThread.progressBar = progressBar;
     }
 
     static class ThreadComparator implements Comparator<RaytracingThread> {

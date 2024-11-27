@@ -1,25 +1,36 @@
 package scene;
 
 import mesh.*;
+import mesh.Vector;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Scene {
 
     public ArrayList<Mesh> meshes;
     public ArrayList<Camera> cameras;
     public Camera activeCamera;
-    public DoubleColor backgroundColor;
 
-    private static final DoubleColor DEFAULT_BACKGROUND_COLOR = new DoubleColor(new Color(0, 164, 200));
+    public DoubleColor enviroColor, ambientLight, dirLight;
+    public Vector dirLightDir;
+
+    public static final DoubleColor DEFAULT_ENVIRO_COLOR = new DoubleColor(new Color(0, 164, 200));
+    public static final DoubleColor DEFAULT_AMBIENT_LIGHT = new DoubleColor(new Color(255, 255, 255));
+    public static final DoubleColor DEFAULT_DIR_LIGHT = new DoubleColor(new Color(255, 245, 171));
+    public static final double DEFAULT_AMBIENT_LIGHT_INTENSITY = 0.25;
+    public static final double DEFAULT_DIR_LIGHT_INTENSITY = 1;
+    public static final Vector DEFAULT_DIR_LIGHT_DIR = new Vector(-1, 1, 1).normalize();
 
     public String name;
 
     public Scene() {
         meshes = new ArrayList<>();
         cameras = new ArrayList<>();
-        backgroundColor = DEFAULT_BACKGROUND_COLOR;
+        enviroColor = DEFAULT_ENVIRO_COLOR;
+        setAmbientLight(DEFAULT_AMBIENT_LIGHT, DEFAULT_AMBIENT_LIGHT_INTENSITY);
+        setDirLight(DEFAULT_DIR_LIGHT, DEFAULT_DIR_LIGHT_INTENSITY);
+        setDirLightDir(DEFAULT_DIR_LIGHT_DIR);
 
         setName(getClass().getName());
     }
@@ -76,8 +87,20 @@ public class Scene {
         activeCamera = cameraIndex == -1 || cameraIndex > cameras.size() ? null : cameras.get(cameraIndex);
     }
 
-    public void setBackgroundColor(DoubleColor color) {
-        backgroundColor = color;
+    public void setEnviroColor(DoubleColor color) {
+        enviroColor = color;
+    }
+
+    public void setAmbientLight(DoubleColor color, double intensity) {
+        ambientLight = DoubleColor.multiply(color, intensity);
+    }
+
+    public void setDirLight(DoubleColor color, double intensity) {
+        dirLight = DoubleColor.multiply(color, intensity);
+    }
+
+    public void setDirLightDir(Vector dir) {
+        dirLightDir = dir;
     }
 
     public void scale(double scaleX, double scaleY, double scaleZ) {

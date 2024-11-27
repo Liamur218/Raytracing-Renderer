@@ -43,16 +43,11 @@ public class Image extends BufferedImage {
         }
     }
 
-    public void writeToFile() {
-        Date date = Calendar.getInstance().getTime();
-        writeToFile(date.getTime() + " : " + date.getMonth() + "-" + date.getDay() + "-" + date.getYear());
-    }
-
     public void writeToFile(RenderSettings settings) {
-        writeToFile(settings.toFilenameString() + ".png");
+        writeToFile(settings.toFilenameString() + ".png", settings.logger);
     }
 
-    public void writeToFile(String filename) {
+    public void writeToFile(String filename, Logger logger) {
         if (infoOnImage) {
             writeStrOnImage("Size: " + renderSettings.size.width + " x " + renderSettings.size.height,
                     0, 3);
@@ -61,13 +56,13 @@ public class Image extends BufferedImage {
             writeStrOnImage("Threads: " + renderSettings.threadCount, 3, 3);
         }
         try {
-            Logger.logMsg(Util.getCurrentTime() + " Writing image to file " + filename + "... ");
+            logger.logMsg(Util.getCurrentTime() + " Writing image to file " + filename + "... ");
             long start = System.nanoTime();
-            String filepath = "renders/" + filename;
+            String filepath = "output/renders/" + filename;
             File file = new File(filepath.endsWith(".png") ? filepath : filepath + ".png");
             ImageIO.write(this, "png", file);
-            Logger.logMsgLn("Done");
-            Logger.logElapsedTime("-> Write to file complete in: ", start);
+            logger.logMsgLn("Done");
+            logger.logElapsedTime("-> Write to file complete in: ", start);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,5 +1,7 @@
 package threading;
 
+import util.*;
+
 import java.util.*;
 
 public class LocalThreadPool extends ThreadPool {
@@ -12,6 +14,8 @@ public class LocalThreadPool extends ThreadPool {
 
     private ArrayList<Runnable> returnQueue;
     private final Object RETURN_QUEUE_SEMAPHORE;
+
+    Logger logger;
 
     public LocalThreadPool(int maxWorkers) {
         workQueue = new ArrayList<>();
@@ -29,6 +33,9 @@ public class LocalThreadPool extends ThreadPool {
             workers.add(worker);
         }
         MAX_WORKERS = maxWorkers;
+
+        logger = new Logger();
+        logger.setVerbose(false);
     }
 
     @Override
@@ -72,18 +79,6 @@ public class LocalThreadPool extends ThreadPool {
     }
 
     @Override
-    public void waitForAllToFinish() {
-        while (isThereWorkToDo() || isWorkBeingDone()) {
-            try {
-                synchronized (WAKEUP_STICK) {
-                    WAKEUP_STICK.wait();
-                }
-            } catch (InterruptedException ignored) {
-            }
-        }
-    }
-
-    @Override
     public ArrayList<Runnable> exportCompletedTasks() {
         ArrayList<Runnable> completedTasks;
         synchronized (RETURN_QUEUE_SEMAPHORE) {
@@ -105,14 +100,28 @@ public class LocalThreadPool extends ThreadPool {
         return !activeWorkers.isEmpty();
     }
 
+    @Override
+    protected synchronized boolean isAllWorkDone() {
+        return workQueue.isEmpty() && activeWorkers.isEmpty();
+    }
+
     void onWorkerFinish(Worker worker) {
         synchronized (RETURN_QUEUE_SEMAPHORE) {
             returnQueue.add(worker.work);
+        }
+        if (progressBar != null) {
+            progressBar.increment();
         }
         worker.setWork(null);
         synchronized (this) {
             activeWorkers.remove(worker);
             idleWorkers.add(worker);
+        }
+        logger.logMsgLn(worker.workToString() + " completed by " + worker);
+        if (isAllWorkDone()) {
+            synchronized (FINAL_WAKEUP_STICK) {
+                FINAL_WAKEUP_STICK.notifyAll();
+            }
         }
         synchronized (WAKEUP_STICK) {
             WAKEUP_STICK.notifyAll();

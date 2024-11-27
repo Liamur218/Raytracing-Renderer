@@ -7,9 +7,7 @@ import util.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Logger.setPrintLogs(true);
-
-        Scene scene = TSObjects.newScene();
+        Scene scene = TSKnight.newScene();
 
         RenderSettings settings = RenderSettings.FANCY_SETTINGS;
         settings.setSeed(0);
@@ -17,5 +15,6 @@ public class Main {
 
         Image image = Renderer.render(settings);
         image.writeToFile(settings);
+        Logger.writeLogsToFile(settings);
     }
 }
