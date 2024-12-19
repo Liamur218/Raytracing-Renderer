@@ -1,7 +1,6 @@
 package renderer;
 
 import scene.Scene;
-import util.Logger;
 
 import java.awt.*;
 import java.util.Random;
@@ -24,8 +23,6 @@ public class RenderSettings {
 
     PostProcessor postProcessor;
 
-    public Logger logger;
-
     // Default settings
     public static final RenderSettings DEFAULT_SETTINGS = new RenderSettings();
 
@@ -36,7 +33,6 @@ public class RenderSettings {
         DEFAULT_SETTINGS.setThreadCount(25);
         DEFAULT_SETTINGS.setSectionSize(500, 500);
         DEFAULT_SETTINGS.setSeed(new Random().nextInt());
-        DEFAULT_SETTINGS.logger = new Logger();
     }
 
     // Other settings
@@ -69,7 +65,6 @@ public class RenderSettings {
         sectionHeight = settings.sectionHeight;
         seed = settings.seed;
         postProcessor = settings.postProcessor;
-        logger = settings.logger;
     }
 
     public RenderSettings setScene(Scene scene) {
@@ -130,11 +125,6 @@ public class RenderSettings {
 
     public RenderSettings setPostProcessor(PostProcessor postProcessor) {
         this.postProcessor = postProcessor;
-        return this;
-    }
-
-    public RenderSettings setVerboseLogger(boolean verbose) {
-        logger.setVerbose(verbose);
         return this;
     }
 

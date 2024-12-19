@@ -44,10 +44,10 @@ public class Image extends BufferedImage {
     }
 
     public void writeToFile(RenderSettings settings) {
-        writeToFile(settings.toFilenameString() + ".png", settings.logger);
+        writeToFile(settings.toFilenameString() + ".png");
     }
 
-    public void writeToFile(String filename, Logger logger) {
+    public void writeToFile(String filename) {
         if (infoOnImage) {
             writeStrOnImage("Size: " + renderSettings.size.width + " x " + renderSettings.size.height,
                     0, 3);
@@ -56,13 +56,13 @@ public class Image extends BufferedImage {
             writeStrOnImage("Threads: " + renderSettings.threadCount, 3, 3);
         }
         try {
-            logger.logMsg(Util.getCurrentTime() + " Writing image to file " + filename + "... ");
+            Logger.logMsg(Util.getCurrentTime() + " Writing image to file " + filename + "... ");
             long start = System.nanoTime();
             String filepath = "output/renders/" + filename;
             File file = new File(filepath.endsWith(".png") ? filepath : filepath + ".png");
             ImageIO.write(this, "png", file);
-            logger.logMsgLn("Done");
-            logger.logElapsedTime("-> Write to file complete in: ", start);
+            Logger.logMsgLn("Done");
+            Logger.logElapsedTime("-> Write to file complete in: ", start);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,8 +1,6 @@
 package threading;
 
-import util.*;
-
-import java.util.*;
+import java.util.ArrayList;
 
 public class LocalThreadPool extends ThreadPool {
 
@@ -14,8 +12,6 @@ public class LocalThreadPool extends ThreadPool {
 
     private ArrayList<Runnable> returnQueue;
     private final Object RETURN_QUEUE_SEMAPHORE;
-
-    Logger logger;
 
     public LocalThreadPool(int maxWorkers) {
         workQueue = new ArrayList<>();
@@ -33,9 +29,6 @@ public class LocalThreadPool extends ThreadPool {
             workers.add(worker);
         }
         MAX_WORKERS = maxWorkers;
-
-        logger = new Logger();
-        logger.setVerbose(false);
     }
 
     @Override
@@ -117,14 +110,13 @@ public class LocalThreadPool extends ThreadPool {
             activeWorkers.remove(worker);
             idleWorkers.add(worker);
         }
-        logger.logMsgLn(worker.workToString() + " completed by " + worker);
+        synchronized (WAKEUP_STICK) {
+            WAKEUP_STICK.notifyAll();
+        }
         if (isAllWorkDone()) {
             synchronized (FINAL_WAKEUP_STICK) {
                 FINAL_WAKEUP_STICK.notifyAll();
             }
-        }
-        synchronized (WAKEUP_STICK) {
-            WAKEUP_STICK.notifyAll();
         }
     }
 }

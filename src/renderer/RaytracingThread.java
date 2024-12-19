@@ -19,6 +19,8 @@ public class RaytracingThread implements Runnable, Serializable {
 
     private Random random;
 
+    long elapsedTime;
+
     int id;
     static int idCounter = 0;
 
@@ -56,6 +58,7 @@ public class RaytracingThread implements Runnable, Serializable {
         Renderer.returnImageFragment(imageFragment);
 
         stopTime = System.nanoTime();
+        elapsedTime = stopTime - startTime;
     }
 
     public static int getTotalCreatedThreads() {

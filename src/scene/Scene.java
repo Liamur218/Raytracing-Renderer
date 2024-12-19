@@ -9,8 +9,7 @@ import java.util.*;
 public class Scene {
 
     public ArrayList<Mesh> meshes;
-    public ArrayList<Camera> cameras;
-    public Camera activeCamera;
+    public Camera camera;
 
     public DoubleColor enviroColor, ambientLight, dirLight;
     public Vector dirLightDir;
@@ -26,7 +25,6 @@ public class Scene {
 
     public Scene() {
         meshes = new ArrayList<>();
-        cameras = new ArrayList<>();
         enviroColor = DEFAULT_ENVIRO_COLOR;
         setAmbientLight(DEFAULT_AMBIENT_LIGHT, DEFAULT_AMBIENT_LIGHT_INTENSITY);
         setDirLight(DEFAULT_DIR_LIGHT, DEFAULT_DIR_LIGHT_INTENSITY);
@@ -49,42 +47,8 @@ public class Scene {
         meshes.add(mesh);
     }
 
-    public void addCamera(Camera camera) {
-        cameras.add(camera);
-    }
-
-    public void addCamera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
-                          double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
-        addCamera(new Vector(posX, posY, posZ), new Vector(dirX, dirY, dirZ), new Vector(normalX, normalY, normalZ),
-                hFOV, vFOV);
-    }
-
-    public void addCamera(Vector pos, Vector dir, Vector normal, int hFOV, int vFOV) {
-        addCamera(new Camera(pos, dir, normal, hFOV, vFOV));
-    }
-
-    public void addActiveCamera(Camera camera) {
-        cameras.add(camera);
-        setActiveCamera(camera);
-    }
-
-    public void addActiveCamera(Vector pos, Vector dir, Vector normal, int hFOV, int vFOV) {
-        addActiveCamera(new Camera(pos, dir, normal, hFOV, vFOV));
-    }
-
-    public void addActiveCamera(double posX, double posY, double posZ, double dirX, double dirY, double dirZ,
-                                double normalX, double normalY, double normalZ, int hFOV, int vFOV) {
-        addActiveCamera(
-                new Vector(posX, posY, posZ), new Vector(dirX, dirY, dirZ), new Vector(normalX, normalY, normalZ),
-                hFOV, vFOV);
-    }
-
-    public void setActiveCamera(Camera camera) {
-        activeCamera = camera;
-    }
-
-    public void setActiveCamera(int cameraIndex) {
-        activeCamera = cameraIndex == -1 || cameraIndex > cameras.size() ? null : cameras.get(cameraIndex);
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 
     public void setEnviroColor(DoubleColor color) {
@@ -108,9 +72,7 @@ public class Scene {
             mesh.scale(scaleX, scaleY, scaleZ);
         }
         Vector scale = new Vector(scaleX, scaleY, scaleZ);
-        for (Camera camera : cameras) {
-            camera.pos.set(Vector.componentMultiply(camera.pos, scale));
-        }
+        camera.pos.set(Vector.componentMultiply(camera.pos, scale));
     }
 
     public void scale(double scale) {

@@ -20,7 +20,7 @@ public abstract class TSBasicEnvironment {
         camDir = new Vector(1, 0, 0);
         camNormal = new Vector(0, 0, 1);
         camera = new Camera(camPos, camDir, camNormal);
-        scene.addActiveCamera(camera);
+        scene.setCamera(camera);
 
         // Vectors
         backLeftTop = new Vector(2, 1, 1);

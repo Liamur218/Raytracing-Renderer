@@ -8,16 +8,13 @@ public class ProgressBar {
     String title, progress, msg;
     String status;
 
-    Logger logger;
-
-    public ProgressBar(String name, long max, Logger logger) {
+    public ProgressBar(String name, long max) {
         title = (name.isBlank()) ? name : name + ": ";
         this.max = max;
         msg = "";
         status = "";
         startTime = System.nanoTime();
         lastUpdateTime = startTime;
-        this.logger = logger;
     }
 
     public synchronized void setStatus(String status) {
@@ -37,7 +34,7 @@ public class ProgressBar {
     }
 
     private void print() {
-        logger.printMsg("\b".repeat(msg.length()));
+        Logger.printMsg("\b".repeat(msg.length()));
         double percent = ((double) current / max);
         long elapsedTime = lastUpdateTime - startTime;
         long estTotalTime = (percent == 0) ? -1 : (long) (elapsedTime / percent);
@@ -46,6 +43,6 @@ public class ProgressBar {
                 " - Elapsed: " + TimeFormatter.timeToString(elapsedTime, TimeFormatter.SECOND) +
                 " - Remaining: " + TimeFormatter.timeToString(estTimeRemaining, TimeFormatter.SECOND);
         msg = title + progress;
-        logger.printMsg(msg);
+        Logger.printMsg(msg);
     }
 }
