@@ -11,14 +11,15 @@ public class Scene {
     public ArrayList<Mesh> meshes;
     public Camera camera;
 
-    public DoubleColor enviroColor, ambientLight, dirLight;
-    public Vector dirLightDir;
+    // Environment color -> raw color of the skybox (i.e. blue sky)
+    // Ambient light color -> color of light illuminating objects in the scene (i.e. while light from the sun)
+    public DoubleColor enviroColor, ambientLightColor;
+    public double ambientLightIntensity;
+    public Vector lightSourceDir;
 
     public static final DoubleColor DEFAULT_ENVIRO_COLOR = new DoubleColor(new Color(0, 164, 200));
     public static final DoubleColor DEFAULT_AMBIENT_LIGHT = new DoubleColor(new Color(255, 255, 255));
-    public static final DoubleColor DEFAULT_DIR_LIGHT = new DoubleColor(new Color(255, 245, 171));
-    public static final double DEFAULT_AMBIENT_LIGHT_INTENSITY = 0.25;
-    public static final double DEFAULT_DIR_LIGHT_INTENSITY = 1;
+    public static final double DEFAULT_AMBIENT_LIGHT_INTENSITY = 1;
     public static final Vector DEFAULT_DIR_LIGHT_DIR = new Vector(-1, 1, 1).normalize();
 
     public String name;
@@ -27,8 +28,7 @@ public class Scene {
         meshes = new ArrayList<>();
         enviroColor = DEFAULT_ENVIRO_COLOR;
         setAmbientLight(DEFAULT_AMBIENT_LIGHT, DEFAULT_AMBIENT_LIGHT_INTENSITY);
-        setDirLight(DEFAULT_DIR_LIGHT, DEFAULT_DIR_LIGHT_INTENSITY);
-        setDirLightDir(DEFAULT_DIR_LIGHT_DIR);
+        setLightSourceDir(DEFAULT_DIR_LIGHT_DIR);
 
         setName(getClass().getName());
     }
@@ -56,15 +56,12 @@ public class Scene {
     }
 
     public void setAmbientLight(DoubleColor color, double intensity) {
-        ambientLight = DoubleColor.multiply(color, intensity);
+        ambientLightColor = color;
+        ambientLightIntensity = intensity;
     }
 
-    public void setDirLight(DoubleColor color, double intensity) {
-        dirLight = DoubleColor.multiply(color, intensity);
-    }
-
-    public void setDirLightDir(Vector dir) {
-        dirLightDir = dir;
+    public void setLightSourceDir(Vector dir) {
+        lightSourceDir = dir;
     }
 
     public void scale(double scaleX, double scaleY, double scaleZ) {

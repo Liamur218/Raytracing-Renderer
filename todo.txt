@@ -1,0 +1,9 @@
+IMPORTANT THINGS
+----------------
+-----> Refraction
+-----> Distributed Thread Pool
+[DONE] Environment/ambient lighting
+
+COOL THINGS
+-----------
+-----> GPU Rendering

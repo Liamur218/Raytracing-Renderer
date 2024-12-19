@@ -2,11 +2,11 @@ package driver;
 
 import renderer.*;
 import scene.Scene;
-import scene.scenes.TSKnight;
+import scene.scenes.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSKnight.newScene();
+        Scene scene = TSTeapot.newScene();
 
         RenderSettings settings = RenderSettings.DEFAULT_SETTINGS;
         settings.setSeed(0);

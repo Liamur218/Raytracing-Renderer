@@ -8,7 +8,6 @@ public class LocalThreadPool extends ThreadPool {
     private final ArrayList<Worker> activeWorkers;
     private final ArrayList<Worker> idleWorkers;
     private final ArrayList<Worker> workers;
-    private final int MAX_WORKERS;
 
     private ArrayList<Runnable> returnQueue;
     private final Object RETURN_QUEUE_SEMAPHORE;
@@ -28,7 +27,6 @@ public class LocalThreadPool extends ThreadPool {
             idleWorkers.add(worker);
             workers.add(worker);
         }
-        MAX_WORKERS = maxWorkers;
     }
 
     @Override

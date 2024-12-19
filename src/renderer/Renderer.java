@@ -128,7 +128,7 @@ public abstract class Renderer {
         Logger.logMsg("\n");
         Logger.logMsgLn("\tImage size -------- " + width + " x " + height);
         Logger.logMsgLn("\tFrames ------------ " + frameCount);
-        Logger.logMsgLn("\tThreads ----------- " + ((threadCount > 0) ? threadCount : "YES"));
+        Logger.logMsgLn("\tThreads ----------- " + threadCount);
         Logger.logMsgLn("\tMax recursion ----- " + recursionCount);
         Logger.logMsgLn("\tImage fragments --- " + totalImgFragCount);
         Logger.logMsgLn("\tFragments / frame - " + fragsPerFrame);
@@ -196,6 +196,7 @@ public abstract class Renderer {
     }
 
     static RaycastInfo raycast(Vector origin, Vector ray, int bouncesToLive, Scene scene, RaycastInfo lastCast) {
+        // Create raycast info reference for later use (instantiate it to avoid NullPointerException)
         RaycastInfo raycast = new RaycastInfo(origin, ray);
 
         // Find intersected mesh and point of intersection
@@ -207,7 +208,7 @@ public abstract class Renderer {
         }
 
         // Create new mesh stack for first raycast and fill it with air, or
-        //      grab stack of previous materials from the last raycast we just did
+        // grab stack of previous materials from the last raycast we just did
         if (lastCast == null) {
             YetAnotherStack<Mesh> meshStack = new YetAnotherStack<>();
             meshStack.add(new Mesh() {
@@ -222,20 +223,26 @@ public abstract class Renderer {
 
         // Recursive step
         if (raycast.intersection == null) {
+            // We didn't hit anything: get environment lighting data and return
             if (lastCast == null) {
                 raycast.rayColor.set(scene.enviroColor);
             } else {
-                double directionalIntensity = 1 / (0.5 * Vector.angleBetween(raycast.direction, scene.dirLightDir) + 1);
-                DoubleColor dirLight = DoubleColor.multiply(scene.dirLight, directionalIntensity);
-                raycast.rayColor.set(DoubleColor.add(scene.ambientLight, dirLight));
+                /*
+                * The method of doing this taken from Sebastian Lague's code (thank you, Sebastian!)
+                * float sun = pow(max(0, dot(ray.dir, _WorldSpaceLightPos0.xyz)), SunFocus) * SunIntensity;
+                * float3 composite = lerp(GroundColour, skyGradient, groundToSkyT) + sun * (groundToSkyT>=1);
+                * */
+                double directionalIntensity = Math.max(0, Vector.dot(ray, scene.lightSourceDir)) *
+                        scene.ambientLightIntensity;
+                raycast.rayColor.set(DoubleColor.multiply(scene.ambientLightColor, directionalIntensity));
             }
-            raycast.rayColor.set((lastCast == null) ? scene.enviroColor : scene.ambientLight);
             return raycast;
         } else if (raycast.material.reflectivity == 0) {
+            // We hit a non-reflective surface: any raycasts after this one don't matter
             raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
             return raycast;
         } else if (bouncesToLive > 0) {
-            // Chose direction for next raycast
+            // We hit something: chose direction for next raycast
             Vector nextDir;
             RaycastInfo nextCast;
             if (false/*random.nextDouble() > raycast.material.opacity*/) {
@@ -408,8 +415,8 @@ public abstract class Renderer {
             doExit = true;
         }
 
-        if (settings.threadCount == 0) {
-            Logger.logWarningMsg("Thread count should not be 0. Using thread count of 1 instead.");
+        if (settings.threadCount <= 0) {
+            Logger.logWarningMsg("Thread count should be a positive integer. Using thread count of 1 instead.");
             settings.threadCount = 1;
         }
 

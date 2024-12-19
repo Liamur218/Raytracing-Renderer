@@ -1,5 +1,8 @@
 package mesh;
 
+import java.awt.*;
+import java.util.concurrent.CountDownLatch;
+
 import static mesh.DoubleColor.*;
 
 public class Material {
@@ -35,7 +38,7 @@ public class Material {
 
     // Basic materials
     public static final Material WHITE_MAT = new Material(WHITE);
-    public static final Material L_GRAY_MAT = new Material(LIGHT_GRAY);
+    public static final Material LIGHT_GRAY_MAT = new Material(LIGHT_GRAY);
     public static final Material GRAY_MAT = new Material(GRAY);
     public static final Material D_GRAY_MAT = new Material(DARK_GRAY);
     public static final Material BLACK_MAT = new Material(BLACK);
@@ -160,6 +163,14 @@ public class Material {
     public Material setColor(DoubleColor color) {
         this.color = color;
         return this;
+    }
+
+    public Material setColor(Color color) {
+        return setColor(new DoubleColor(color));
+    }
+
+    public Material setColor(double r, double g, double b) {
+        return setColor(new DoubleColor(r, g, b));
     }
 
     public Material setEmissivity(double emissivity) {
