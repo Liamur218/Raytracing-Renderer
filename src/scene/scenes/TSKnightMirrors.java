@@ -4,7 +4,7 @@ import mesh.*;
 import scene.*;
 import util.ModelLoader;
 
-public class TSKnightMirrors {
+public abstract class TSKnightMirrors {
     public static Scene newScene() {
         Vector centerPos, camPos, camDir, camNormal;
         Camera camera;

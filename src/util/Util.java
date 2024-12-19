@@ -3,7 +3,7 @@ package util;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.*;
 
 public abstract class Util {
 
@@ -29,11 +29,30 @@ public abstract class Util {
         return Math.toDegrees(Math.asin(x));
     }
 
-    public static String getCurrentTime() {
+    public static String bracket(String string) {
+        return "[" + string + "]";
+    }
+
+    public static String getTime() {
+        LocalDateTime ldt = LocalDateTime.now();
+        return DF.format(ldt.getHour()) + ":" + DF.format(ldt.getMinute()) + ":" + DF.format(ldt.getSecond());
+    }
+
+    public static String getTimeWrapped() {
         LocalDateTime ldt = LocalDateTime.now();
         return "[" + DF.format(ldt.getHour()) + ":" +
                 DF.format(ldt.getMinute()) + ":" +
                 DF.format(ldt.getSecond()) + "]";
+    }
+
+    public static String getDate() {
+        Calendar calendar = Calendar.getInstance();
+        return (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" +
+                calendar.get(Calendar.YEAR);
+    }
+
+    public static String getDateWrapped() {
+        return "[" + getDate() + "]";
     }
 
     // Collision logic

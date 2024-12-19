@@ -3,7 +3,6 @@ package util;
 import renderer.RenderSettings;
 
 import java.io.*;
-import java.text.DecimalFormat;
 
 public abstract class Logger {
 
@@ -63,7 +62,7 @@ public abstract class Logger {
         if (currentSection != null) {
             endLogSection();
         }
-        logMsg(Util.getCurrentTime() + " " + startMsg + "... ");
+        logMsg(Util.getTimeWrapped() + " " + startMsg + "... ");
         currentSection = new LogSection(sectionName, System.nanoTime());
     }
 

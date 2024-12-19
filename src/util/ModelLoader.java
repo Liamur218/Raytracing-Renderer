@@ -7,14 +7,6 @@ import java.util.ArrayList;
 
 public abstract class ModelLoader {
     public static PolygonMesh loadStl(String filepath) {
-        return loadStl(filepath, false);
-    }
-
-    public static PolygonMesh loadAsciiStl(String filepath) {
-        return loadAsciiStl(filepath, false);
-    }
-
-    public static PolygonMesh loadStl(String filepath, boolean normalize) {
         File file = new File(filepath);
         FileInputStream input = null;
         PolygonMesh polygonMesh = new PolygonMesh();
@@ -75,14 +67,10 @@ public abstract class ModelLoader {
             }
         }
 
-        if (normalize) {
-            polygonMesh.normalize();
-        }
-
         return polygonMesh;
     }
 
-    public static PolygonMesh loadAsciiStl(String filename, boolean normalize) {
+    public static PolygonMesh loadAsciiStl(String filename) {
         PolygonMesh polygonMesh = new PolygonMesh();
         try (BufferedReader inputStream = new BufferedReader(new FileReader(filename))) {
             Vector normal = null;
@@ -107,10 +95,6 @@ public abstract class ModelLoader {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        if (normalize) {
-            polygonMesh.normalize();
         }
 
         return polygonMesh;

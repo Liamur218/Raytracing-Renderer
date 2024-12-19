@@ -9,7 +9,7 @@ import java.awt.*;
 public abstract class TSTeapot {
     public static Scene newScene() {
         Scene scene = new Scene();
-        scene.setName("Utah Teapot");
+        scene.setName("Utah Teapot LR");
 
         Vector camPos = new Vector(0.25, 0, 0.125);
         Vector camDir = new Vector(0.75, 0, -0.25);
@@ -19,7 +19,7 @@ public abstract class TSTeapot {
 
         scene.setLightSourceDir(new Vector(0, 1, 1));
 
-        PolygonMesh polygonMesh = ModelLoader.loadAsciiStl("assets/utah_teapot.stl");
+        PolygonMesh polygonMesh = ModelLoader.loadAsciiStl("assets/utah teapot low res.stl");
         polygonMesh.normalize();
         polygonMesh.rotate(90, 0, -90);
         polygonMesh.scale(0.75);

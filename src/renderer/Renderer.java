@@ -51,7 +51,7 @@ public abstract class Renderer {
         int threadCount = renderSettings.threadCount;
         int rngSeed = renderSettings.seed;
 
-        Logger.logMsgLn("\n * * * STARTING RENDERER * * *");
+        Logger.logMsgLn("RENDERER START ON " + Util.getDate() + " AT " + Util.getTime());
         Image image = new Image(width, height);
 
         // Variable setup
@@ -189,7 +189,7 @@ public abstract class Renderer {
             Logger.endLogSection();
         }
 
-        Logger.logMsgLn(Util.getCurrentTime() + " All done");
+        Logger.logMsgLn(Util.getTimeWrapped() + " All done");
         Logger.logElapsedTime("-> Total elapsed time: ", masterStart);
 
         return image;

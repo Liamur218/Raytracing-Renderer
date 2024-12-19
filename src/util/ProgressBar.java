@@ -42,7 +42,7 @@ public class ProgressBar {
         progress = current + " / " + max + " (" + (int) (percent * 100) + "%) - Status: " + status +
                 " - Elapsed: " + TimeFormatter.timeToString(elapsedTime, TimeFormatter.SECOND) +
                 " - Remaining: " + TimeFormatter.timeToString(estTimeRemaining, TimeFormatter.SECOND);
-        msg = Util.getCurrentTime() + " " + title + progress;
+        msg = Util.getTimeWrapped() + " " + title + progress;
         Logger.printMsg(msg);
     }
 }

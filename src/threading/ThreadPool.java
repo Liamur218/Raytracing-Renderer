@@ -36,6 +36,7 @@ public abstract class ThreadPool extends Thread {
             } catch (InterruptedException ignored) {
             }
         }
+        //System.out.println(" Done Waiting!");
     }
 
     public abstract ArrayList<Runnable> exportCompletedTasks();

@@ -3,7 +3,7 @@ package scene.scenes;
 import mesh.*;
 import scene.Scene;
 
-public class TSObjects {
+public abstract class TSObjects {
     public static Scene newScene() {
         Scene scene = TSBasicEnvironment.newScene();
         scene.setName("Objects");

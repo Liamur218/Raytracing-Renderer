@@ -56,7 +56,7 @@ public class Image extends BufferedImage {
             writeStrOnImage("Threads: " + renderSettings.threadCount, 3, 3);
         }
         try {
-            Logger.logMsg(Util.getCurrentTime() + " Writing image to file " + filename + "... ");
+            Logger.logMsg(Util.getTimeWrapped() + " Writing image to file " + filename + "... ");
             long start = System.nanoTime();
             String filepath = "output/renders/" + filename;
             File file = new File(filepath.endsWith(".png") ? filepath : filepath + ".png");
