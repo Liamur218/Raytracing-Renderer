@@ -1,8 +1,7 @@
 package renderer;
 
-import mesh.Vector;
 import mesh.*;
-import util.YetAnotherStack;
+import util.MeshStack;
 
 public class RaycastInfo {
 
@@ -20,7 +19,7 @@ public class RaycastInfo {
     public DoubleColor rayColor;
 
     // Carries info forward along successive raycasts
-    public YetAnotherStack<Mesh> meshStack;
+    public MeshStack meshStack;
 
     public RaycastInfo(Vector origin, Vector direction) {
         this.origin = origin;

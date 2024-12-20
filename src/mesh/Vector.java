@@ -38,6 +38,10 @@ public class Vector {
         this(listedPoints.split(" "));
     }
 
+    public static Vector extractFromMatrixCol(double[][] matrix, int colNumber) {
+        return new Vector(matrix[0][colNumber], matrix[1][colNumber], matrix[2][colNumber]);
+    }
+
     public Vector set(double x, double y, double z) {
         this.x = x;
         this.y = y;

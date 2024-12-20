@@ -7,8 +7,21 @@ public abstract class Mesh {
     public Material material;
     protected static final Material DEFAULT_MATERIAL = Material.WHITE_MAT;
 
-    public int ID;
+    public int id;
     private static int ID_COUNTER = 0;
+
+    public static final Mesh NULL_MESH = new Mesh() {
+        @Override
+        public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) { return null; }
+        @Override
+        public void setCenterAt(double x, double y, double z) {}
+        @Override
+        public void scale(double scaleX, double scaleY, double scaleZ) {}
+    }.setMaterial(Material.AIR);
+
+    protected Mesh() {
+        id = ID_COUNTER++;
+    }
 
     public abstract RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast);
 
@@ -29,7 +42,11 @@ public abstract class Mesh {
         return this;
     }
 
-    protected void setID() {
-        ID = ID_COUNTER++;
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Mesh mesh) {
+            return mesh.id == id;
+        }
+        return false;
     }
 }

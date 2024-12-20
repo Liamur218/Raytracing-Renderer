@@ -210,13 +210,8 @@ public abstract class Renderer {
         // Create new mesh stack for first raycast and fill it with air, or
         // grab stack of previous materials from the last raycast we just did
         if (lastCast == null) {
-            YetAnotherStack<Mesh> meshStack = new YetAnotherStack<>();
-            meshStack.add(new Mesh() {
-                @Override public RaycastInfo getClosestIntersection(Vector o, Vector v, RaycastInfo lC) { return null; }
-                @Override public void setCenterAt(double x, double y, double z) {}
-                @Override public void scale(double scaleX, double scaleY, double scaleZ) {}
-            }.setMaterial(Material.AIR));
-            raycast.meshStack = meshStack;
+            raycast.meshStack = new MeshStack();
+            raycast.meshStack.add(Mesh.NULL_MESH);
         } else {
             raycast.meshStack = lastCast.meshStack;
         }
@@ -245,14 +240,20 @@ public abstract class Renderer {
             // We hit something: chose direction for next raycast
             Vector nextDir;
             RaycastInfo nextCast;
-            if (false/*random.nextDouble() > raycast.material.opacity*/) {
-                if (Vector.angleBetween(raycast.direction, raycast.normal) > 90) {
-                    raycast.meshStack.add(raycast.mesh);
-                    nextDir = getRefractedDirection(raycast);
-                } else {
-                    nextDir = getRefractedDirection(raycast);
-                    raycast.meshStack.removeLast(raycast.mesh);
+            if (random.nextDouble() > raycast.material.opacity) {
+                Material currentMedium;
+                Material nextMedium;
+                Vector normal;
+                if (Vector.angleBetween(raycast.direction, raycast.normal) >= 90) {  // Entering material
+                    currentMedium = raycast.meshStack.getLast().material;
+                    nextMedium = raycast.material;
+                    normal = raycast.normal;
+                } else {  // Exiting material
+                    currentMedium = raycast.meshStack.removeFromEnd(raycast.mesh).material;
+                    nextMedium = raycast.meshStack.getLast().material;
+                    normal = Vector.multiply(raycast.normal, -1);
                 }
+                nextDir = getRefractedDirection(raycast.direction, normal, currentMedium, nextMedium);
             } else if (random.nextDouble() > raycast.material.specularity) {
                 nextDir = getDiffuseDirection(raycast.normal);
             } else {
@@ -263,7 +264,7 @@ public abstract class Renderer {
             nextCast = raycast(raycast.intersection, nextDir, bouncesToLive - 1, scene, raycast);
 
             // Process raycast results and average colors
-            // 1. Set color of this outgoing ray to color of incoming ray (for returning later)
+            // 1. Set the color of this outgoing ray to the color of the incoming ray (for returning later)
             raycast.rayColor = nextCast.rayColor;
             // 2. Scale the brightness of the reflected light by the reflectivity of this material
             // 3. Tint color of this ray by the color of the material this ray is reflected from
@@ -357,30 +358,30 @@ public abstract class Renderer {
 
     // Raycast direction methods
     private static Vector getDiffuseDirection(Vector polygonNormal) {
-        Vector diffuseDir;
-        do {
-            diffuseDir = new Vector(random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
-            if (Vector.angleBetween(diffuseDir, polygonNormal) > 90) {
-                diffuseDir.multiply(-1);
-            }
-        } while (Vector.angleBetween(diffuseDir, polygonNormal) > 90 - MIN_REFLECTION_ANGLE);
-        diffuseDir.normalize();
-        return diffuseDir;
+        Vector diffuseDir = new Vector(random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
+        if (Vector.angleBetween(diffuseDir, polygonNormal) > 90) {
+            diffuseDir.multiply(-1);
+        }
+        if (Vector.angleBetween(diffuseDir, polygonNormal) > 90 - MIN_REFLECTION_ANGLE) {
+            diffuseDir.rotate(Vector.cross(diffuseDir, polygonNormal),
+                    random.nextDouble(MIN_REFLECTION_ANGLE, 90));
+        }
+        return diffuseDir.normalize();
     }
 
     private static Vector getSpecularDirection(Vector raycastDir, Vector polygonNormal) {
         return Vector.rotate(raycastDir, polygonNormal, 180).multiply(-1);
     }
 
-    private static Vector getRefractedDirection(RaycastInfo raycast) {
-        // Shell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
+    private static Vector getRefractedDirection(Vector dir, Vector norm, Material currentMedium, Material nextMedium) {
+        // Snell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
         // asin(n1/n2 * sin(ϴ1)) = ϴ2
-        double n1 = raycast.meshStack.getFromEnd(0).material.refractiveIndex;
-        double n2 = raycast.meshStack.getFromEnd(1).material.refractiveIndex;
+        double n1 = currentMedium.refractiveIndex;
+        double n2 = nextMedium.refractiveIndex;
 
-        Vector binormal = Vector.cross(raycast.direction, raycast.normal);
-        Vector newNormal = Vector.multiply(raycast.normal, -1);
-        double incomingAngle = Vector.angleBetween(newNormal, raycast.direction);
+        Vector binormal = Vector.cross(dir, norm).normalize();
+        Vector newNormal = Vector.multiply(norm, -1);
+        double incomingAngle = Vector.angleBetween(newNormal, dir);
         double outgoingAngle = Util.asind(n1 / n2 * Util.sind(incomingAngle));
         return Vector.rotate(newNormal, binormal, outgoingAngle);
     }

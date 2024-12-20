@@ -15,11 +15,6 @@ public class DistributedThreadPool extends ThreadPool {
     }
 
     @Override
-    public void waitForAllToFinish() {
-
-    }
-
-    @Override
     public ArrayList<Runnable> exportCompletedTasks() {
         return null;
     }

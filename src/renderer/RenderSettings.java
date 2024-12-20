@@ -42,7 +42,7 @@ public class RenderSettings {
     static {
         FANCY_SETTINGS.setFrameCount(150);
 
-        ULTRA_SETTINGS.setSize(3024, 1964);
+        ULTRA_SETTINGS.setSize((int) (1920 * 1.75), (int) (1080 * 1.75));
         ULTRA_SETTINGS.setRecursionCount(30);
         ULTRA_SETTINGS.setFrameCount(300);
     }

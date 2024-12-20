@@ -18,7 +18,7 @@ public class Material {
     public double opacity;
     public double refractiveIndex;
 
-    // ID
+    // id
     public int ID;
     private static int ID_COUNTER = 0;
 

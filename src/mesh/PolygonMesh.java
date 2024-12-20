@@ -15,7 +15,6 @@ public class PolygonMesh extends Mesh {
 
     public PolygonMesh() {
         polygonArrayList = new ArrayList<>();
-        setID();
     }
 
     public void addPolygon(Polygon polygon) {

@@ -15,14 +15,13 @@ public class SphereMesh extends Mesh {
     public SphereMesh(double posX, double posY, double posZ, double radius) {
         center = new Vector(posX, posY, posZ);
         this.radius = Math.max(radius, 0);
-        setID();
     }
 
     @Override
     public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) {
         RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
         double minDistance = (lastCast != null && lastCast.sphere == this) ? Util.getIEEE754Error(0) : 0;
-        // P = origin
+        // P = position
         // U = direction
         // C = center
         // r = radius
@@ -64,7 +63,7 @@ public class SphereMesh extends Mesh {
 
     @Override
     public void scale(double scaleX, double scaleY, double scaleZ) {
-        center.set(Vector.componentMultiply(center, new Vector(scaleX, scaleY, scaleZ)));
+        center = Vector.componentMultiply(center, new Vector(scaleX, scaleY, scaleZ));
         radius *= Math.min(scaleX, Math.min(scaleY, scaleZ));
     }
 }

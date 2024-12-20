@@ -7,9 +7,9 @@ import util.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSObjects.newScene();
+        Scene scene = TSCubesAndRays.newScene();
 
-        RenderSettings settings = RenderSettings.FANCY_SETTINGS;
+        RenderSettings settings = RenderSettings.ULTRA_SETTINGS;
         settings.setSeed(0);
         settings.setScene(scene);
 
