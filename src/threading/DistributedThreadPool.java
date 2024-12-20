@@ -5,7 +5,17 @@ import java.util.ArrayList;
 public class DistributedThreadPool extends ThreadPool {
 
     @Override
-    public void addJob(Runnable job) {
+    public void addTask(Runnable job) {
+
+    }
+
+    @Override
+    public void executeTasks() {
+
+    }
+
+    @Override
+    public void executeTask(Runnable job) {
 
     }
 

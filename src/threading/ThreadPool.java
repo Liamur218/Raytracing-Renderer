@@ -23,7 +23,9 @@ public abstract class ThreadPool extends Thread {
         FINAL_WAKEUP_STICK = new Object();
     }
 
-    public abstract void addJob(Runnable job);
+    public abstract void addTask(Runnable job);
+    public abstract void executeTasks();
+    public abstract void executeTask(Runnable job);
 
     protected abstract boolean isAllWorkDone();
 

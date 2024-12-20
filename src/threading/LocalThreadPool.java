@@ -60,13 +60,23 @@ public class LocalThreadPool extends ThreadPool {
     }
 
     @Override
-    public void addJob(Runnable job) {
+    public void addTask(Runnable job) {
         synchronized (this) {
             workQueue.add(job);
         }
+    }
+
+    @Override
+    public void executeTasks() {
         synchronized (WAKEUP_STICK) {
             WAKEUP_STICK.notifyAll();
         }
+    }
+
+    @Override
+    public void executeTask(Runnable job) {
+        addTask(job);
+        executeTasks();
     }
 
     @Override

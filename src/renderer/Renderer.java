@@ -143,7 +143,7 @@ public abstract class Renderer {
             // Pull and submit all threads for current frame section
             RaytracingThread rtThread = threads.get(0);
             while (rtThread.imageFragment.frameSpaceID == currentFrameSpaceID) {
-                threadPool.addJob(rtThread);
+                threadPool.addTask(rtThread);
                 threads.remove(rtThread);
                 if (!threads.isEmpty()) {
                     rtThread = threads.get(0);
@@ -151,6 +151,7 @@ public abstract class Renderer {
                     break;
                 }
             }
+            threadPool.executeTasks();
 
             // Wait for all current threads to finish, then copy their imageFragments to an array list for processing
             threadPool.waitForAllToFinish();

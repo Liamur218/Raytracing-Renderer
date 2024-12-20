@@ -33,7 +33,7 @@ public class Material {
 
     // Private templates
     private static final Material LIGHT = new Material(WHITE).setReflectivity(0).setEmissivity(1);
-    private static final Material GLASS = new Material(WHITE).setSpecularity(1).setOpacity(0.1).setRefractiveIndex(1.5);
+    private static final Material GLASS = new Material(WHITE).setSpecularity(1).setOpacity(0).setRefractiveIndex(1.5);
     private static final Material MIRROR = new Material(WHITE).setSpecularity(1);
 
     // Basic materials
