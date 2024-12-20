@@ -1,8 +1,9 @@
 IMPORTANT THINGS
 ----------------
 -----> Refraction
------> Distributed Thread Pool
+-----> Distributed thread pool
 [DONE] Environment/ambient lighting
+-----> Fix V/H FOV issue
 
 COOL THINGS
 -----------
