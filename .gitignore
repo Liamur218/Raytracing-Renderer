@@ -5,9 +5,6 @@
 assets/big_assets/
 output/
 
-# Drivers
-driver/
-
 # IDE's
 .vscode
 .idea
