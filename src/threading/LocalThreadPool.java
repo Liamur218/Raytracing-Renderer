@@ -10,7 +10,6 @@ public class LocalThreadPool extends ThreadPool {
     private final ArrayList<Worker> workers;
 
     private ArrayList<Runnable> returnQueue;
-    private final Object RETURN_QUEUE_SEMAPHORE;
 
     public LocalThreadPool(int maxWorkers) {
         workQueue = new ArrayList<>();
@@ -19,7 +18,6 @@ public class LocalThreadPool extends ThreadPool {
         workers = new ArrayList<>();
 
         returnQueue = new ArrayList<>();
-        RETURN_QUEUE_SEMAPHORE = new Object();
 
         for (int i = 0; i < maxWorkers; i++) {
             Worker worker = new Worker(this);
@@ -60,10 +58,8 @@ public class LocalThreadPool extends ThreadPool {
     }
 
     @Override
-    public void addTask(Runnable job) {
-        synchronized (this) {
-            workQueue.add(job);
-        }
+    public synchronized void addTask(Runnable job) {
+        workQueue.add(job);
     }
 
     @Override
@@ -80,12 +76,10 @@ public class LocalThreadPool extends ThreadPool {
     }
 
     @Override
-    public ArrayList<Runnable> exportCompletedTasks() {
+    public synchronized ArrayList<Runnable> exportCompletedTasks() {
         ArrayList<Runnable> completedTasks;
-        synchronized (RETURN_QUEUE_SEMAPHORE) {
-            completedTasks = returnQueue;
-            returnQueue = new ArrayList<>();
-        }
+        completedTasks = returnQueue;
+        returnQueue = new ArrayList<>();
         return completedTasks;
     }
 
@@ -106,18 +100,16 @@ public class LocalThreadPool extends ThreadPool {
         return workQueue.isEmpty() && activeWorkers.isEmpty();
     }
 
-    void onWorkerFinish(Worker worker) {
-        synchronized (RETURN_QUEUE_SEMAPHORE) {
-            returnQueue.add(worker.work);
-        }
+    synchronized void onWorkerFinish(Worker worker) {
+        returnQueue.add(worker.work);
+        worker.setWork(null);
+        activeWorkers.remove(worker);
+        idleWorkers.add(worker);
+
         if (progressBar != null) {
             progressBar.increment();
         }
-        worker.setWork(null);
-        synchronized (this) {
-            activeWorkers.remove(worker);
-            idleWorkers.add(worker);
-        }
+
         synchronized (WAKEUP_STICK) {
             WAKEUP_STICK.notifyAll();
         }

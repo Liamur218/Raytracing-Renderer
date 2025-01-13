@@ -121,6 +121,7 @@ public abstract class Renderer {
         renderedImageFragments.clear();
 
         // Sort threads by position (they should be sorted this way already, we're just making sure)
+        Logger.newLogSection("Thread organization", "Organizing Threads");
         threads.sort(new RaytracingThread.ThreadComparator());
 
         // Start render * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

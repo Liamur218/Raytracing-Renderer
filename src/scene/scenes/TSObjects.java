@@ -25,7 +25,7 @@ public abstract class TSObjects {
         scene.addMesh(pMesh);
         // Large sphere (on ground, to right of ledge)
         sMesh = new SphereMesh(1.5, -0.5, -0.5, 0.5);
-        sMesh.setMaterial(Material.WHITE_MIR);
+        sMesh.setMaterial(Material.WHITE_GLASS);
         scene.addMesh(sMesh);
         // Small sphere (on ledge, left of small cube)
         sMesh = new SphereMesh(1.25, 0.825, -0.125, 0.125);

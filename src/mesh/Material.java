@@ -1,7 +1,6 @@
 package mesh;
 
 import java.awt.*;
-import java.util.concurrent.CountDownLatch;
 
 import static mesh.DoubleColor.*;
 
@@ -40,7 +39,7 @@ public class Material {
     public static final Material WHITE_MAT = new Material(WHITE);
     public static final Material LIGHT_GRAY_MAT = new Material(LIGHT_GRAY);
     public static final Material GRAY_MAT = new Material(GRAY);
-    public static final Material D_GRAY_MAT = new Material(DARK_GRAY);
+    public static final Material DARK_GRAY_MAT = new Material(DARK_GRAY);
     public static final Material BLACK_MAT = new Material(BLACK);
     public static final Material RED_MAT = new Material(RED);
     public static final Material PINK_MAT = new Material(PINK);
