@@ -1,9 +1,10 @@
 package util;
 
 import mesh.*;
+import mesh.Vector;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public abstract class ModelLoader {
     public static PolygonMesh loadStl(String filepath) {
@@ -100,42 +101,50 @@ public abstract class ModelLoader {
         return polygonMesh;
     }
 
-    public static PolygonMesh loadObj(String filepath) {
-        BufferedReader reader = null;
-        ArrayList<Vector> vertices = new ArrayList<>();
-        ArrayList<int[]> indexedFaces = new ArrayList<>();
+    public static PolygonMesh loadObj(String filename) {
         PolygonMesh polygonMesh = new PolygonMesh();
-        try {
-            reader = new BufferedReader(new FileReader(filepath));
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            // Extract relevant data
+            ArrayList<String> vertexLines = new ArrayList<>();
+            ArrayList<String> polygonLines = new ArrayList<>();
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                if (line.startsWith("v ")) {
-                    String[] array = line.split(" ");
-                    vertices.add(new Vector(
-                            Double.parseDouble(array[1]), Double.parseDouble(array[2]), Double.parseDouble(array[3])));
-                } else if (line.startsWith("f ")) {
-                    String[] splitLine = line.split(" ");
-                    indexedFaces.add(new int[]{
-                            Integer.parseInt(splitLine[1].split("/")[0]),
-                            Integer.parseInt(splitLine[2].split("/")[0]),
-                            Integer.parseInt(splitLine[3].split("/")[0])});
+                String string = line.trim().split(" ")[0];
+                if (string.equals("v")) {
+                    vertexLines.add(line);
+                } else if (string.equals("vt")) {
+                    polygonLines.add(line);
+                } else if (string.equals("f")) {
+
                 }
             }
 
-            for (int[] face : indexedFaces) {
-                polygonMesh.addPolygon(new Polygon(
-                        vertices.get(face[0] - 1),
-                        vertices.get(face[1] - 1),
-                        vertices.get(face[2] - 1)));
+            // Process lines
+            Vector[] vertices = new Vector[vertexLines.size()];
+            for (int i = 0; i < vertices.length; i++) {
+                String[] lineArray = vertexLines.get(i).split(" ");
+                vertices[i] = new Vector(lineArray[1], lineArray[2], lineArray[3]);
             }
 
-            return polygonMesh;
+            // Process polygons
+            for (String line : polygonLines) {
+                String[] lineArray = line.replace('f', ' ').trim().split(" ");
+                Vector[] vectors = new Vector[Polygon.VERTEX_COUNT];
+                for (int i = 0; i < vectors.length; i++) {
+                    String vertexIdString = lineArray[i].split("/")[0];
+                    try {
+                        int vertexId = Integer.parseInt(vertexIdString);
+                        vectors[i] = vertices[vertexId];
+                    } catch (NumberFormatException ignored) {
+                        Logger.logWarningMsg("Encountered bad index when parsing model data for model " + filename +
+                                " at index " + vertexIdString + ". Model building stopped.");
+                        return polygonMesh;
+                    }
+                    polygonMesh.addPolygon(new Polygon(vectors));
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                reader.close();
-            } catch (NullPointerException | IOException ignored) {
-            }
         }
         return polygonMesh;
     }

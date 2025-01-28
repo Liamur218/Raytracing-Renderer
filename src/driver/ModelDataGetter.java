@@ -5,7 +5,7 @@ import util.ModelLoader;
 
 public class ModelDataGetter {
     public static void main(String[] args) {
-        String filename = "assets/utah teapot low res.stl";
+        String filename = "assets/Blender Cube.obj";
 
         PolygonMesh polygonMesh = ModelLoader.loadAsciiStl(filename);
         int polygonCount = polygonMesh.getPolygonCount();
