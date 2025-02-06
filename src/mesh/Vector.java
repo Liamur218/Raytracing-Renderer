@@ -30,7 +30,7 @@ public class Vector {
         this(a, a, a);
     }
 
-    public Vector(String[] points) {
+    public Vector(String... points) {
         this(Double.parseDouble(points[0]), Double.parseDouble(points[1]), Double.parseDouble(points[2]));
     }
 

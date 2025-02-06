@@ -21,11 +21,12 @@ public abstract class ThreadPool extends Thread {
         WAKEUP_STICK = new Object();
 
         FINAL_WAKEUP_STICK = new Object();
+
+        setName("Thread Pool");
     }
 
     public abstract void addTask(Runnable job);
     public abstract void executeTasks();
-    public abstract void executeTask(Runnable job);
 
     protected abstract boolean isAllWorkDone();
 

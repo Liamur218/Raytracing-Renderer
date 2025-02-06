@@ -25,6 +25,8 @@ public class LocalThreadPool extends ThreadPool {
             idleWorkers.add(worker);
             workers.add(worker);
         }
+
+        setName("Local Thread Pool");
     }
 
     @Override
@@ -70,12 +72,6 @@ public class LocalThreadPool extends ThreadPool {
     }
 
     @Override
-    public void executeTask(Runnable job) {
-        addTask(job);
-        executeTasks();
-    }
-
-    @Override
     public synchronized ArrayList<Runnable> exportCompletedTasks() {
         ArrayList<Runnable> completedTasks;
         completedTasks = returnQueue;
@@ -102,7 +98,7 @@ public class LocalThreadPool extends ThreadPool {
 
     synchronized void onWorkerFinish(Worker worker) {
         returnQueue.add(worker.work);
-        worker.setWork(null);
+        worker.work = null;
         activeWorkers.remove(worker);
         idleWorkers.add(worker);
 

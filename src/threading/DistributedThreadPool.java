@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class DistributedThreadPool extends ThreadPool {
 
+    public DistributedThreadPool() {
+        setName("Distributed Thread Pool");
+    }
+
     @Override
     public void addTask(Runnable job) {
 
@@ -11,11 +15,6 @@ public class DistributedThreadPool extends ThreadPool {
 
     @Override
     public void executeTasks() {
-
-    }
-
-    @Override
-    public void executeTask(Runnable job) {
 
     }
 

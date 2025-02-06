@@ -16,12 +16,12 @@ public class Worker extends Thread {
     public Worker(LocalThreadPool owner) {
         this.owner = owner;
         isRunning = true;
-        id = ID_COUNTER++;
+        id = ++ID_COUNTER;
     }
 
     public synchronized void assignWork(Runnable job) {
-        setWork(job);
-        jobId = JOB_ID_COUNTER++;
+        work = job;
+        jobId = ++JOB_ID_COUNTER;
         notifyAll();
     }
 
@@ -51,13 +51,9 @@ public class Worker extends Thread {
         notifyAll();
     }
 
-    void setWork(Runnable runnable) {
-        work = runnable;
-    }
-
     @Override
     public String toString() {
-        return "worker " + id;
+        return "Worker " + id;
     }
 
     public String workToString() {
