@@ -9,7 +9,6 @@ public abstract class ThreadPool extends Thread {
     protected boolean running;
     protected final Object START_STOP_SEMAPHORE;
 
-    protected final Object WAKEUP_STICK;
     protected final Object FINAL_WAKEUP_STICK;
 
     ProgressBar progressBar;
@@ -17,8 +16,6 @@ public abstract class ThreadPool extends Thread {
     protected ThreadPool() {
         running = true;
         START_STOP_SEMAPHORE = new Object();
-
-        WAKEUP_STICK = new Object();
 
         FINAL_WAKEUP_STICK = new Object();
 
@@ -47,8 +44,8 @@ public abstract class ThreadPool extends Thread {
         synchronized (START_STOP_SEMAPHORE) {
             running = false;
         }
-        synchronized (WAKEUP_STICK) {
-            WAKEUP_STICK.notifyAll();
+        synchronized (this) {
+            notifyAll();
         }
     }
 

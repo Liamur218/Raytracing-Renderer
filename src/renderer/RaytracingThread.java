@@ -18,7 +18,7 @@ public class RaytracingThread implements Runnable, Serializable {
 
     long startTime, stopTime;
 
-    private Random random;
+    private final Random random;
 
     long elapsedTime;
 

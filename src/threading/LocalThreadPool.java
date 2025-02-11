@@ -33,15 +33,13 @@ public class LocalThreadPool extends ThreadPool {
     public void run() {
         boolean isRunning;
         do {
-            try {
-                synchronized (WAKEUP_STICK) {
-                    WAKEUP_STICK.wait();
+            synchronized (this) {
+                try {
+                    wait();
+                } catch (InterruptedException ignored) {
                 }
-            } catch (InterruptedException ignored) {
-            }
 
-            while (isThereWorkToDo() && getIdleWorkerCount() > 0) {
-                synchronized (this) {
+                while (isThereWorkToDo() && getIdleWorkerCount() > 0) {
                     Runnable runnable = workQueue.remove(0);
                     Worker worker = idleWorkers.remove(0);
                     activeWorkers.add(worker);
@@ -65,10 +63,8 @@ public class LocalThreadPool extends ThreadPool {
     }
 
     @Override
-    public void executeTasks() {
-        synchronized (WAKEUP_STICK) {
-            WAKEUP_STICK.notifyAll();
-        }
+    public synchronized void executeTasks() {
+        notifyAll();
     }
 
     @Override
@@ -106,9 +102,7 @@ public class LocalThreadPool extends ThreadPool {
             progressBar.increment();
         }
 
-        synchronized (WAKEUP_STICK) {
-            WAKEUP_STICK.notifyAll();
-        }
+        notifyAll();
         if (isAllWorkDone()) {
             synchronized (FINAL_WAKEUP_STICK) {
                 FINAL_WAKEUP_STICK.notifyAll();
