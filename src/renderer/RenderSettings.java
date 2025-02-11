@@ -128,6 +128,10 @@ public class RenderSettings {
         return this;
     }
 
+    public RenderSettings copy() {
+        return new RenderSettings(this);
+    }
+
     @Override
     public String toString() {
         return scene + " " +

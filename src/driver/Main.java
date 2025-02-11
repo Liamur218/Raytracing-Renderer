@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         Scene scene = TSObjects.newScene();
 
-        RenderSettings settings = RenderSettings.FANCY_SETTINGS;
+        RenderSettings settings = RenderSettings.FANCY_SETTINGS.copy();
         settings.setSeed(0);
         settings.setScene(scene);
 
