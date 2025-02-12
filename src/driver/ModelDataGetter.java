@@ -5,11 +5,16 @@ import util.ModelLoader;
 
 public class ModelDataGetter {
     public static void main(String[] args) {
-        String filename = "assets/Blender Cube.obj";
+        String filename = "assets/big_assets/zubeia.stl";
+
+        String[] modelNameArray = filename.split("/");
+        String modelName = modelNameArray[modelNameArray.length - 1];
 
         PolygonMesh polygonMesh = ModelLoader.loadAsciiStl(filename);
         int polygonCount = polygonMesh.getPolygonCount();
 
+
+        System.out.println("Model Name: " + modelName);
         System.out.println("MODEL DATA:");
         System.out.println("\tPOLYGON COUNT -- " + polygonCount);
 
