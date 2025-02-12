@@ -1,6 +1,6 @@
 package util;
 
-public class TimeFormatter {
+public abstract class TimeFormatter {
 
     public static final TimeUnit DAY = new TimeUnit("day", Long.MAX_VALUE, null);
     public static final TimeUnit HOUR = new TimeUnit("hr", 24, DAY);

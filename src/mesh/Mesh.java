@@ -10,6 +10,8 @@ public abstract class Mesh {
     public int id;
     private static int ID_COUNTER = 0;
 
+    private String name;
+
     public static final Mesh NULL_MESH = new Mesh() {
         @Override
         public RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast) { return null; }
@@ -21,6 +23,7 @@ public abstract class Mesh {
 
     protected Mesh() {
         id = ID_COUNTER++;
+        setName("Mesh " + id);
     }
 
     public abstract RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast);
@@ -42,11 +45,20 @@ public abstract class Mesh {
         return this;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object instanceof Mesh mesh) {
             return mesh.id == id;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

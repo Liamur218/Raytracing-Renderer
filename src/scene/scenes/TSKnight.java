@@ -2,14 +2,14 @@ package scene.scenes;
 
 import mesh.*;
 import scene.*;
-import util.ModelLoader;
+import util.*;
 
 public abstract class TSKnight {
     public static Scene newScene() {
         Scene scene = TSBasicEnvironment.newScene();
         scene.setName("Knight");
 
-        PolygonMesh polygonMesh = ModelLoader.loadStl("assets/KNIGHT.stl");
+        PolygonMesh polygonMesh = ModelLoader.loadModel("assets/KNIGHT", ModelType.STL_BIN);
         polygonMesh.setCenterAt(0, 0, 0);
         polygonMesh.scale(1.5 / 3.37);
         polygonMesh.rotate(0, 0, 180 + 45);

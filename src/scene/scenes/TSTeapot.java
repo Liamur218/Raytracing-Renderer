@@ -2,7 +2,7 @@ package scene.scenes;
 
 import mesh.*;
 import scene.*;
-import util.ModelLoader;
+import util.*;
 
 import java.awt.*;
 
@@ -19,7 +19,7 @@ public abstract class TSTeapot {
 
         scene.setLightSourceDir(new Vector(0, 1, 1));
 
-        PolygonMesh polygonMesh = ModelLoader.loadAsciiStl("assets/utah teapot low res.stl");
+        PolygonMesh polygonMesh = ModelLoader.loadModel("assets/utah teapot low res", ModelType.STL_ASCII);
         polygonMesh.normalize();
         polygonMesh.rotate(90, 0, -90);
         polygonMesh.scale(0.75);

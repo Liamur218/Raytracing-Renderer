@@ -2,13 +2,13 @@ package scene.scenes;
 
 import mesh.*;
 import scene.Scene;
-import util.ModelLoader;
+import util.*;
 
 public abstract class TSOBJTest {
     public Scene newScene() {
         Scene scene = TSBasicEnvironment.newScene();
 
-        PolygonMesh mesh = ModelLoader.loadObj("src/assets/Blender Cube.obj");
+        PolygonMesh mesh = ModelLoader.loadModel("src/assets/Blender Cube", ModelType.WAVEFRONT_OBJ);
         scene.addMesh(mesh);
 
         return scene;

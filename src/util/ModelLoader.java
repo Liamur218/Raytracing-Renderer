@@ -7,7 +7,32 @@ import java.io.*;
 import java.util.*;
 
 public abstract class ModelLoader {
-    public static PolygonMesh loadStl(String filepath) {
+
+    public static PolygonMesh loadModel(String fileLocation, String modelName, ModelType modelType) {
+        PolygonMesh mesh = loadModel(fileLocation + "/" + modelName, modelType);
+        mesh.setName(modelName);
+        return mesh;
+    }
+
+    public static PolygonMesh loadModel(String filepath, ModelType modelType) {
+        String filename = filepath + "." + modelType.getExtension();
+        switch (modelType) {
+            case STL_BIN -> {
+                return loadStl(filename);
+            }
+            case STL_ASCII -> {
+                return loadAsciiStl(filename);
+            }
+            case WAVEFRONT_OBJ -> {
+                return loadObj(filename);
+            }
+            default -> {
+                return new PolygonMesh();
+            }
+        }
+    }
+
+    private static PolygonMesh loadStl(String filepath) {
         File file = new File(filepath);
         FileInputStream input = null;
         PolygonMesh polygonMesh = new PolygonMesh();
@@ -24,7 +49,7 @@ public abstract class ModelLoader {
 
             /*
              * Triangle  (50 bytes):
-             *    (signed) float – Normal vector         (12 bytes)  <- This is actually important
+             *    (signed) float – Normal vector         (12 bytes)  <- This is important
              *    (signed) float – Vertex 1              (12 bytes)  |
              *    (signed) float – Vertex 2              (12 bytes)  | This is what we mainly need
              *    (signed) float – Vertex 3              (12 bytes)  |
@@ -71,7 +96,7 @@ public abstract class ModelLoader {
         return polygonMesh;
     }
 
-    public static PolygonMesh loadAsciiStl(String filename) {
+    private static PolygonMesh loadAsciiStl(String filename) {
         PolygonMesh polygonMesh = new PolygonMesh();
         try (BufferedReader inputStream = new BufferedReader(new FileReader(filename))) {
             Vector normal = null;
@@ -101,48 +126,72 @@ public abstract class ModelLoader {
         return polygonMesh;
     }
 
-    public static PolygonMesh loadObj(String filename) {
+    private static PolygonMesh loadObj(String filename) {
         PolygonMesh polygonMesh = new PolygonMesh();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             // Extract relevant data
-            ArrayList<String> vertexLines = new ArrayList<>();
-            ArrayList<String> polygonLines = new ArrayList<>();
+            ArrayList<String> vertexStrings = new ArrayList<>();
+            ArrayList<String> polygonStrings = new ArrayList<>();
+            ArrayList<String> lineStrings = new ArrayList<>();
+            ArrayList<String> textureStrings = new ArrayList<>();
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                String string = line.trim().split(" ")[0];
-                if (string.equals("v")) {
-                    vertexLines.add(line);
-                } else if (string.equals("vt")) {
-                    polygonLines.add(line);
-                } else if (string.equals("f")) {
+                line = line.trim();
 
+                String[] lineAsArray = line.split(" ");
+                if (lineAsArray[0].equals("v")) {
+                    vertexStrings.add(line.substring(2));
+                } else if (lineAsArray[0].equals("f")) {
+                    polygonStrings.add(line.substring(2));
+                } else if (lineAsArray[0].equals("l")) {
+                    lineStrings.add(line.substring(2));
+                } else if (lineAsArray[0].equals("vt")) {
+                    textureStrings.add(line.substring(3));
                 }
             }
 
-            // Process lines
-            Vector[] vertices = new Vector[vertexLines.size()];
+            Vector[] vertices = new Vector[vertexStrings.size()];
+
+            // Define vertices
+            // 1. Process vertex strings
             for (int i = 0; i < vertices.length; i++) {
-                String[] lineArray = vertexLines.get(i).split(" ");
-                vertices[i] = new Vector(lineArray[1], lineArray[2], lineArray[3]);
+                String[] vertexAsStringArray = vertexStrings.get(0).split(" ");
+                vertices[i] = new Vector(
+                        Double.parseDouble(vertexAsStringArray[0]),
+                        Double.parseDouble(vertexAsStringArray[1]),
+                        Double.parseDouble(vertexAsStringArray[2]));
             }
 
-            // Process polygons
-            for (String line : polygonLines) {
-                String[] lineArray = line.replace('f', ' ').trim().split(" ");
-                Vector[] vectors = new Vector[Polygon.VERTEX_COUNT];
-                for (int i = 0; i < vectors.length; i++) {
-                    String vertexIdString = lineArray[i].split("/")[0];
-                    try {
-                        int vertexId = Integer.parseInt(vertexIdString);
-                        vectors[i] = vertices[vertexId];
-                    } catch (NumberFormatException ignored) {
-                        Logger.logWarningMsg("Encountered bad index when parsing model data for model " + filename +
-                                " at index " + vertexIdString + ". Model building stopped.");
-                        return polygonMesh;
+            // Start building model
+            // 1. Process polygon strings into individual polygons with vertex/texture/normal indices
+            int[][] polygonIndices = new int[polygonStrings.size()][Polygon.VERTEX_COUNT * 2];
+            for (int i = 0; i < polygonStrings.size(); i++) {
+                String[] faceAsStringArray = polygonStrings.get(i).split(" ");
+                // TODO: 2/12/25 Make this work with more than 3 vertices
+                for (int j = 0; j < Polygon.VERTEX_COUNT; j++) {
+                    String[] faceVertexAsStringArray = faceAsStringArray[j].split("/");
+                    polygonIndices[i][j * 2] = Integer.parseInt(faceVertexAsStringArray[0]);
+                    if (!faceVertexAsStringArray[1].isEmpty()) {
+                        polygonIndices[i][j * 2 + 1] = Integer.parseInt(faceVertexAsStringArray[1]);
                     }
-                    polygonMesh.addPolygon(new Polygon(vectors));
                 }
             }
+
+            // 2. Build polygons
+            for (int[] polygonIndexSet : polygonIndices) {
+                Polygon polygon = new Polygon(
+                        vertices[polygonIndexSet[0] - 1],
+                        vertices[polygonIndexSet[2] - 1],
+                        vertices[polygonIndexSet[4] - 1]
+                );
+                // TODO: 2/12/25 Add texture support
+                polygonMesh.addPolygon(polygon);
+            }
+
+            // 2. Process line element strings
+
+            // 3. Process texture strings
+
         } catch (IOException e) {
             e.printStackTrace();
         }

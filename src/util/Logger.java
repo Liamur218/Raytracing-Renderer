@@ -54,7 +54,7 @@ public abstract class Logger {
     private static void print(String msg) {
         System.out.print(msg.replace(
                 "ERROR", ConsoleColors.RED + "ERROR" + ConsoleColors.RESET).replace(
-                "WARNING", ConsoleColors.YELLOW + "WARNING" + ConsoleColors.YELLOW));
+                "WARNING", ConsoleColors.YELLOW + "WARNING" + ConsoleColors.RESET));
     }
 
     // Sections

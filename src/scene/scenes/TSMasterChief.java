@@ -2,7 +2,7 @@ package scene.scenes;
 
 import mesh.*;
 import scene.Scene;
-import util.ModelLoader;
+import util.*;
 
 import java.awt.*;
 
@@ -18,7 +18,7 @@ public abstract class TSMasterChief {
         Material visorMat = new Material(visorColor).setSpecularity(0.8);
 
         // Helmet
-        PolygonMesh helmet = ModelLoader.loadStl("assets/big_assets/master_chief/helmet_19K.stl");
+        PolygonMesh helmet = ModelLoader.loadModel("assets/big_assets/master_chief/helmet_19K", ModelType.STL_BIN);
         helmet.setMaterial(helmetMat);
         helmet.scale(5);
         scene.addMesh(helmet);

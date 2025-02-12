@@ -2,7 +2,7 @@ package scene.scenes;
 
 import mesh.*;
 import scene.*;
-import util.ModelLoader;
+import util.*;
 
 public abstract class TSKnightMirrors {
     public static Scene newScene() {
@@ -35,7 +35,7 @@ public abstract class TSKnightMirrors {
         frontRightBottom = new Vector(0, -1, -1);
 
         // Knight
-        PolygonMesh polygonMesh = ModelLoader.loadStl("assets/KNIGHT.stl");
+        PolygonMesh polygonMesh = ModelLoader.loadModel("assets/KNIGHT", ModelType.STL_BIN);
         polygonMesh.setCenterAt(0, 0, 0);
         polygonMesh.scale(1.5 / 3.37);
         polygonMesh.rotate(0, 0, 180 + 45);
