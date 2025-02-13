@@ -78,7 +78,7 @@ public class RaytracingThread implements Runnable, Serializable {
         // grab stack of previous materials from the last raycast we just did
         if (lastCast == null) {
             raycast.meshStack = new MeshStack();
-            raycast.meshStack.add(Mesh.NULL_MESH);
+            raycast.meshStack.push(Mesh.NULL_MESH);
         } else {
             raycast.meshStack = lastCast.meshStack;
         }
