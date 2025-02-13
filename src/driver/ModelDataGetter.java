@@ -5,8 +5,8 @@ import util.*;
 
 public class ModelDataGetter {
     public static void main(String[] args) {
-        String filename = "zubeia";
-        String fileLocation = "assets/big_assets/dragon";
+        String filename = "Zubeia";
+        String fileLocation = "assets/big_assets/zubeia";
         ModelType modelType = ModelType.WAVEFRONT_OBJ;
 
         String[] modelNameArray = filename.split("/");

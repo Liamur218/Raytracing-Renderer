@@ -1,7 +1,7 @@
 package mesh;
 
 import renderer.RaycastInfo;
-import util.Logger;
+import util.*;
 
 import java.util.ArrayList;
 
@@ -33,6 +33,8 @@ public class PolygonMesh extends Mesh {
 
     public void finalizeMesh() {
         Logger.logMsg("Finalizing mesh " + this + "... ");
+        long startTime = System.nanoTime();
+
         if (material == null) {
             material = DEFAULT_MATERIAL;
         }
@@ -40,7 +42,9 @@ public class PolygonMesh extends Mesh {
         boundingBox = BoundingBox.newBoundingBox(this);
         polygonArrayList.clear();
         finalized = true;
-        Logger.logMsgLn("Done");
+
+        long endTime = System.nanoTime();
+        Logger.logMsgLn("Done in " + TimeFormatter.timeToString(endTime - startTime));
     }
 
     // For scene setup

@@ -51,7 +51,7 @@ public abstract class Renderer {
         int threadCount = renderSettings.threadCount;
         int rngSeed = renderSettings.seed;
 
-        Logger.logMsgLn("RENDERER START ON " + Util.getDate() + " AT " + Util.getTime());
+        Logger.logMsgLn("\nRENDERER START ON " + Util.getDate() + " AT " + Util.getTime());
         Image image = new Image(width, height);
 
         // Variable setup

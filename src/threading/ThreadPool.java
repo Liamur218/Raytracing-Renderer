@@ -76,15 +76,11 @@ public class ThreadPool extends Thread {
     }
 
     public synchronized void halt() {
-        haltWorkers();
-        running = false;
-        notifyAll();
-    }
-
-    private void haltWorkers() {
         for (Worker worker : workers) {
             worker.halt();
         }
+        running = false;
+        notifyAll();
     }
 
     public void setProgressBar(ProgressBar progressBar) {
@@ -113,7 +109,5 @@ public class ThreadPool extends Thread {
                 isRunning = running;
             }
         } while (isRunning);
-
-        haltWorkers();
     }
 }

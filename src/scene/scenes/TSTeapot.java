@@ -19,7 +19,8 @@ public abstract class TSTeapot {
 
         scene.setLightSourceDir(new Vector(0, 1, 1));
 
-        PolygonMesh polygonMesh = ModelLoader.loadModel("assets/Utah Teapot low res", ModelType.STL_ASCII);
+        PolygonMesh polygonMesh = ModelLoader.loadModel("assets", "Utah Teapot low res", ModelType.STL_ASCII);
+        polygonMesh.setName("Utah Teapot");
         polygonMesh.normalize();
         polygonMesh.rotate(90, 0, -90);
         polygonMesh.scale(0.75);

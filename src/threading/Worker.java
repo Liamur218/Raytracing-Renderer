@@ -18,6 +18,7 @@ public class Worker extends Thread {
 
     public synchronized void halt() {
         running = false;
+        notifyAll();
     }
 
     @Override

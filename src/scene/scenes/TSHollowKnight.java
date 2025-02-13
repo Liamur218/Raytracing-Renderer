@@ -9,7 +9,7 @@ public abstract class TSHollowKnight {
         Scene scene = TSBasicEnvironment.newScene();
         scene.setName("Hollow Knight");
 
-        PolygonMesh polygonMesh = ModelLoader.loadModel("assets/big_assets/HollowKnight", ModelType.STL_BIN);
+        PolygonMesh polygonMesh = ModelLoader.loadModel("assets/big_assets", "Hollow Knight", ModelType.STL_BIN);
         polygonMesh.normalize();
         polygonMesh.scale(0.5);
         polygonMesh.setMaterial(Material.BLUE_MIR);
