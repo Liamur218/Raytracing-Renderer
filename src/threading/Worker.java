@@ -2,61 +2,43 @@ package threading;
 
 public class Worker extends Thread {
 
-    Runnable work;
-    private final LocalThreadPool owner;
+    Runnable task;
+    private final ThreadPool owner;
 
-    boolean isRunning;
+    private boolean running;
 
-    final int id;
-    private static int ID_COUNTER = 0;
-
-    int jobId;
-    private static int JOB_ID_COUNTER = 0;
-
-    public Worker(LocalThreadPool owner) {
+    public Worker(ThreadPool owner) {
         this.owner = owner;
-        isRunning = true;
-        id = ++ID_COUNTER;
+        running = true;
     }
 
-    public synchronized void assignWork(Runnable job) {
-        work = job;
-        jobId = ++JOB_ID_COUNTER;
-        notifyAll();
+    public void assignTask(Runnable task) {
+        this.task = task;
+    }
+
+    public synchronized void halt() {
+        running = false;
     }
 
     @Override
     public void run() {
-        while (isWorkerRunning()) {
-            if (work == null) {
-                try {
-                    synchronized (this) {
+        boolean isRunning;
+        do {
+            if (task == null) {
+                synchronized (this) {
+                    try {
                         wait();
+                    } catch (InterruptedException ignored) {
                     }
-                } catch (InterruptedException ignored) {
                 }
             } else {
-                work.run();
+                task.run();
                 owner.onWorkerFinish(this);
             }
-        }
-    }
 
-    private synchronized boolean isWorkerRunning() {
-        return isRunning;
-    }
-
-    synchronized void halt() {
-        isRunning = false;
-        notifyAll();
-    }
-
-    @Override
-    public String toString() {
-        return "Worker " + id;
-    }
-
-    public String workToString() {
-        return "Job " + jobId;
+            synchronized (this) {
+                isRunning = running;
+            }
+        } while (isRunning);
     }
 }

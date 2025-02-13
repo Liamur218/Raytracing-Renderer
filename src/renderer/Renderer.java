@@ -87,8 +87,8 @@ public abstract class Renderer {
                 ((image.getHeight() - 1) / ImageFragment.SECTION_SIZE.height + 1) * frameCount;
         ProgressBar progressBar = new ProgressBar("Threads", totalImgFragCount);
         ArrayList<RaytracingThread> threads = new ArrayList<>();
-        ThreadPool threadPool = (renderSettings.distributed) ?
-                new DistributedThreadPool() : new LocalThreadPool(threadCount);
+        ThreadPool threadPool = new ThreadPool(threadCount);
+        // TODO: 2/12/25 Add support for distributed rendering
         threadPool.setProgressBar(progressBar);
         threadPool.start();
 

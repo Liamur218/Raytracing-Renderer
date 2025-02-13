@@ -2,54 +2,118 @@ package threading;
 
 import util.ProgressBar;
 
-import java.util.*;
+import java.util.ArrayList;
 
-public abstract class ThreadPool extends Thread {
+public class ThreadPool extends Thread {
 
-    protected boolean running;
-    protected final Object START_STOP_SEMAPHORE;
+    private final ArrayList<Worker> workers, activeWorkers, idleWorkers;
+    private final ArrayList<Runnable> workQueue;
+    private ArrayList<Runnable> returnQueue;
 
-    protected final Object FINAL_WAKEUP_STICK;
+    private final Object FINAL_WAKEUP_STICK;
 
-    ProgressBar progressBar;
+    private boolean running;
 
-    protected ThreadPool() {
-        running = true;
-        START_STOP_SEMAPHORE = new Object();
+    private ProgressBar progressBar;
+
+    public ThreadPool(int maxThreadCount) {
+        workers = new ArrayList<>();
+        activeWorkers = new ArrayList<>();
+        idleWorkers = new ArrayList<>();
+
+        workQueue = new ArrayList<>();
+        returnQueue = new ArrayList<>();
 
         FINAL_WAKEUP_STICK = new Object();
 
-        setName("Thread Pool");
+        running = true;
+
+        for (int i = 0; i < maxThreadCount; i++) {
+            Worker worker = new Worker(this);
+            worker.start();
+            workers.add(worker);
+            idleWorkers.add(worker);
+        }
     }
 
-    public abstract void addTask(Runnable job);
-    public abstract void executeTasks();
+    public synchronized void addTask(Runnable task) {
+        workQueue.add(task);
+    }
 
-    protected abstract boolean isAllWorkDone();
+    public synchronized void executeTasks() {
+        notifyAll();
+    }
 
-    public void waitForAllToFinish() {
-        if (!isAllWorkDone()) {
-            try {
-                synchronized (FINAL_WAKEUP_STICK) {
-                    FINAL_WAKEUP_STICK.wait();
-                }
-            } catch (InterruptedException ignored) {
+    synchronized void onWorkerFinish(Worker worker) {
+        activeWorkers.remove(worker);
+        idleWorkers.add(worker);
+        returnQueue.add(worker.task);
+        worker.task = null;
+        if (progressBar != null) {
+            progressBar.increment();
+        }
+        if (workQueue.isEmpty() && activeWorkers.isEmpty()) {
+            synchronized (FINAL_WAKEUP_STICK) {
+                FINAL_WAKEUP_STICK.notifyAll();
             }
         }
+        notifyAll();
     }
 
-    public abstract ArrayList<Runnable> exportCompletedTasks();
-
-    public void halt() {
-        synchronized (START_STOP_SEMAPHORE) {
-            running = false;
+    public void waitForAllToFinish() {
+        try {
+            synchronized (FINAL_WAKEUP_STICK) {
+                FINAL_WAKEUP_STICK.wait();
+            }
+        } catch (InterruptedException ignored) {
         }
-        synchronized (this) {
-            notifyAll();
+    }
+
+    public synchronized ArrayList<Runnable> exportCompletedTasks() {
+        ArrayList<Runnable> out = returnQueue;
+        returnQueue = new ArrayList<>();
+        return out;
+    }
+
+    public synchronized void halt() {
+        haltWorkers();
+        running = false;
+        notifyAll();
+    }
+
+    private void haltWorkers() {
+        for (Worker worker : workers) {
+            worker.halt();
         }
     }
 
     public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
+    }
+
+    @Override
+    public void run() {
+        boolean isRunning;
+        do {
+            synchronized (this) {
+                if (!workQueue.isEmpty() && !idleWorkers.isEmpty()) {
+                    Worker worker = idleWorkers.remove(0);
+                    activeWorkers.add(worker);
+                    worker.assignTask(workQueue.remove(0));
+                    synchronized (worker) {
+                        worker.notifyAll();
+                    }
+                } else {
+                    try {
+                        wait();
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+
+                isRunning = running;
+            }
+        } while (isRunning);
+
+        haltWorkers();
     }
 }
