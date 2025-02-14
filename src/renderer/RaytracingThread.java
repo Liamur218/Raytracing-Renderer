@@ -47,6 +47,7 @@ public class RaytracingThread implements Runnable, Serializable {
     public void run() {
         startTime = System.nanoTime();
 
+        imageFragment.initialize();
         for (int i = 0; i < imageFragment.size.width; i++) {
             for (int j = 0; j < imageFragment.size.height; j++) {
                 Vector ray = new Vector(startDir);

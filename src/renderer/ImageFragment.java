@@ -16,12 +16,15 @@ public class ImageFragment implements Serializable {
     public int frameSpaceID;
 
     ImageFragment(int width, int height, int posX, int posY, int frameNumber, int frameSpaceID) {
-        array = new NormColor[width][height];
         size = new Dimension(width, height);
         this.posX = posX;
         this.posY = posY;
         this.frameNumber = frameNumber;
         this.frameSpaceID = frameSpaceID;
+    }
+
+    public void initialize() {
+        array = new NormColor[size.width][size.height];
     }
 
     void setRGB(int x, int y, NormColor color) {

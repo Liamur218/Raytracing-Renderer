@@ -133,7 +133,7 @@ public abstract class Renderer {
         Logger.logMsgLn("\tMax recursion ----- " + recursionCount);
         Logger.logMsgLn("\tImage fragments --- " + totalImgFragCount);
         Logger.logMsgLn("\tFragments / frame - " + fragsPerFrame);
-        Logger.logMsgLn("\tRNG Seed -------------- " + rngSeed);
+        Logger.logMsgLn("\tRNG Seed ---------- " + rngSeed);
         if (threadCount > frameCount && threadCount > 0) {
             Logger.logWarningMsg("Settings specify more threads than frames; excess threads will not be used");
         }
