@@ -47,19 +47,19 @@ public abstract class TSKnightMirrors {
         backWall = new PolygonMesh();
         backWall.addPolygon(backLeftBottom, backRightTop, backRightBottom);
         backWall.addPolygon(backLeftBottom, backLeftTop, backRightTop);
-        backWall.setMaterial(Material.WHITE_MAT.copy().setReflectivity(0.9).setSpecularity(1));
+        backWall.setMaterial(Material.WHITE_MAT.copy().setReflectivity(0.9f).setSpecularity(1));
         scene.addMesh(backWall);
         // Left Wall
         leftWall = new PolygonMesh();
         leftWall.addPolygon(frontLeftBottom, backLeftBottom, backLeftTop);
         leftWall.addPolygon(backLeftTop, frontLeftTop, frontLeftBottom);
-        leftWall.setMaterial(Material.RED_MAT.copy().setReflectivity(0.9).setSpecularity(1));
+        leftWall.setMaterial(Material.RED_MAT.copy().setReflectivity(0.9f).setSpecularity(1));
         scene.addMesh(leftWall);
         // Right Wall
         rightWall = new PolygonMesh();
         rightWall.addPolygon(backRightBottom, frontRightBottom, backRightTop);
         rightWall.addPolygon(frontRightBottom, frontRightTop, backRightTop);
-        rightWall.setMaterial(Material.BLUE_MAT.copy().setReflectivity(0.9).setSpecularity(1));
+        rightWall.setMaterial(Material.BLUE_MAT.copy().setReflectivity(0.9f).setSpecularity(1));
         scene.addMesh(rightWall);
         // Floor
         floor = new PolygonMesh();
@@ -77,7 +77,7 @@ public abstract class TSKnightMirrors {
         frontWall = new PolygonMesh();
         frontWall.addPolygon(frontLeftBottom, frontRightTop, frontRightBottom);
         frontWall.addPolygon(frontLeftBottom, frontLeftTop, frontRightTop);
-        frontWall.setMaterial(Material.WHITE_MAT.copy().setReflectivity(0.9).setSpecularity(1));
+        frontWall.setMaterial(Material.WHITE_MAT.copy().setReflectivity(0.9f).setSpecularity(1));
         scene.addMesh(frontWall);
 
         return scene;

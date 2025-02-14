@@ -164,13 +164,13 @@ public class RaytracingThread implements Runnable, Serializable {
     private Vector getRefractedDirection(Vector dir, Vector norm, Material currentMedium, Material nextMedium) {
         // Snell's Law -> n1 * sin(ϴ1) = n2 * sin(ϴ2)
         // asin(n1/n2 * sin(ϴ1)) = ϴ2
-        double n1 = currentMedium.refractiveIndex;
-        double n2 = nextMedium.refractiveIndex;
+        float n1 = currentMedium.refractiveIndex;
+        float n2 = nextMedium.refractiveIndex;
 
         Vector binormal = Vector.cross(dir, norm).normalize();
         Vector newNormal = Vector.multiply(norm, -1);
-        double incomingAngle = Vector.angleBetween(newNormal, dir);
-        double outgoingAngle = Util.asind(n1 / n2 * Util.sind(incomingAngle));
+        float incomingAngle = (float) Vector.angleBetween(newNormal, dir);
+        float outgoingAngle = Util.asind( n1 / n2 * Util.sind(incomingAngle));
         return Vector.rotate(newNormal, binormal, outgoingAngle);
     }
 

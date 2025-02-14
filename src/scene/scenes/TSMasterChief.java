@@ -15,7 +15,7 @@ public abstract class TSMasterChief {
         NormColor helmetColor = new NormColor(new Color(40, 50, 20));
         NormColor visorColor = new NormColor(new Color(200, 180, 80));
         Material helmetMat = new Material(helmetColor).setSpecularity(0);
-        Material visorMat = new Material(visorColor).setSpecularity(0.8);
+        Material visorMat = new Material(visorColor).setSpecularity(0.8f);
 
         // Helmet
         PolygonMesh helmet = ModelLoader.loadModel("assets/big_assets/master_chief", "Helmet 19K", ModelType.STL_BIN);

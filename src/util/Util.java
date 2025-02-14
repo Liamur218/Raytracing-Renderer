@@ -29,12 +29,20 @@ public abstract class Util {
         return Math.sin(Math.toRadians(x));
     }
 
+    public static float sind(float x) {
+        return (float) Math.sin(Math.toRadians(x));
+    }
+
     public static double cosd(double x) {
         return Math.cos(Math.toRadians(x));
     }
 
     public static double asind(double x) {
         return Math.toDegrees(Math.asin(x));
+    }
+
+    public static float asind(float x) {
+        return (float) Math.toDegrees(Math.asin(x));
     }
 
     public static String bracket(String string) {

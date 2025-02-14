@@ -9,30 +9,30 @@ public class Material {
     public NormColor color;
 
     // Emission & Reflection
-    public double emissivity;
-    public double reflectivity;
-    public double specularity;
+    public float emissivity;
+    public float reflectivity;
+    public float specularity;
 
     // Refraction
-    public double opacity;
-    public double refractiveIndex;
+    public float opacity;
+    public float refractiveIndex;
 
     // id
     public int ID;
     private static int ID_COUNTER = 0;
 
     // Defaults
-    public static final double DEFAULT_EMISSIVITY = 0;
-    public static final double DEFAULT_REFLECTIVITY = 1;
-    public static final double DEFAULT_SPECULARITY = 0;
-    public static final double DEFAULT_OPACITY = 1;
-    public static final double DEFAULT_REFRACTIVE_INDEX = 1;
+    public static final float DEFAULT_EMISSIVITY = 0;
+    public static final float DEFAULT_REFLECTIVITY = 1;
+    public static final float DEFAULT_SPECULARITY = 0;
+    public static final float DEFAULT_OPACITY = 1;
+    public static final float DEFAULT_REFRACTIVE_INDEX = 1;
 
     public static final Material AIR = new Material(WHITE);
 
     // Private templates
     private static final Material LIGHT = new Material(WHITE).setReflectivity(0).setEmissivity(1);
-    private static final Material GLASS = new Material(WHITE).setSpecularity(1).setOpacity(0).setRefractiveIndex(1.5);
+    private static final Material GLASS = new Material(WHITE).setSpecularity(1).setOpacity(0).setRefractiveIndex(1.5f);
     private static final Material MIRROR = new Material(WHITE).setSpecularity(1);
 
     // Basic materials
@@ -172,27 +172,27 @@ public class Material {
         return setColor(new NormColor(r, g, b));
     }
 
-    public Material setEmissivity(double emissivity) {
+    public Material setEmissivity(float emissivity) {
         this.emissivity = emissivity;
         return this;
     }
 
-    public Material setReflectivity(double reflectivity) {
+    public Material setReflectivity(float reflectivity) {
         this.reflectivity = reflectivity;
         return this;
     }
 
-    public Material setSpecularity(double specularity) {
+    public Material setSpecularity(float specularity) {
         this.specularity = specularity;
         return this;
     }
 
-    public Material setOpacity(double opacity) {
+    public Material setOpacity(float opacity) {
         this.opacity = opacity;
         return this;
     }
 
-    public Material setRefractiveIndex(double refractiveIndex) {
+    public Material setRefractiveIndex(float refractiveIndex) {
         this.refractiveIndex = refractiveIndex;
         return this;
     }
