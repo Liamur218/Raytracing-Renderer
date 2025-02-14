@@ -16,7 +16,7 @@ public class RaycastInfo {
     public double distance;
 
     // Carries color info back to camera
-    public DoubleColor rayColor;
+    public NormColor rayColor;
 
     // Carries info forward along successive raycasts
     public MeshStack meshStack;
@@ -26,7 +26,7 @@ public class RaycastInfo {
         this.direction = direction;
         distance = Double.MAX_VALUE;
 
-        rayColor = new DoubleColor();
+        rayColor = new NormColor();
     }
 
     public void set(Vector intersection, Vector normal, Mesh mesh, Material material, double distance) {

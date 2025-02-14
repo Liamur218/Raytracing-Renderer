@@ -1,7 +1,6 @@
 package renderer;
 
-import mesh.DoubleColor;
-import util.Util;
+import mesh.NormColor;
 
 public class PostProcessor {
 
@@ -25,10 +24,10 @@ public class PostProcessor {
             for (int pixelX = 0; pixelX < image.getWidth(); pixelX++) {
                 for (int pixelY = 0; pixelY < image.getHeight(); pixelY++) {
                     int pixelsInSample = 0;
-                    DoubleColor color = new DoubleColor();
+                    NormColor color = new NormColor();
                     for (int x = Math.max(pixelX - 1, 0); x < Math.min(pixelX + 1, image.getWidth()); x++) {
                         for (int y = Math.max(pixelY - 1, 0); y < Math.min(pixelY + 1, image.getHeight()); y++) {
-                            color.add(new DoubleColor(original.getRGB(x, y)));
+                            color.add(new NormColor(original.getRGB(x, y)));
                             pixelsInSample++;
                         }
                     }
@@ -40,7 +39,7 @@ public class PostProcessor {
         if (doEnhance) {
             for (int i = 0; i < image.getWidth(); i++) {
                 for (int j = 0; j < image.getHeight(); j++) {
-                    DoubleColor color = image.getDoubleColor(i, j);
+                    NormColor color = image.getDoubleColor(i, j);
                     color.multiply(enhancementFactor);
                     image.setRGB(i, j, color);
                 }

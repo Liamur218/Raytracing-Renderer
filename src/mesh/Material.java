@@ -2,11 +2,11 @@ package mesh;
 
 import java.awt.*;
 
-import static mesh.DoubleColor.*;
+import static mesh.NormColor.*;
 
 public class Material {
 
-    public DoubleColor color;
+    public NormColor color;
 
     // Emission & Reflection
     public double emissivity;
@@ -133,7 +133,7 @@ public class Material {
     public static final Material BLUE_GLASS = new Material(GLASS).setColor(BLUE);
     public static final Material PURPLE_GLASS = new Material(GLASS).setColor(PURPLE);
 
-    public Material(DoubleColor color) {
+    public Material(NormColor color) {
         this.color = color;
         setReflectivity(DEFAULT_REFLECTIVITY);
         setEmissivity(DEFAULT_EMISSIVITY);
@@ -159,17 +159,17 @@ public class Material {
         return new Material(this);
     }
 
-    public Material setColor(DoubleColor color) {
+    public Material setColor(NormColor color) {
         this.color = color;
         return this;
     }
 
     public Material setColor(Color color) {
-        return setColor(new DoubleColor(color));
+        return setColor(new NormColor(color));
     }
 
-    public Material setColor(double r, double g, double b) {
-        return setColor(new DoubleColor(r, g, b));
+    public Material setColor(float r, float g, float b) {
+        return setColor(new NormColor(r, g, b));
     }
 
     public Material setEmissivity(double emissivity) {

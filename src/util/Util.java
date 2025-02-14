@@ -9,8 +9,16 @@ public abstract class Util {
 
     private static final DecimalFormat DF = new DecimalFormat("##");
 
+    public static float clamp(float a, float low, float high) {
+        return Math.max(Math.min(a, high), low);
+    }
+
     public static double clamp(double a, double low, double high) {
         return Math.max(Math.min(a, high), low);
+    }
+
+    public static float linearInterpolation(float dMin, float dMax, float dMid, float rMin, float rMax) {
+        return (dMid - dMin) * (rMax - rMin) / (dMax - dMin) + rMin;
     }
 
     public static double linearInterpolation(double dMin, double dMax, double dMid, double rMin, double rMax) {

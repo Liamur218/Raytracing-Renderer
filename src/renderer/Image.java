@@ -1,6 +1,6 @@
 package renderer;
 
-import mesh.DoubleColor;
+import mesh.NormColor;
 import util.*;
 
 import javax.imageio.ImageIO;
@@ -106,16 +106,16 @@ public class Image extends BufferedImage {
         }
     }
 
-    public void setRGB(int x, int y, double[] rgb) {
-        setRGB(x, y, new DoubleColor(rgb[0], rgb[1], rgb[2]).getRGB());
+    public void setRGB(int x, int y, float[] rgb) {
+        setRGB(x, y, new NormColor(rgb[0], rgb[1], rgb[2]).getRGB());
     }
 
-    public void setRGB(int x, int y, DoubleColor color) {
+    public void setRGB(int x, int y, NormColor color) {
         setRGB(x, y, color.getRGB());
     }
 
-    public DoubleColor getDoubleColor(int x, int y) {
-        return new DoubleColor();
+    public NormColor getDoubleColor(int x, int y) {
+        return new NormColor();
     }
 
     public Image copy() {
@@ -134,13 +134,13 @@ public class Image extends BufferedImage {
 
     public static Image average(ArrayList<Image> imageList) {
         Image average = new Image(imageList.get(0).getWidth(), imageList.get(0).getHeight());
-        DoubleColor[] colors = new DoubleColor[imageList.size()];
+        NormColor[] colors = new NormColor[imageList.size()];
         for (int i = 0; i < imageList.get(0).getWidth(); i++) {
             for (int j = 0; j < imageList.get(0).getHeight(); j++) {
                 for (int k = 0; k < imageList.size(); k++) {
                     colors[k] = imageList.get(k).getDoubleColor(i, j);
                 }
-                average.setRGB(i, j, DoubleColor.average(colors).getRGB());
+                average.setRGB(i, j, NormColor.average(colors).getRGB());
             }
         }
         return average;

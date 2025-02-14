@@ -51,7 +51,7 @@ public class RaytracingThread implements Runnable, Serializable {
             for (int j = 0; j < imageFragment.size.height; j++) {
                 Vector ray = new Vector(startDir);
                 ray.add(Vector.multiply(hStep, i)).add(Vector.multiply(vStep, j)).normalize();
-                DoubleColor color = raycast(origin, ray, recursionCount, scene, null).rayColor;
+                NormColor color = raycast(origin, ray, recursionCount, scene, null).rayColor;
                 imageFragment.setRGB(i, j, color);
             }
         }
@@ -96,12 +96,12 @@ public class RaytracingThread implements Runnable, Serializable {
                  * */
                 double directionalIntensity = Math.max(0, Vector.dot(ray, scene.lightSourceDir)) *
                         scene.ambientLightIntensity;
-                raycast.rayColor.set(DoubleColor.multiply(scene.ambientLightColor, directionalIntensity));
+                raycast.rayColor.set(NormColor.multiply(scene.ambientLightColor, directionalIntensity));
             }
             return raycast;
         } else if (raycast.material.reflectivity == 0) {
             // We hit a non-reflective surface: any raycasts after this one don't matter
-            raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
+            raycast.rayColor.set(NormColor.multiply(raycast.material.color, raycast.material.emissivity));
             return raycast;
         } else if (bouncesToLive > 0) {
             // We hit something: chose direction for next raycast
@@ -135,11 +135,11 @@ public class RaytracingThread implements Runnable, Serializable {
             raycast.rayColor = nextCast.rayColor;
             // 2. Scale the brightness of the reflected light by the reflectivity of this material
             // 3. Tint color of this ray by the color of the material this ray is reflected from
-            raycast.rayColor.multiply(DoubleColor.multiply(raycast.material.color, raycast.material.reflectivity));
+            raycast.rayColor.multiply(NormColor.multiply(raycast.material.color, raycast.material.reflectivity));
             // 4. Add the color of any light emitted by the next material to the ray's color
-            raycast.rayColor.add(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
+            raycast.rayColor.add(NormColor.multiply(raycast.material.color, raycast.material.emissivity));
         } else {
-            raycast.rayColor.set(DoubleColor.multiply(raycast.material.color, raycast.material.emissivity));
+            raycast.rayColor.set(NormColor.multiply(raycast.material.color, raycast.material.emissivity));
         }
         return raycast;
     }

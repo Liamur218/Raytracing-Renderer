@@ -168,11 +168,11 @@ public abstract class Renderer {
             Dimension fragSize = renderedImageFragments.get(0).size;
             for (int localX = 0; localX < fragSize.width; localX++) {
                 for (int localY = 0; localY < fragSize.height; localY++) {
-                    DoubleColor[] colors = new DoubleColor[renderedImageFragments.size()];
+                    NormColor[] colors = new NormColor[renderedImageFragments.size()];
                     for (int frameNumber = 0; frameNumber < colors.length; frameNumber++) {
                         colors[frameNumber] = renderedImageFragments.get(frameNumber).array[localX][localY];
                     }
-                    image.setRGB(fragPosX + localX, fragPosY + localY, DoubleColor.average(colors).getRGB());
+                    image.setRGB(fragPosX + localX, fragPosY + localY, NormColor.average(colors).getRGB());
                 }
             }
 
@@ -268,7 +268,7 @@ public abstract class Renderer {
         }
 
         if (raycast.intersection == null) {
-            raycast.rayColor.set(DoubleColor.BLACK);
+            raycast.rayColor.set(NormColor.BLACK);
         } else {
             raycast.rayColor.set(raycast.material.color);
         }
