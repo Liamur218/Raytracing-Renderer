@@ -3,11 +3,12 @@ package mesh;
 import renderer.RaycastInfo;
 import util.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class PolygonMesh extends Mesh {
 
-    private final ArrayList<Polygon> polygonArrayList;
+    private ArrayList<Polygon> polygonArrayList;
+    private ArrayList<Vector> vertexArrayList;
 
     public Polygon[] polygons;
 
@@ -16,9 +17,16 @@ public class PolygonMesh extends Mesh {
 
     public PolygonMesh() {
         polygonArrayList = new ArrayList<>();
+        vertexArrayList = new ArrayList<>();
     }
 
     public void addPolygon(Polygon polygon) {
+        polygonArrayList.add(polygon);
+        for (Vector polygonVertex : polygon.getVertices()) {
+            if (!vertexArrayList.contains(polygonVertex)) {
+                vertexArrayList.add(polygonVertex);
+            }
+        }
         polygonArrayList.add(polygon);
     }
 
@@ -28,7 +36,7 @@ public class PolygonMesh extends Mesh {
 
     public void addPolygon(double x1, double y1, double z1, double x2, double y2, double z2,
                            double x3, double y3, double z3) {
-        polygonArrayList.add(new Polygon(x1, y1, z1, x2, y2, z2, x3, y3, z3));
+        addPolygon(new Polygon(x1, y1, z1, x2, y2, z2, x3, y3, z3));
     }
 
     public void finalizeMesh() {
@@ -40,7 +48,11 @@ public class PolygonMesh extends Mesh {
         }
         polygons = polygonArrayList.toArray(new Polygon[0]);
         boundingBox = BoundingBox.newBoundingBox(this);
-        polygonArrayList.clear();
+
+        // *Emperor Palpatine voice* "You have been replaced"
+        polygonArrayList = null;
+        vertexArrayList = null;
+
         finalized = true;
 
         long endTime = System.nanoTime();
@@ -49,10 +61,8 @@ public class PolygonMesh extends Mesh {
 
     // For scene setup
     public void move(double dx, double dy, double dz) {
-        for (Polygon polygon : polygonArrayList) {
-            for (Vector point : polygon) {
-                point.add(dx, dy, dz);
-            }
+        for (Vector vertex : vertexArrayList) {
+            vertex.add(dx, dy, dz);
         }
     }
 
@@ -61,12 +71,12 @@ public class PolygonMesh extends Mesh {
     }
 
     public void rotate(double dxDeg, double dyDeg, double dzDeg) {
+        for (Vector vertex : vertexArrayList) {
+            vertex.rotate(Vector.X_AXIS, dxDeg);
+            vertex.rotate(Vector.Y_AXIS, dyDeg);
+            vertex.rotate(Vector.Z_AXIS, dzDeg);
+        }
         for (Polygon polygon : polygonArrayList) {
-            for (Vector point : polygon) {
-                point.rotate(Vector.X_AXIS, dxDeg);
-                point.rotate(Vector.Y_AXIS, dyDeg);
-                point.rotate(Vector.Z_AXIS, dzDeg);
-            }
             polygon.normal.rotate(Vector.X_AXIS, dxDeg);
             polygon.normal.rotate(Vector.Y_AXIS, dyDeg);
             polygon.normal.rotate(Vector.Z_AXIS, dzDeg);
@@ -74,12 +84,10 @@ public class PolygonMesh extends Mesh {
     }
 
     public void scale(double x, double y, double z) {
-        for (Polygon polygon : polygonArrayList) {
-            for (Vector point : polygon) {
-                point.x *= x;
-                point.y *= y;
-                point.z *= z;
-            }
+        for (Vector vertex : vertexArrayList) {
+            vertex.x *= x;
+            vertex.y *= y;
+            vertex.z *= z;
         }
     }
 
@@ -100,6 +108,7 @@ public class PolygonMesh extends Mesh {
         return boundingBox.getIntersectedPolygon(origin, ray, lastPolygon);
     }
 
+    // Positional data getters
     public Vector[] getMinMax() {
         Vector min = new Vector(Double.MAX_VALUE);
         Vector max = new Vector(-Double.MAX_VALUE);

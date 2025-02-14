@@ -18,4 +18,22 @@ public enum ModelType {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case STL_BIN -> {
+                return "stl, binary";
+            }
+            case STL_ASCII -> {
+                return "stl, ascii";
+            }
+            case WAVEFRONT_OBJ -> {
+                return "wavefront obj";
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
 }

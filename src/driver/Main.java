@@ -7,9 +7,10 @@ import util.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSKnight.newScene();
+        Scene scene = TSOBJTest.newScene();
+        scene.setName("OBJ Test");
 
-        RenderSettings settings = RenderSettings.FANCY_SETTINGS.copy();
+        RenderSettings settings = RenderSettings.DEFAULT_SETTINGS.copy();
         settings.setSeed(0);
         settings.setScene(scene);
 

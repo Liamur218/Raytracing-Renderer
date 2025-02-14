@@ -42,6 +42,10 @@ public class Polygon implements Iterable<Vector> {
         return this;
     }
 
+    Vector[] getVertices() {
+        return points;
+    }
+
     Vector getCentroid() {
         return new Vector(
                 points[0].x + points[1].x + points[2].x,

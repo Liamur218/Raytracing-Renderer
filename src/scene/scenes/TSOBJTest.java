@@ -5,10 +5,13 @@ import scene.Scene;
 import util.*;
 
 public abstract class TSOBJTest {
-    public Scene newScene() {
+    public static Scene newScene() {
         Scene scene = TSBasicEnvironment.newScene();
 
-        PolygonMesh mesh = ModelLoader.loadModel("src/assets", "Blender Cube", ModelType.WAVEFRONT_OBJ);
+        PolygonMesh mesh = ModelLoader.loadModel("assets", "Blender Cube", ModelType.WAVEFRONT_OBJ);
+        mesh.scale(0.25);
+        mesh.move(1.5, 0, 0);
+        mesh.setMaterial(Material.ORANGE_MAT);
         scene.addMesh(mesh);
 
         return scene;

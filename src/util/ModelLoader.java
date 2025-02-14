@@ -9,27 +9,22 @@ import java.util.*;
 public abstract class ModelLoader {
 
     public static PolygonMesh loadModel(String fileLocation, String modelName, ModelType modelType) {
-        PolygonMesh mesh = loadModel(fileLocation + "/" + modelName, modelType);
+        Logger.logMsgLn("Loading model " + modelName + " from " + fileLocation + " (type: " + modelType + ")");
+        long start = System.nanoTime();
+
+        String filename = fileLocation + "/" + modelName + "." + modelType.getExtension();
+        PolygonMesh mesh;
+        switch (modelType) {
+            case STL_BIN -> mesh = loadStl(filename);
+            case STL_ASCII -> mesh = loadAsciiStl(filename);
+            case WAVEFRONT_OBJ -> mesh = loadObj(filename);
+            default -> mesh = new PolygonMesh();
+        }
+
+        long end = System.nanoTime();
+        Logger.logMsgLn("Model " + modelName + " loaded in " + TimeFormatter.timeToString(end - start));
         mesh.setName(modelName);
         return mesh;
-    }
-
-    public static PolygonMesh loadModel(String filepath, ModelType modelType) {
-        String filename = filepath + "." + modelType.getExtension();
-        switch (modelType) {
-            case STL_BIN -> {
-                return loadStl(filename);
-            }
-            case STL_ASCII -> {
-                return loadAsciiStl(filename);
-            }
-            case WAVEFRONT_OBJ -> {
-                return loadObj(filename);
-            }
-            default -> {
-                return new PolygonMesh();
-            }
-        }
     }
 
     private static PolygonMesh loadStl(String filepath) {
@@ -155,7 +150,7 @@ public abstract class ModelLoader {
             // Define vertices
             // 1. Process vertex strings
             for (int i = 0; i < vertices.length; i++) {
-                String[] vertexAsStringArray = vertexStrings.get(0).split(" ");
+                String[] vertexAsStringArray = vertexStrings.remove(0).split(" ");
                 vertices[i] = new Vector(
                         Double.parseDouble(vertexAsStringArray[0]),
                         Double.parseDouble(vertexAsStringArray[1]),
@@ -167,11 +162,10 @@ public abstract class ModelLoader {
             int[][] polygonIndices = new int[polygonStrings.size()][Polygon.VERTEX_COUNT * 2];
             for (int i = 0; i < polygonStrings.size(); i++) {
                 String[] faceAsStringArray = polygonStrings.get(i).split(" ");
-                // TODO: 2/12/25 Make this work with more than 3 vertices
                 for (int j = 0; j < Polygon.VERTEX_COUNT; j++) {
                     String[] faceVertexAsStringArray = faceAsStringArray[j].split("/");
                     polygonIndices[i][j * 2] = Integer.parseInt(faceVertexAsStringArray[0]);
-                    if (!faceVertexAsStringArray[1].isEmpty()) {
+                    if (faceVertexAsStringArray.length > 1 && !faceVertexAsStringArray[1].isEmpty()) {
                         polygonIndices[i][j * 2 + 1] = Integer.parseInt(faceVertexAsStringArray[1]);
                     }
                 }
