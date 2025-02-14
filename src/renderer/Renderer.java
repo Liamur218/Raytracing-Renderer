@@ -133,7 +133,7 @@ public abstract class Renderer {
         Logger.logMsgLn("\tMax recursion ----- " + recursionCount);
         Logger.logMsgLn("\tImage fragments --- " + totalImgFragCount);
         Logger.logMsgLn("\tFragments / frame - " + fragsPerFrame);
-        Logger.logMsgLn("\tSeed -------------- " + rngSeed);
+        Logger.logMsgLn("\tRNG Seed -------------- " + rngSeed);
         if (threadCount > frameCount && threadCount > 0) {
             Logger.logWarningMsg("Settings specify more threads than frames; excess threads will not be used");
         }
@@ -202,7 +202,7 @@ public abstract class Renderer {
     }
 
     public static Image quickRender(Scene scene) {
-        return quickRender(scene, RenderSettings.DEFAULT_SETTINGS.size);
+        return quickRender(scene, RenderSettings.BUDGET_SETTINGS.size);
     }
 
     public static Image quickRender(Scene scene, Dimension imageSize) {

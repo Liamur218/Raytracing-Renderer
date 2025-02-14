@@ -7,8 +7,7 @@ import util.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSOBJTest.newScene();
-        scene.setName("OBJ Test");
+        Scene scene = TSObjects.newScene();
 
         RenderSettings settings = RenderSettings.DEFAULT_SETTINGS.copy();
         settings.setSeed(0);

@@ -24,34 +24,41 @@ public class RenderSettings {
     PostProcessor postProcessor;
 
     // Default settings
-    public static final RenderSettings DEFAULT_SETTINGS = new RenderSettings();
+    public static final RenderSettings BUDGET_SETTINGS = new RenderSettings();
 
     static {
-        DEFAULT_SETTINGS.setSize(1920, 1080);
-        DEFAULT_SETTINGS.setRecursionCount(15);
-        DEFAULT_SETTINGS.setFrameCount(30);
-        DEFAULT_SETTINGS.setThreadCount(25);
-        DEFAULT_SETTINGS.setSectionSize(500, 500);
-        DEFAULT_SETTINGS.setSeed(new Random().nextInt());
+        BUDGET_SETTINGS.setSize(1920, 1080);
+        BUDGET_SETTINGS.setRecursionCount(15);
+        BUDGET_SETTINGS.setFrameCount(30);
+        BUDGET_SETTINGS.setThreadCount(25);
+        BUDGET_SETTINGS.setSectionSize(500, 500);
+        BUDGET_SETTINGS.setSeed(new Random().nextInt());
     }
 
     // Other settings
-    public static final RenderSettings FANCY_SETTINGS = new RenderSettings(DEFAULT_SETTINGS);
-    public static final RenderSettings ULTRA_SETTINGS = new RenderSettings(DEFAULT_SETTINGS);
+    public static final RenderSettings DEFAULT_SETTINGS = new RenderSettings(BUDGET_SETTINGS);
+    public static final RenderSettings FANCY_SETTINGS = new RenderSettings(BUDGET_SETTINGS);
+    public static final RenderSettings ULTRA_SETTINGS = new RenderSettings(BUDGET_SETTINGS);
 
     static {
-        FANCY_SETTINGS.setFrameCount(150);
+        DEFAULT_SETTINGS.setFrameCount(150);
 
-        ULTRA_SETTINGS.setSize((int) (1920 * 1.75), (int) (1080 * 1.75));
+        FANCY_SETTINGS.setSize(1920 * 1.5, 1080 * 1.5);
+        FANCY_SETTINGS.setRecursionCount(20);
+        FANCY_SETTINGS.setFrameCount(200);
+        FANCY_SETTINGS.setThreadCount(100);
+
+        ULTRA_SETTINGS.setSize(1920 * 2, 1080 * 2);
         ULTRA_SETTINGS.setRecursionCount(30);
         ULTRA_SETTINGS.setFrameCount(300);
+        ULTRA_SETTINGS.setThreadCount(150);
     }
 
     private RenderSettings() {
     }
 
     public RenderSettings(Scene scene) {
-        this(DEFAULT_SETTINGS);
+        this(BUDGET_SETTINGS);
         this.scene = scene;
     }
 
@@ -80,6 +87,10 @@ public class RenderSettings {
     public RenderSettings setSize(int width, int height) {
         setSize(new Dimension(width, height));
         return this;
+    }
+
+    public RenderSettings setSize(double width, double height) {
+        return setSize((int) width, (int) height);
     }
 
     public RenderSettings setRecursionCount(int recursionCount) {

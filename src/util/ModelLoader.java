@@ -8,16 +8,17 @@ import java.util.*;
 
 public abstract class ModelLoader {
 
-    public static PolygonMesh loadModel(String fileLocation, String modelName, ModelType modelType) {
+    public static PolygonMesh loadModel(String fileLocation, String filename, ModelType modelType) {
+        String modelName = filename.replace("_", " ");
         Logger.logMsgLn("Loading model " + modelName + " from " + fileLocation + " (type: " + modelType + ")");
         long start = System.nanoTime();
 
-        String filename = fileLocation + "/" + modelName + "." + modelType.getExtension();
+        String filepath = fileLocation + "/" + filename + "." + modelType.getExtension();
         PolygonMesh mesh;
         switch (modelType) {
-            case STL_BIN -> mesh = loadStl(filename);
-            case STL_ASCII -> mesh = loadAsciiStl(filename);
-            case WAVEFRONT_OBJ -> mesh = loadObj(filename);
+            case STL_BIN -> mesh = loadStl(filepath);
+            case STL_ASCII -> mesh = loadAsciiStl(filepath);
+            case WAVEFRONT_OBJ -> mesh = loadObj(filepath);
             default -> mesh = new PolygonMesh();
         }
 
@@ -130,18 +131,21 @@ public abstract class ModelLoader {
             ArrayList<String> polygonStrings = new ArrayList<>();
             ArrayList<String> lineStrings = new ArrayList<>();
             ArrayList<String> textureStrings = new ArrayList<>();
+            String matLibFilename = null;
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 line = line.trim();
 
                 String[] lineAsArray = line.split(" ");
-                if (lineAsArray[0].equals("v")) {
-                    vertexStrings.add(line.substring(2));
-                } else if (lineAsArray[0].equals("f")) {
-                    polygonStrings.add(line.substring(2));
+                if (lineAsArray[0].equals("mtllib")) {
+                    matLibFilename = lineAsArray[1];
+                } else if (lineAsArray[0].equals("v")) {
+                    vertexStrings.add(line.substring(lineAsArray[0].length() + 1));
+                } else if (lineAsArray[0].equals("f")/* || lineAsArray[0].equals("usemtl")*/) {
+                    polygonStrings.add(line.substring(lineAsArray[0].length() + 1));
                 } else if (lineAsArray[0].equals("l")) {
-                    lineStrings.add(line.substring(2));
+                    lineStrings.add(line.substring(lineAsArray[0].length() + 1));
                 } else if (lineAsArray[0].equals("vt")) {
-                    textureStrings.add(line.substring(3));
+                    textureStrings.add(line.substring(lineAsArray[0].length() + 1));
                 }
             }
 
