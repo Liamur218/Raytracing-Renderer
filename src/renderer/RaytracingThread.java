@@ -95,8 +95,8 @@ public class RaytracingThread implements Runnable, Serializable {
                  * float sun = pow(max(0, dot(ray.dir, _WorldSpaceLightPos0.xyz)), SunFocus) * SunIntensity;
                  * float3 composite = lerp(GroundColour, skyGradient, groundToSkyT) + sun * (groundToSkyT>=1);
                  * */
-                double directionalIntensity = Math.max(0, Vector.dot(ray, scene.lightSourceDir)) *
-                        scene.ambientLightIntensity;
+                float directionalIntensity = (float) (Math.max(0, Vector.dot(ray, scene.lightSourceDir)) *
+                        scene.ambientLightIntensity);
                 raycast.rayColor.set(NormColor.multiply(scene.ambientLightColor, directionalIntensity));
             }
             return raycast;

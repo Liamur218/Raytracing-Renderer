@@ -31,12 +31,12 @@ public class NormColor implements Serializable {
         this(0, 0, 0);
     }
 
-    public NormColor(float x) {
-        this(x, x, x);
+    public NormColor(float f) {
+        this(f, f, f);
     }
 
     public NormColor(int rgb) {
-        this(new Color(rgb));
+        this(((rgb & 0x00FF0000) >> 16) / 255f, ((rgb & 0x0000FF00) >> 8) / 255f, (rgb & 0x000000FF) / 255f);
     }
 
     public NormColor(float r, float g, float b) {
@@ -50,18 +50,11 @@ public class NormColor implements Serializable {
     }
 
     public NormColor(Color color) {
-        this((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255);
+        this(color.getRGB());
     }
 
     public NormColor(NormColor color) {
         this(color.r, color.g, color.b);
-    }
-
-    public NormColor cap() {
-        r = Util.clamp(r, 0, 1);
-        g = Util.clamp(g, 0, 1);
-        b = Util.clamp(b, 0, 1);
-        return this;
     }
 
     public void set(NormColor color) {
@@ -75,17 +68,22 @@ public class NormColor implements Serializable {
     }
 
     public void set(int r, int g, int b) {
-        set(new Color(r, g, b));
+        set(r / 255f, g / 255f, b / 255f);
+    }
+
+    public void set(int rgb) {
+        set((rgb & 0x00FF0000) >> 16, (rgb & 0x0000FF00) >> 8, (rgb & 0x000000FF));
     }
 
     public void set(Color color) {
-        set(new NormColor(color));
+        set(color.getRGB());
     }
 
     public int getRGB() {
-        //return ((((int) (r * 255)) & 0xFF) << 16) | ((((int) (g * 255)) & 0xFF) << 8)  | ((((int) (b * 255)) & 0xFF));
-        NormColor capped = new NormColor(this).cap();
-        return new Color((int) (capped.r * 255), (int) (capped.g * 255), (int) (capped.b * 255)).getRGB();
+        return 0xFF000000 +
+                ((int) (Util.clamp(r, 0, 1) * 255) << 16) +
+                ((int) (Util.clamp(g, 0, 1) * 255) << 8) +
+                (int) (Util.clamp(b, 0, 1) * 255);
     }
 
     public double[] toDoubleArray() {
@@ -96,6 +94,13 @@ public class NormColor implements Serializable {
         r += color.r;
         g += color.g;
         b += color.b;
+        return this;
+    }
+
+    public NormColor add(int rgb) {
+        r += ((rgb & 0x00FF0000 >> 16) / 255f);
+        g += ((rgb & 0x0000FF00 >> 8) / 255f);
+        b += ((rgb & 0x000000FF) / 255f);
         return this;
     }
 
@@ -114,14 +119,21 @@ public class NormColor implements Serializable {
         return new NormColor(color1.r - color2.r, color1.g - color2.g, color1.b - color2.b);
     }
 
-    public static NormColor multiply(NormColor color, double a) {
+    public static NormColor multiply(NormColor color, float a) {
         return new NormColor(color).multiply(a);
     }
 
-    public NormColor multiply(double a) {
+    public NormColor multiply(float a) {
         r *= a;
         g *= a;
         b *= a;
+        return this;
+    }
+
+    public NormColor divide(float a) {
+        r /= a;
+        g /= a;
+        b /= a;
         return this;
     }
 

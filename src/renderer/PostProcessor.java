@@ -1,21 +1,23 @@
 package renderer;
 
-import mesh.NormColor;
+import mesh.*;
 
 public class PostProcessor {
 
     boolean doAntiAliasing;
 
     boolean doEnhance;
-    double enhancementFactor;
+    float enhancementFactor;
 
-    public void doAntiAliasing(boolean doAntiAliasing) {
-        this.doAntiAliasing = doAntiAliasing;
+    public PostProcessor enableAntiAliasing() {
+        doAntiAliasing = true;
+        return this;
     }
 
-    public void doLighten(boolean doEnhance, double enhancementFactor) {
-        this.doEnhance = doEnhance;
+    public PostProcessor enableLighten(float enhancementFactor) {
+        doEnhance = true;
         this.enhancementFactor = enhancementFactor;
+        return this;
     }
 
     void postProcess(Image image) {
@@ -27,12 +29,12 @@ public class PostProcessor {
                     NormColor color = new NormColor();
                     for (int x = Math.max(pixelX - 1, 0); x < Math.min(pixelX + 1, image.getWidth()); x++) {
                         for (int y = Math.max(pixelY - 1, 0); y < Math.min(pixelY + 1, image.getHeight()); y++) {
-                            color.add(new NormColor(original.getRGB(x, y)));
+                            color.add(original.getRGB(x, y));
                             pixelsInSample++;
                         }
                     }
-                    //color.add(new DoubleColor(original.getRGB(pixelX, pixelY)));
-                    image.setRGB(pixelX, pixelY, color.multiply(1.0 / pixelsInSample).getRGB());
+                    color.add(new NormColor(original.getRGB(pixelX, pixelY)).multiply(9));
+                    image.setRGB(pixelX, pixelY, color.divide(pixelsInSample + 9).getRGB());
                 }
             }
         }
