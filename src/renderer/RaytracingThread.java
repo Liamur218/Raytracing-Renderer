@@ -52,8 +52,8 @@ public class RaytracingThread implements Runnable, Serializable {
             for (int j = 0; j < imageFragment.size.height; j++) {
                 Vector ray = new Vector(startDir);
                 ray.add(Vector.multiply(hStep, i)).add(Vector.multiply(vStep, j)).normalize();
-                NormColor color = raycast(origin, ray, recursionCount, scene, null).rayColor;
-                imageFragment.setRGB(i, j, color);
+                RaycastInfo raycastInfo = raycast(origin, ray, recursionCount, scene, null);
+                imageFragment.setRGB(i, j, NormColor.multiply(raycastInfo.rayColor, raycastInfo.rayIntensity));
             }
         }
 
@@ -93,14 +93,15 @@ public class RaytracingThread implements Runnable, Serializable {
                  * float sun = pow(max(0, dot(ray.dir, _WorldSpaceLightPos0.xyz)), SunFocus) * SunIntensity;
                  * float3 composite = lerp(GroundColour, skyGradient, groundToSkyT) + sun * (groundToSkyT>=1);
                  * */
-                float directionalIntensity = (float) (Math.max(0, Vector.dot(ray, scene.lightSourceDir)) *
+                raycast.rayColor.set(scene.ambientLightColor);
+                raycast.rayIntensity = (float) (Math.max(0, Vector.dot(ray, scene.lightSourceDir)) *
                         scene.ambientLightIntensity);
-                raycast.rayColor.set(NormColor.multiply(scene.ambientLightColor, directionalIntensity));
             }
             return raycast;
         } else if (raycast.material.reflectivity == 0) {
             // We hit a non-reflective surface: any raycasts after this one don't matter
-            raycast.rayColor.set(NormColor.multiply(raycast.material.color, raycast.material.emissivity));
+            raycast.rayColor.set(raycast.material.color);
+            raycast.rayIntensity = raycast.material.emissivity;
             return raycast;
         } else if (bouncesToLive > 0) {
             // We hit something: chose direction for next raycast
@@ -132,13 +133,17 @@ public class RaytracingThread implements Runnable, Serializable {
             // Process raycast results and average colors
             // 1. Set the color of this outgoing ray to the color of the incoming ray (for returning later)
             raycast.rayColor = nextCast.rayColor;
+            raycast.rayIntensity = nextCast.rayIntensity;
             // 2. Scale the brightness of the reflected light by the reflectivity of this material
+            raycast.rayIntensity *= raycast.material.reflectivity;
             // 3. Tint color of this ray by the color of the material this ray is reflected from
-            raycast.rayColor.multiply(NormColor.multiply(raycast.material.color, raycast.material.reflectivity));
+            raycast.rayColor.multiply(raycast.material.color);
             // 4. Add the color of any light emitted by the next material to the ray's color
-            raycast.rayColor.add(NormColor.multiply(raycast.material.color, raycast.material.emissivity));
+            raycast.rayColor.add(raycast.material.color);
+            raycast.rayIntensity += raycast.material.emissivity;
         } else {
-            raycast.rayColor.set(NormColor.multiply(raycast.material.color, raycast.material.emissivity));
+            raycast.rayColor.set(raycast.material.color);
+            raycast.rayIntensity = raycast.material.emissivity;
         }
         return raycast;
     }

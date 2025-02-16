@@ -17,6 +17,7 @@ public class RaycastInfo {
 
     // Carries color info back to camera
     public NormColor rayColor;
+    public float rayIntensity;
 
     // Carries info forward along successive raycasts
     public MeshStack meshStack;
