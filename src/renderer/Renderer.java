@@ -197,10 +197,6 @@ public abstract class Renderer {
         return image;
     }
 
-    static synchronized void returnImageFragment(ImageFragment imageFragment) {
-        renderedImageFragments.add(imageFragment);
-    }
-
     public static Image quickRender(Scene scene) {
         return quickRender(scene, RenderSettings.BUDGET_SETTINGS.size);
     }

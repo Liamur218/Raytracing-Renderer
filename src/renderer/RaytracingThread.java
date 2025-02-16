@@ -57,8 +57,6 @@ public class RaytracingThread implements Runnable, Serializable {
             }
         }
 
-        Renderer.returnImageFragment(imageFragment);
-
         stopTime = System.nanoTime();
         elapsedTime = stopTime - startTime;
     }
