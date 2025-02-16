@@ -60,6 +60,14 @@ public class Scene {
         ambientLightIntensity = intensity;
     }
 
+    public void setAmbientLight(NormColor color) {
+        ambientLightColor = color;
+    }
+
+    public void setAmbientLight(double intensity) {
+        ambientLightIntensity = intensity;
+    }
+
     public void setLightSourceDir(Vector dir) {
         lightSourceDir = dir;
     }

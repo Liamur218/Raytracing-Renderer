@@ -5,9 +5,9 @@ import util.*;
 
 public class ModelDataGetter {
     public static void main(String[] args) {
-        String filename = "Hollow Knight";
-        String fileLocation = "assets/big_assets";
-        ModelType modelType = ModelType.WAVEFRONT_OBJ;
+        String filename = "Crucible";
+        String fileLocation = "assets";
+        ModelType modelType = ModelType.STL_BIN;
 
         String[] modelNameArray = filename.split("/");
         String modelName = modelNameArray[modelNameArray.length - 1];

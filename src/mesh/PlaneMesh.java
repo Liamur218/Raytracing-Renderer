@@ -6,6 +6,8 @@ public class PlaneMesh extends Mesh {
 
     Vector refPoint, normal;
 
+    boolean doRearVisibility;
+
     public PlaneMesh(Vector refPoint, Vector normal) {
         this(refPoint.x, refPoint.y, refPoint.z, normal.x, normal.y, normal.z);
     }
@@ -13,6 +15,12 @@ public class PlaneMesh extends Mesh {
     public PlaneMesh(double refX, double refY, double refZ, double normalX, double normalY, double normalZ) {
         refPoint = new Vector(refX, refY, refZ);
         normal = new Vector(normalX, normalY, normalZ).normalize();
+        doRearVisibility = true;
+    }
+
+    public PlaneMesh disableRearVisibility() {
+        doRearVisibility = false;
+        return this;
     }
 
     @Override
@@ -20,7 +28,7 @@ public class PlaneMesh extends Mesh {
         RaycastInfo raycastInfo = new RaycastInfo(origin, ray);
 
         Vector intersectionPoint = Vector.getRayPlaneIntersection(origin, ray, refPoint, normal);
-        if (intersectionPoint != null) {
+        if (intersectionPoint != null && (doRearVisibility || Vector.angleBetween(ray, normal) >= 90)) {
             raycastInfo.set(intersectionPoint, normal,
                     this, material, Vector.distanceBetween(origin, intersectionPoint));
         }
