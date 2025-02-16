@@ -1,9 +1,9 @@
 package driver;
 
+import mesh.NormColor;
+
 public class Test {
     public static void main(String[] args) {
-        String string = "Hello World";
-        System.out.println(string);
-        System.out.println(string.substring(1));
+        NormColor normColor = new NormColor(1, 0.5f, 0);
     }
 }
