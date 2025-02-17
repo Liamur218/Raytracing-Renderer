@@ -54,13 +54,7 @@ public class RenderSettings {
         ULTRA_SETTINGS.setThreadCount(150);
     }
 
-    private RenderSettings() {
-    }
-
-    public RenderSettings(Scene scene) {
-        this(BUDGET_SETTINGS);
-        this.scene = scene;
-    }
+    private RenderSettings() {}
 
     public RenderSettings(RenderSettings settings) {
         scene = settings.scene;

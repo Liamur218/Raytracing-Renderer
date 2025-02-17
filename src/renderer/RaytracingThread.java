@@ -138,10 +138,11 @@ public class RaytracingThread implements Runnable, Serializable {
             raycast.rayIntensity *= raycast.material.reflectivity;
             // 3. Tint color of this ray by the color of the material this ray is reflected from
             raycast.rayColor.multiply(raycast.material.color);
-            // 4. Add the color of any light emitted by the next material to the ray's color
-            raycast.rayColor.add(raycast.material.color);
+            // 4. Add the color of any light emitted by this material to the ray's color
+            raycast.rayColor.multiply(raycast.material.color);
             raycast.rayIntensity += raycast.material.emissivity;
         } else {
+            // We're out of bounces
             raycast.rayColor.set(raycast.material.color);
             raycast.rayIntensity = raycast.material.emissivity;
         }

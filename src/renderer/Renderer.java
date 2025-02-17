@@ -18,24 +18,6 @@ public abstract class Renderer {
 
     private static Random random;
 
-    public static Image render(Scene scene, int width, int height, int recursionCount, int frameCount) {
-        return render(scene, width, height, recursionCount, frameCount, 1);
-    }
-
-    public static Image render(Scene scene, Dimension size, int recursionCount, int frameCount, int threadCount) {
-        return render(scene, size.width, size.height, recursionCount, frameCount, threadCount);
-    }
-
-    public static Image render(Scene scene, int width, int height,
-                               int recursionCount, int frameCount, int threadCount) {
-        RenderSettings settings = new RenderSettings(scene);
-        settings.setSize(width, height);
-        settings.setRecursionCount(recursionCount);
-        settings.setFrameCount(frameCount);
-        settings.setThreadCount(threadCount);
-        return render(settings);
-    }
-
     /*
      * "This is where the fun begins"
      * -Anakin Skywalker, right before the fun began
