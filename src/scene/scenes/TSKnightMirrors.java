@@ -71,7 +71,7 @@ public abstract class TSKnightMirrors {
         ceiling = new PolygonMesh();
         ceiling.addPolygon(frontRightTop, frontLeftTop, backRightTop);
         ceiling.addPolygon(backRightTop, frontLeftTop, backLeftTop);
-        ceiling.setMaterial(Material.WHITE_E_MAT);
+        ceiling.setMaterial(Material.WHITE_EMISSIVE_MAT);
         scene.addMesh(ceiling);
         // Front Wall
         frontWall = new PolygonMesh();

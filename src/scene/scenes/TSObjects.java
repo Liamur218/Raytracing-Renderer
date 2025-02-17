@@ -29,7 +29,7 @@ public abstract class TSObjects {
         scene.addMesh(sMesh);
         // Small sphere (on ledge, left of small cube)
         sMesh = new SphereMesh(1.25, 0.825, -0.125, 0.125);
-        sMesh.setMaterial(Material.WHITE_E_MAT);
+        sMesh.setMaterial(Material.WHITE_EMISSIVE_MAT);
         scene.addMesh(sMesh);
         // Large cube (cube on ledge)
         Vector pos = new Vector(1.5, 0.5, 0);
@@ -39,7 +39,7 @@ public abstract class TSObjects {
         // Small cube (cube under ledge)
         pos = new Vector(1.25, 0.5, -0.875);
         cMesh = new CubeMesh(pos, 0.25, 0.25, 0.25, 0, 0, -30);
-        cMesh.setMaterial(Material.ORANGE_E_MAT);
+        cMesh.setMaterial(Material.ORANGE_EMISSIVE_MAT);
         scene.addMesh(cMesh);
 
         return scene;

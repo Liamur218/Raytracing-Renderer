@@ -52,76 +52,44 @@ public class Material {
     public static final Material PURPLE_MAT = new Material(PURPLE);
 
     // Emissive materials
-    public static final Material WHITE_E_MAT = new Material(LIGHT).setColor(WHITE);
-    public static final Material LIGHT_GRAY_E_MAT = new Material(LIGHT).setColor(LIGHT_GRAY);
-    public static final Material GRAY_E_MAT = new Material(LIGHT).setColor(GRAY);
-    public static final Material DARK_GRAY_E_MAT = new Material(LIGHT).setColor(DARK_GRAY);
-    public static final Material BLACK_E_MAT = new Material(LIGHT).setColor(BLACK);
-    public static final Material RED_E_MAT = new Material(LIGHT).setColor(RED);
-    public static final Material PINK_E_MAT = new Material(LIGHT).setColor(PINK);
-    public static final Material ORANGE_E_MAT = new Material(LIGHT).setColor(ORANGE);
-    public static final Material YELLOW_E_MAT = new Material(LIGHT).setColor(YELLOW);
-    public static final Material GREEN_E_MAT = new Material(LIGHT).setColor(GREEN);
-    public static final Material MAGENTA_E_MAT = new Material(LIGHT).setColor(MAGENTA);
-    public static final Material CYAN_E_MAT = new Material(LIGHT).setColor(CYAN);
-    public static final Material BLUE_E_MAT = new Material(LIGHT).setColor(BLUE);
-    public static final Material PURPLE_E_MAT = new Material(LIGHT).setColor(PURPLE);
-
-    // Bright emissive materials
-    public static final Material WHITE_BE_MAT = new Material(WHITE_E_MAT).setEmissivity(2);
-    public static final Material LIGHT_GRAY_BE_MAT = new Material(LIGHT_GRAY_E_MAT).setEmissivity(2);
-    public static final Material GRAY_BE_MAT = new Material(GRAY_E_MAT).setEmissivity(2);
-    public static final Material DARK_GRAY_BE_MAT = new Material(DARK_GRAY_E_MAT).setEmissivity(2);
-    public static final Material BLACK_BE_MAT = new Material(BLACK_E_MAT).setEmissivity(2);
-    public static final Material RED_BE_MAT = new Material(RED_E_MAT).setEmissivity(2);
-    public static final Material PINK_BE_MAT = new Material(PINK_E_MAT).setEmissivity(2);
-    public static final Material ORANGE_BE_MAT = new Material(ORANGE_E_MAT).setEmissivity(2);
-    public static final Material YELLOW_BE_MAT = new Material(YELLOW_E_MAT).setEmissivity(2);
-    public static final Material GREEN_BE_MAT = new Material(GREEN_E_MAT).setEmissivity(2);
-    public static final Material MAGENTA_BE_MAT = new Material(MAGENTA_E_MAT).setEmissivity(2);
-    public static final Material CYAN_BE_MAT = new Material(CYAN_E_MAT).setEmissivity(2);
-    public static final Material BLUE_BE_MAT = new Material(BLUE_E_MAT).setEmissivity(2);
-    public static final Material PURPLE_BE_MAT = new Material(PURPLE_E_MAT).setEmissivity(2);
-
-    // Very bright emissive materials
-    public static final Material WHITE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(WHITE_E_MAT).setEmissivity(3);
-    public static final Material LIGHT_VERY_GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(LIGHT_GRAY_E_MAT).setEmissivity(3);
-    public static final Material GRAY_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(GRAY_E_MAT).setEmissivity(3);
-    public static final Material DARK_VERY_GRAY_BRIGHT_EMISSIVE_MATERIAL = new Material(DARK_GRAY_E_MAT).setEmissivity(3);
-    public static final Material BLACK_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(BLACK_E_MAT).setEmissivity(3);
-    public static final Material RED_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(RED_E_MAT).setEmissivity(3);
-    public static final Material PINK_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(PINK_E_MAT).setEmissivity(3);
-    public static final Material ORANGE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(ORANGE_E_MAT).setEmissivity(3);
-    public static final Material YELLOW_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(YELLOW_E_MAT).setEmissivity(3);
-    public static final Material GREEN_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(GREEN_E_MAT).setEmissivity(3);
-    public static final Material MAGENTA_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(MAGENTA_E_MAT).setEmissivity(3);
-    public static final Material CYAN_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(CYAN_E_MAT).setEmissivity(3);
-    public static final Material BLUE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(BLUE_E_MAT).setEmissivity(3);
-    public static final Material PURPLE_VERY_BRIGHT_EMISSIVE_MATERIAL = new Material(PURPLE_E_MAT).setEmissivity(3);
+    public static final Material WHITE_EMISSIVE_MAT = new Material(LIGHT).setColor(WHITE);
+    public static final Material LIGHT_GRAY_EMISSIVE_MAT = new Material(LIGHT).setColor(LIGHT_GRAY);
+    public static final Material GRAY_EMISSIVE_MAT = new Material(LIGHT).setColor(GRAY);
+    public static final Material DARK_GRAY_EMISSIVE_MAT = new Material(LIGHT).setColor(DARK_GRAY);
+    public static final Material BLACK_EMISSIVE_MAT = new Material(LIGHT).setColor(BLACK);
+    public static final Material RED_EMISSIVE_MAT = new Material(LIGHT).setColor(RED);
+    public static final Material PINK_EMISSIVE_MAT = new Material(LIGHT).setColor(PINK);
+    public static final Material ORANGE_EMISSIVE_MAT = new Material(LIGHT).setColor(ORANGE);
+    public static final Material YELLOW_EMISSIVE_MAT = new Material(LIGHT).setColor(YELLOW);
+    public static final Material GREEN_EMISSIVE_MAT = new Material(LIGHT).setColor(GREEN);
+    public static final Material MAGENTA_EMISSIVE_MAT = new Material(LIGHT).setColor(MAGENTA);
+    public static final Material CYAN_EMISSIVE_MAT = new Material(LIGHT).setColor(CYAN);
+    public static final Material BLUE_EMISSIVE_MAT = new Material(LIGHT).setColor(BLUE);
+    public static final Material PURPLE_EMISSIVE_MAT = new Material(LIGHT).setColor(PURPLE);
 
     // Mirrors
-    public static final Material WHITE_MIR = new Material(MIRROR).setColor(WHITE);
-    public static final Material O_WHITE_MIR = new Material(MIRROR).setColor(OFF_WHITE);
-    public static final Material L_GRAY_MIR = new Material(MIRROR).setColor(LIGHT_GRAY);
-    public static final Material GRAY_MIR = new Material(MIRROR).setColor(GRAY);
-    public static final Material D_GRAY_MIR = new Material(MIRROR).setColor(DARK_GRAY);
-    public static final Material BLACK_MIR = new Material(MIRROR).setColor(BLACK);
-    public static final Material RED_MIR = new Material(MIRROR).setColor(RED);
-    public static final Material PINK_MIR = new Material(MIRROR).setColor(PINK);
-    public static final Material ORANGE_MIR = new Material(MIRROR).setColor(ORANGE);
-    public static final Material YELLOW_MIR = new Material(MIRROR).setColor(YELLOW);
-    public static final Material GREEN_MIR = new Material(MIRROR).setColor(GREEN);
-    public static final Material MAGENTA_MIR = new Material(MIRROR).setColor(MAGENTA);
-    public static final Material CYAN_MIR = new Material(MIRROR).setColor(CYAN);
-    public static final Material BLUE_MIR = new Material(MIRROR).setColor(BLUE);
-    public static final Material PURPLE_MIR = new Material(MIRROR).setColor(PURPLE);
+    public static final Material WHITE_MIRROR = new Material(MIRROR).setColor(WHITE);
+    public static final Material OFF_WHITE_MIRROR = new Material(MIRROR).setColor(OFF_WHITE);
+    public static final Material LIGHT_GRAY_MIRROR = new Material(MIRROR).setColor(LIGHT_GRAY);
+    public static final Material GRAY_MIRROR = new Material(MIRROR).setColor(GRAY);
+    public static final Material DARK_GRAY_MIRROR = new Material(MIRROR).setColor(DARK_GRAY);
+    public static final Material BLACK_MIRROR = new Material(MIRROR).setColor(BLACK);
+    public static final Material RED_MIRROR = new Material(MIRROR).setColor(RED);
+    public static final Material PINK_MIRROR = new Material(MIRROR).setColor(PINK);
+    public static final Material ORANGE_MIRROR = new Material(MIRROR).setColor(ORANGE);
+    public static final Material YELLOW_MIRROR = new Material(MIRROR).setColor(YELLOW);
+    public static final Material GREEN_MIRROR = new Material(MIRROR).setColor(GREEN);
+    public static final Material MAGENTA_MIRROR = new Material(MIRROR).setColor(MAGENTA);
+    public static final Material CYAN_MIRROR = new Material(MIRROR).setColor(CYAN);
+    public static final Material BLUE_MIRROR = new Material(MIRROR).setColor(BLUE);
+    public static final Material PURPLE_MIRROR = new Material(MIRROR).setColor(PURPLE);
 
     // Glasses
     public static final Material WHITE_GLASS = new Material(GLASS).setColor(WHITE);
-    public static final Material O_WHITE_GLASS = new Material(GLASS).setColor(OFF_WHITE);
-    public static final Material L_GRAY_GLASS = new Material(GLASS).setColor(LIGHT_GRAY);
+    public static final Material OFF_WHITE_GLASS = new Material(GLASS).setColor(OFF_WHITE);
+    public static final Material LIGHT_GRAY_GLASS = new Material(GLASS).setColor(LIGHT_GRAY);
     public static final Material GRAY_GLASS = new Material(GLASS).setColor(GRAY);
-    public static final Material D_GRAY_GLASS = new Material(GLASS).setColor(DARK_GRAY);
+    public static final Material DARK_GRAY_GLASS = new Material(GLASS).setColor(DARK_GRAY);
     public static final Material BLACK_GLASS = new Material(GLASS).setColor(BLACK);
     public static final Material RED_GLASS = new Material(GLASS).setColor(RED);
     public static final Material PINK_GLASS = new Material(GLASS).setColor(PINK);

@@ -29,7 +29,7 @@ public abstract class TSCubesAndRays {
 
         // Central Cube
         cube = new CubeMesh(0, 0, 0.0625, 0.125, 0.125, 0.125);
-        cube.setMaterial(Material.WHITE_E_MAT);
+        cube.setMaterial(Material.WHITE_EMISSIVE_MAT);
         scene.addMesh(cube);
 
         // Surrounding Cubes
