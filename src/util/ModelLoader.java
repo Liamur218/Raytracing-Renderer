@@ -8,7 +8,7 @@ import java.util.*;
 
 public abstract class ModelLoader {
 
-    public static PolygonMesh loadModel(String fileLocation, String filename, ModelType modelType) {
+    public static PolygonMesh loadModel(String fileLocation, String filename, ModelFileType modelType) {
         String modelName = filename.replace("_", " ");
         Logger.logMsgLn("Loading model " + modelName + " from " + fileLocation + " (type: " + modelType + ")");
         long start = System.nanoTime();

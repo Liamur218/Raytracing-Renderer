@@ -9,7 +9,7 @@ public abstract class TSKnight {
         Scene scene = TSBasicEnvironment.newScene();
         scene.setName("Knight");
 
-        PolygonMesh polygonMesh = ModelLoader.loadModel("assets", "Knight", ModelType.STL_BIN);
+        PolygonMesh polygonMesh = ModelLoader.loadModel("assets", "Knight", ModelFileType.STL_BIN);
         polygonMesh.setCenterAt(0, 0, 0);
         polygonMesh.scale(1.5 / 3.37);
         polygonMesh.rotate(0, 0, 180 + 45);

@@ -1,6 +1,6 @@
 package util;
 
-public enum ModelType {
+public enum ModelFileType {
     STL_BIN,
     STL_ASCII,
     WAVEFRONT_OBJ;

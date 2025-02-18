@@ -7,7 +7,7 @@ public class ModelDataGetter {
     public static void main(String[] args) {
         String filename = "Crucible";
         String fileLocation = "assets";
-        ModelType modelType = ModelType.STL_BIN;
+        ModelFileType modelType = ModelFileType.STL_BIN;
 
         String[] modelNameArray = filename.split("/");
         String modelName = modelNameArray[modelNameArray.length - 1];
