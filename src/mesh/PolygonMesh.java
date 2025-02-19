@@ -49,35 +49,56 @@ public class PolygonMesh extends Mesh {
     }
 
     public void finalizeMesh() {
-        Logger.logMsg("Finalizing mesh " + this + "... ");
-        long startTime = System.nanoTime();
+        if (!finalized) {
+            Logger.logMsg("Finalizing mesh " + this + "... ");
+            long startTime = System.nanoTime();
 
-        // Set material if user forgor
-        if (material == null) {
-            material = DEFAULT_MATERIAL;
+            // Set material if user forgor
+            if (material == null) {
+                material = DEFAULT_MATERIAL;
+            }
+
+            // Instantiate polygons from vertex indices
+            polygons = new Polygon[tempPolygonIndexList.size()];
+            for (int i = 0; i < polygons.length; i++) {
+                int[] vertexIndices = tempPolygonIndexList.get(i);
+                Vector vertex1 = tempVertexList.get(vertexIndices[0]);
+                Vector vertex2 = tempVertexList.get(vertexIndices[1]);
+                Vector vertex3 = tempVertexList.get(vertexIndices[2]);
+                polygons[i] = new Polygon(vertex1, vertex2, vertex3);
+            }
+
+            // Build bounding box
+            boundingBox = BoundingBox.newBoundingBox(this);
+
+            // Yeet the child
+            tempVertexList = null;
+            tempPolygonIndexList = null;
+
+            // Finish up
+            finalized = true;
+            long endTime = System.nanoTime();
+            Logger.logMsgLn("Done in " + TimeFormatter.timeToString(endTime - startTime));
         }
+    }
 
-        // Add instantiate polygons from vertex indices
-        polygons = new Polygon[tempPolygonIndexList.size()];
-        for (int i = 0; i < polygons.length; i++) {
-            int[] vertexIndices = tempPolygonIndexList.get(i);
-            Vector vertex1 = tempVertexList.get(vertexIndices[0]);
-            Vector vertex2 = tempVertexList.get(vertexIndices[1]);
-            Vector vertex3 = tempVertexList.get(vertexIndices[2]);
-            polygons[i] = new Polygon(vertex1, vertex2, vertex3);
+    public void unFinalizeMesh() {
+        if (finalized) {
+            Logger.logMsg("Un-finalizing mesh " + this + "... ");
+            long startTime = System.nanoTime();
+
+            for (int i = 0; i < polygons.length; i++) {
+                addPolygon(polygons[i]);
+                polygons[i] = null;
+            }
+
+            boundingBox = null;
+
+            // Finish up
+            finalized = false;
+            long endTime = System.nanoTime();
+            Logger.logMsgLn("Done in " + TimeFormatter.timeToString(endTime - startTime));
         }
-
-        // Build bounding box
-        boundingBox = BoundingBox.newBoundingBox(this);
-
-        // Yeet the child
-        tempVertexList = null;
-        tempPolygonIndexList = null;
-
-        // Finish up
-        finalized = true;
-        long endTime = System.nanoTime();
-        Logger.logMsgLn("Done in " + TimeFormatter.timeToString(endTime - startTime));
     }
 
     // For scene setup
@@ -159,8 +180,20 @@ public class PolygonMesh extends Mesh {
         scale(1 / (getSize().getLargestComponent() / 2));
     }
 
+    public int getVertexCount() {
+        return finalized ? -1 : tempVertexList.size();
+    }
+
     public int getPolygonCount() {
-        return (finalized) ? polygons.length : tempPolygonIndexList.size();
+        return finalized ? polygons.length : tempPolygonIndexList.size();
+    }
+
+    public ArrayList<Vector> getUnFinalizedVertices() {
+        return tempVertexList;
+    }
+
+    public ArrayList<int[]> getUnFinalizedPolygonIndices() {
+        return tempPolygonIndexList;
     }
 
     public BoundingBox getBoundingBox() {

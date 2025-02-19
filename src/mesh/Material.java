@@ -18,10 +18,11 @@ public class Material {
     public float refractiveIndex;
 
     // id
-    public int ID;
+    public int id;
     private static int ID_COUNTER = 0;
 
     // Defaults
+    public static final NormColor DEFAULT_COLOR = WHITE;
     public static final float DEFAULT_EMISSIVITY = 0;
     public static final float DEFAULT_REFLECTIVITY = 1;
     public static final float DEFAULT_SPECULARITY = 0;
@@ -101,15 +102,20 @@ public class Material {
     public static final Material BLUE_GLASS = new Material(GLASS).setColor(BLUE);
     public static final Material PURPLE_GLASS = new Material(GLASS).setColor(PURPLE);
 
-    public Material(NormColor color) {
-        this.color = color;
+    public Material() {
+        setColor(DEFAULT_COLOR);
         setReflectivity(DEFAULT_REFLECTIVITY);
         setEmissivity(DEFAULT_EMISSIVITY);
         setSpecularity(DEFAULT_SPECULARITY);
         setOpacity(DEFAULT_OPACITY);
         setRefractiveIndex(DEFAULT_REFRACTIVE_INDEX);
 
-        ID = ID_COUNTER++;
+        id = ID_COUNTER++;
+    }
+
+    public Material(NormColor color) {
+        this();
+        setColor(color);
     }
 
     public Material(Material material) {
@@ -120,7 +126,7 @@ public class Material {
         opacity = material.opacity;
         refractiveIndex = material.refractiveIndex;
 
-        ID = ID_COUNTER++;
+        id = ID_COUNTER++;
     }
 
     public Material copy() {
@@ -168,8 +174,14 @@ public class Material {
     @Override
     public boolean equals(Object object) {
         if (object instanceof Material material) {
-            return ID == material.ID;
+            return id == material.id;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "id " + id + " " + color + " E:" + emissivity + " R:" + reflectivity + " S:" + specularity +
+                " O:" + opacity + " RI:" + refractiveIndex;
     }
 }

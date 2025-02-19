@@ -4,9 +4,9 @@ import renderer.RaycastInfo;
 
 public class PlaneMesh extends Mesh {
 
-    Vector refPoint, normal;
+    public Vector refPoint, normal;
 
-    boolean doRearVisibility;
+    public boolean doRearVisibility;
 
     public PlaneMesh(Vector refPoint, Vector normal) {
         this(refPoint.x, refPoint.y, refPoint.z, normal.x, normal.y, normal.z);
@@ -20,6 +20,11 @@ public class PlaneMesh extends Mesh {
 
     public PlaneMesh disableRearVisibility() {
         doRearVisibility = false;
+        return this;
+    }
+
+    public PlaneMesh setDoRearVisibility(boolean doRearVisibility) {
+        this.doRearVisibility = doRearVisibility;
         return this;
     }
 

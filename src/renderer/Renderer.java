@@ -261,6 +261,7 @@ public abstract class Renderer {
             Logger.logErrorMsg("Scene object is null");
             System.exit(1);
         } else {
+            settings.scene.finalizeMeshes();
             for (Mesh mesh : settings.scene.meshes) {
                 if (mesh.material == null) {
                     Logger.logErrorMsg("Material for mesh " + mesh + " is null");

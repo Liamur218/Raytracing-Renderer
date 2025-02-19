@@ -33,17 +33,13 @@ public class Scene {
         setName(getClass().getName());
     }
 
-    public void setName(String sceneName) {
+    public Scene setName(String sceneName) {
         this.name = sceneName;
+        return this;
     }
 
     // Setup
     public void addMesh(Mesh mesh) {
-        if (mesh instanceof PolygonMesh pMesh) {
-            if (!pMesh.finalized) {
-                pMesh.finalizeMesh();
-            }
-        }
         meshes.add(mesh);
     }
 
@@ -86,6 +82,14 @@ public class Scene {
 
     public void scale(Vector scale) {
         scale(scale.getX(), scale.getY(), scale.getZ());
+    }
+
+    public void finalizeMeshes() {
+        for (Mesh mesh : meshes) {
+            if (mesh instanceof PolygonMesh polygonMesh) {
+                polygonMesh.finalizeMesh();
+            }
+        }
     }
 
     // Printing stuff

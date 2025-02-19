@@ -45,8 +45,9 @@ public abstract class Mesh {
         return this;
     }
 
-    public void setName(String name) {
+    public Mesh setName(String name) {
         this.name = name;
+        return this;
     }
 
     @Override
