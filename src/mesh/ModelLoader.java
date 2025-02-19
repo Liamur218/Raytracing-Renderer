@@ -1,7 +1,6 @@
-package util;
+package mesh;
 
-import mesh.*;
-import mesh.Vector;
+import util.*;
 
 import java.io.*;
 import java.util.*;

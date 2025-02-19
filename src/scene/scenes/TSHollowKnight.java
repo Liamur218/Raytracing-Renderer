@@ -2,7 +2,6 @@ package scene.scenes;
 
 import mesh.*;
 import scene.Scene;
-import util.*;
 
 public abstract class TSHollowKnight {
     public static Scene newScene() {

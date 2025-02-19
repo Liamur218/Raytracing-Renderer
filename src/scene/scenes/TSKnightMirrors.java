@@ -2,7 +2,6 @@ package scene.scenes;
 
 import mesh.*;
 import scene.*;
-import util.*;
 
 public abstract class TSKnightMirrors {
     public static Scene newScene() {

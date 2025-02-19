@@ -1,7 +1,6 @@
 package driver;
 
 import mesh.*;
-import util.*;
 
 public class ModelDataGetter {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package util;
+package mesh;
 
 public enum ModelFileType {
     STL_BIN,
