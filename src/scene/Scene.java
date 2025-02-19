@@ -14,12 +14,12 @@ public class Scene {
     // Environment color -> raw color of the skybox (i.e. blue sky)
     // Ambient light color -> color of light illuminating objects in the scene (i.e. while light from the sun)
     public NormColor enviroColor, ambientLightColor;
-    public double ambientLightIntensity;
+    public float ambientLightIntensity;
     public Vector lightSourceDir;
 
     public static final NormColor DEFAULT_ENVIRO_COLOR = new NormColor(new Color(0, 164, 200));
     public static final NormColor DEFAULT_AMBIENT_LIGHT = new NormColor(new Color(255, 255, 255));
-    public static final double DEFAULT_AMBIENT_LIGHT_INTENSITY = 1;
+    public static final float DEFAULT_AMBIENT_LIGHT_INTENSITY = 1;
     public static final Vector DEFAULT_DIR_LIGHT_DIR = new Vector(-1, 1, 1).normalize();
 
     public String name;
@@ -55,7 +55,7 @@ public class Scene {
         enviroColor = color;
     }
 
-    public void setAmbientLight(NormColor color, double intensity) {
+    public void setAmbientLight(NormColor color, float intensity) {
         ambientLightColor = color;
         ambientLightIntensity = intensity;
     }
@@ -64,7 +64,7 @@ public class Scene {
         ambientLightColor = color;
     }
 
-    public void setAmbientLight(double intensity) {
+    public void setAmbientLight(float intensity) {
         ambientLightIntensity = intensity;
     }
 

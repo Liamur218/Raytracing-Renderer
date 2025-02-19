@@ -87,6 +87,7 @@ public class RaytracingThread implements Runnable, Serializable {
             // We didn't hit anything: get environment lighting data and return
             if (lastCast == null) {
                 raycast.rayColor.set(scene.enviroColor);
+                raycast.rayIntensity = scene.ambientLightIntensity;
             } else {
                 /*
                  * The method of doing this taken from Sebastian Lague's code (thank you, Sebastian!)
