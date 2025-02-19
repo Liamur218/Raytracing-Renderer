@@ -7,9 +7,9 @@ import util.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSKnight.newScene();
+        Scene scene = TSTeapot.newScene();
 
-        RenderSettings settings = RenderSettings.DEFAULT_SETTINGS.copy();
+        RenderSettings settings = RenderSettings.BUDGET_SETTINGS.copy();
         settings.setSeed(0);
         settings.setScene(scene);
 

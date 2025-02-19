@@ -45,6 +45,7 @@ public abstract class Util {
         return (float) Math.toDegrees(Math.asin(x));
     }
 
+    // Text formatting stuff
     public static String bracket(String string) {
         return "[" + string + "]";
     }

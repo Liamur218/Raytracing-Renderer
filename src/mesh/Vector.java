@@ -10,7 +10,7 @@ public class Vector {
     public static final Vector X_AXIS = new Vector(1, 0, 0);
     public static final Vector Y_AXIS = new Vector(0, 1, 0);
     public static final Vector Z_AXIS = new Vector(0, 0, 1);
-    public static final Vector[] AXES = new Vector[]{ X_AXIS, Y_AXIS, Z_AXIS };
+    public static final Vector[] AXES = new Vector[]{X_AXIS, Y_AXIS, Z_AXIS};
 
     public static final int LENGTH = 3;
 
@@ -245,10 +245,19 @@ public class Vector {
     public boolean equals(Object object) {
         if (object instanceof Vector vector) {
             return vector.x == x && vector.y == y && vector.z == z;
-        } return false;
+        }
+        return false;
     }
 
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public double getZ() { return z; }
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
 }
