@@ -30,7 +30,7 @@ public class RenderSettings {
         BUDGET_SETTINGS.setSize(1920, 1080);
         BUDGET_SETTINGS.setRecursionCount(15);
         BUDGET_SETTINGS.setFrameCount(30);
-        BUDGET_SETTINGS.setThreadCount(25);
+        BUDGET_SETTINGS.setThreadCount(30);
         BUDGET_SETTINGS.setSectionSize(500, 500);
         BUDGET_SETTINGS.setSeed(new Random().nextInt());
     }
@@ -42,6 +42,7 @@ public class RenderSettings {
 
     static {
         DEFAULT_SETTINGS.setFrameCount(150);
+        DEFAULT_SETTINGS.setThreadCount(25);
 
         FANCY_SETTINGS.setSize(1920 * 1.5, 1080 * 1.5);
         FANCY_SETTINGS.setRecursionCount(20);
