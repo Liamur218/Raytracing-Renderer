@@ -3,7 +3,8 @@
 
 # Directories
 assets/big_assets/
-output/
+output/logs
+output/renders
 test/
 
 # IDE's

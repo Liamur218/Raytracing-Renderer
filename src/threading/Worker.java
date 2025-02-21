@@ -3,11 +3,11 @@ package threading;
 public class Worker extends Thread {
 
     Runnable task;
-    private final ThreadPool owner;
+    private final LocalThreadPool owner;
 
     private boolean running;
 
-    public Worker(ThreadPool owner) {
+    public Worker(LocalThreadPool owner) {
         this.owner = owner;
         running = true;
     }
