@@ -16,8 +16,6 @@ public class RaytracingThread implements Runnable, Serializable {
     Scene scene;
     ImageFragment imageFragment;
 
-    long startTime, stopTime;
-
     private final Random random;
 
     long elapsedTime;
@@ -45,8 +43,6 @@ public class RaytracingThread implements Runnable, Serializable {
 
     @Override
     public void run() {
-        startTime = System.nanoTime();
-
         imageFragment.initialize();
         for (int i = 0; i < imageFragment.size.width; i++) {
             for (int j = 0; j < imageFragment.size.height; j++) {
@@ -56,9 +52,6 @@ public class RaytracingThread implements Runnable, Serializable {
                 imageFragment.setRGB(i, j, NormColor.multiply(raycastInfo.rayColor, raycastInfo.rayIntensity));
             }
         }
-
-        stopTime = System.nanoTime();
-        elapsedTime = stopTime - startTime;
     }
 
     public RaycastInfo raycast(Vector origin, Vector ray, int bouncesToLive, Scene scene, RaycastInfo lastCast) {

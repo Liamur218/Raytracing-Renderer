@@ -7,6 +7,7 @@ public abstract class TSObjects {
     public static Scene newScene() {
         Scene scene = TSBasicEnvironment.newScene();
         scene.setName("Objects");
+        scene.camera.setFOV(105);
 
         PolygonMesh pMesh;
         SphereMesh sMesh;

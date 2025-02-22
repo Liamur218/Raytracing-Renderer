@@ -21,7 +21,7 @@ public abstract class TSStanfordBox {
         Vector cameraDir = new Vector(0, 0, 1);
         Vector cameraNorm = new Vector(0, 1, 0);
         Camera camera = new Camera(cameraPos, cameraDir, cameraNorm);
-        camera.setFOV(36);
+        camera.setFOV(46);
         scene.setCamera(camera);
 
         // Floor (white)

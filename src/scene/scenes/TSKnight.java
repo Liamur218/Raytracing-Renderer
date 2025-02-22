@@ -7,6 +7,7 @@ public abstract class TSKnight {
     public static Scene newScene() {
         Scene scene = TSBasicEnvironment.newScene();
         scene.setName("Knight");
+        scene.camera.setFOV(100);
 
         PolygonMesh polygonMesh = ModelLoader.loadModel("assets", "Knight", ModelFileType.STL_BIN);
         polygonMesh.setCenterAt(0, 0, 0);

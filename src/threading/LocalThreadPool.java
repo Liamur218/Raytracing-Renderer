@@ -1,7 +1,5 @@
 package threading;
 
-import util.ProgressBar;
-
 import java.util.ArrayList;
 
 public class LocalThreadPool extends ThreadPool {
@@ -9,8 +7,6 @@ public class LocalThreadPool extends ThreadPool {
     private final ArrayList<Worker> workers, activeWorkers, idleWorkers;
 
     private final Object FINAL_WAKEUP_STICK;
-
-    private ProgressBar progressBar;
 
     public LocalThreadPool(int maxThreadCount) {
         workers = new ArrayList<>();

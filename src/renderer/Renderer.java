@@ -51,14 +51,14 @@ public abstract class Renderer {
          * */
         Logger.newLogSection("Setup", "Setting up");
         Vector A = camera.dir.copy();
-        A.rotate(camera.normal, camera.fov.width / 2f);
-        A.rotate(camera.binormal, camera.fov.height / 2f);
+        A.rotate(camera.normal, camera.hFOV / 2);
+        A.rotate(camera.binormal, camera.vFOV / 2);
         Vector B = camera.dir.copy();
-        B.rotate(camera.normal, camera.fov.width / -2f);
-        B.rotate(camera.binormal, camera.fov.height / 2f);
+        B.rotate(camera.normal, camera.hFOV / -2);
+        B.rotate(camera.binormal, camera.vFOV / 2);
         Vector C = camera.dir.copy();
-        C.rotate(camera.normal, camera.fov.width / 2f);
-        C.rotate(camera.binormal, camera.fov.height / -2f);
+        C.rotate(camera.normal, camera.hFOV / 2);
+        C.rotate(camera.binormal, camera.vFOV / -2);
         Vector rCA = Vector.subtract(C, A);
         Vector rBA = Vector.subtract(B, A);
         Vector hStep = Vector.divide(rBA, width);
@@ -204,14 +204,14 @@ public abstract class Renderer {
          * */
         Logger.logMsg("Setting up... ");
         Vector A = camera.dir.copy();
-        A.rotate(camera.normal, camera.fov.width / 2f);
-        A.rotate(camera.binormal, camera.fov.height / 2f);
+        A.rotate(camera.normal, camera.hFOV / 2);
+        A.rotate(camera.binormal, camera.vFOV / 2);
         Vector B = camera.dir.copy();
-        B.rotate(camera.normal, camera.fov.width / -2f);
-        B.rotate(camera.binormal, camera.fov.height / 2f);
+        B.rotate(camera.normal, camera.hFOV / -2);
+        B.rotate(camera.binormal, camera.vFOV / 2);
         Vector C = camera.dir.copy();
-        C.rotate(camera.normal, camera.fov.width / 2f);
-        C.rotate(camera.binormal, camera.fov.height / -2f);
+        C.rotate(camera.normal, camera.hFOV / 2);
+        C.rotate(camera.binormal, camera.vFOV / -2);
         Vector rCA = Vector.subtract(C, A);
         Vector rBA = Vector.subtract(B, A);
         Vector hStep = Vector.divide(rBA, width);

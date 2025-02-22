@@ -3,7 +3,7 @@ IMPORTANT THINGS
 -----> Refraction
 -----> Distributed thread pool
 [DONE] Environment/ambient lighting
------> Fix V/H FOV issue
+[DONE] Fix V/H FOV issue  (Kinda, maybe?)
 
 COOL THINGS
 -----------

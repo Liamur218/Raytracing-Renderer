@@ -47,7 +47,7 @@ public class Scene {
         this.camera = camera;
     }
 
-    public void setEnviroColor(NormColor color) {
+    public void setSkyColor(NormColor color) {
         enviroColor = color;
     }
 

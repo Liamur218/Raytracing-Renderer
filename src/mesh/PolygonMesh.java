@@ -50,7 +50,7 @@ public class PolygonMesh extends Mesh {
 
     public void finalizeMesh() {
         if (!finalized) {
-            Logger.logMsg("Finalizing mesh " + this + "... ");
+            Logger.logMsgLn(Util.getTimeWrapped() + " Finalizing mesh \"" + this + "\"... ");
             long startTime = System.nanoTime();
 
             // Set material if user forgor
@@ -59,6 +59,7 @@ public class PolygonMesh extends Mesh {
             }
 
             // Instantiate polygons from vertex indices
+            Logger.logMsgLn("\t" + Util.getTimeWrapped() + " Building polygons");
             polygons = new Polygon[tempPolygonIndexList.size()];
             for (int i = 0; i < polygons.length; i++) {
                 int[] vertexIndices = tempPolygonIndexList.get(i);
@@ -69,6 +70,7 @@ public class PolygonMesh extends Mesh {
             }
 
             // Build bounding box
+            Logger.logMsgLn("\t" + Util.getTimeWrapped() + " Building bounding box");
             boundingBox = BoundingBox.newBoundingBox(this);
 
             // Yeet the child
@@ -78,13 +80,14 @@ public class PolygonMesh extends Mesh {
             // Finish up
             finalized = true;
             long endTime = System.nanoTime();
-            Logger.logMsgLn("Done in " + TimeFormatter.timeToString(endTime - startTime));
+            Logger.logMsgLn(Util.getTimeWrapped() + " Mesh \"" + name + "\" finalized in " +
+                    TimeFormatter.timeToString(endTime - startTime));
         }
     }
 
     public void unFinalizeMesh() {
         if (finalized) {
-            Logger.logMsg("Un-finalizing mesh " + this + "... ");
+            Logger.logMsg(Util.getTimeWrapped() + " Un-finalizing mesh " + this + "... ");
             long startTime = System.nanoTime();
 
             for (int i = 0; i < polygons.length; i++) {

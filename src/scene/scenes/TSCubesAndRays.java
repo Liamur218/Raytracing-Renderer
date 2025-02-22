@@ -8,11 +8,12 @@ public abstract class TSCubesAndRays {
         Scene scene = new Scene();
         scene.setName("Cubes and Rays");
 
-        Vector camPos = new Vector(-0.375, -0.375, 0.5);
+        Vector camPos = new Vector(-0.375, -0.375, 0.45);
         Vector camDir = new Vector(1, 1, -1);
         Vector camNormal = new Vector(0, 0, 1);
         Camera camera = new Camera(camPos, camDir, camNormal);
         scene.setCamera(camera);
+        scene.setAmbientLight(0);
 
         // Variables
         double cubeBuffer = 0.0625;

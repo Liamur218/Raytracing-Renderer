@@ -9,7 +9,8 @@ public abstract class ModelLoader {
 
     public static PolygonMesh loadModel(String fileLocation, String filename, ModelFileType modelType) {
         String modelName = filename.replace("_", " ");
-        Logger.logMsgLn("Loading model " + modelName + " from " + fileLocation + " (type: " + modelType + ")");
+        Logger.logMsgLn(Util.getTimeWrapped() + " Loading model " + modelName + " from " + fileLocation +
+                " (type: " + modelType + ")");
         long start = System.nanoTime();
 
         String filepath = fileLocation + "/" + filename + "." + modelType.getExtension();
@@ -22,7 +23,8 @@ public abstract class ModelLoader {
         }
 
         long end = System.nanoTime();
-        Logger.logMsgLn("Model " + modelName + " loaded in " + TimeFormatter.timeToString(end - start));
+        Logger.logMsgLn(Util.getTimeWrapped() + " Model " + modelName + " loaded in " +
+                TimeFormatter.timeToString(end - start));
         mesh.setName(modelName);
         return mesh;
     }

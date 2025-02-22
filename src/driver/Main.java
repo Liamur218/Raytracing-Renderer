@@ -2,24 +2,19 @@ package driver;
 
 import renderer.*;
 import scene.*;
-import scene.scenes.TSObjects;
-import util.Logger;
+import scene.scenes.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene;
+        Scene scene = TSTeapot.newScene();
 
-        scene = TSObjects.newScene();
-        SceneIOHandler.writeToFile(scene, "output/scenes");
+        //SceneIOHandler.writeToFile(scene, "output/scenes");
 
-        scene = SceneIOHandler.readFromFile("output/scenes/Objects.scene");
+        RenderSettings renderSettings = RenderSettings.BUDGET_SETTINGS;
+        renderSettings.setScene(scene);
+        renderSettings.setSeed(0);
 
-        RenderSettings settings = RenderSettings.BUDGET_SETTINGS.copy();
-        settings.setSeed(0);
-        settings.setScene(scene);
-
-        Image image = Renderer.render(settings);
-        image.writeToFile(settings);
-        Logger.writeLogsToFile(settings);
+        Image image = Renderer.render(renderSettings);
+        image.writeToFile(renderSettings);
     }
 }

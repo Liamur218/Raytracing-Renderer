@@ -41,8 +41,8 @@ public abstract class SceneIOHandler {
             writeVector(scene.camera.pos, outputStream);
             writeVector(scene.camera.dir, outputStream);
             writeVector(scene.camera.normal, outputStream);
-            writeInt(scene.camera.fov.width, outputStream);
-            writeInt(scene.camera.fov.height, outputStream);
+            writeFloat(scene.camera.hFOV, outputStream);
+            writeFloat(scene.camera.vFOV, outputStream);
 
             for (Material material : materials) {
                 writeMaterial(material, outputStream);
@@ -66,7 +66,7 @@ public abstract class SceneIOHandler {
             Scene scene = new Scene().setName(name);
 
             Camera camera = new Camera(readVector(inputStream), readVector(inputStream), readVector(inputStream));
-            camera.setFOV(readInt(inputStream), readInt(inputStream));
+            camera.setFOV(readFloat(inputStream), readFloat(inputStream));
             scene.setCamera(camera);
 
             Material[] materials = new Material[materialCount];

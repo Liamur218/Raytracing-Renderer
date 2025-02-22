@@ -4,8 +4,8 @@ import mesh.*;
 
 public class ModelDataGetter {
     public static void main(String[] args) {
-        String filename = "Crucible";
-        String fileLocation = "assets";
+        String filename = "Zubeia";
+        String fileLocation = "assets/big_assets/Zubeia";
         ModelFileType modelType = ModelFileType.STL_BIN;
 
         String[] modelNameArray = filename.split("/");

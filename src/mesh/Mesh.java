@@ -10,7 +10,7 @@ public abstract class Mesh {
     public int id;
     private static int ID_COUNTER = 0;
 
-    private String name;
+    protected String name;
 
     public static final Mesh NULL_MESH = new Mesh() {
         @Override
