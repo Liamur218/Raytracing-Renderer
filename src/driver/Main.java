@@ -6,11 +6,9 @@ import scene.scenes.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSTeapot.newScene();
+        Scene scene = TSObjects.newScene();
 
-        //SceneIOHandler.writeToFile(scene, "output/scenes");
-
-        RenderSettings renderSettings = RenderSettings.BUDGET_SETTINGS;
+        RenderSettings renderSettings = RenderSettings.DEFAULT_SETTINGS;
         renderSettings.setScene(scene);
         renderSettings.setSeed(0);
 

@@ -1,9 +1,8 @@
 package util;
 
 import java.nio.ByteBuffer;
-import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.text.*;
+import java.util.Date;
 
 public abstract class Util {
 
@@ -51,25 +50,19 @@ public abstract class Util {
     }
 
     public static String getTime() {
-        LocalDateTime ldt = LocalDateTime.now();
-        return DF.format(ldt.getHour()) + ":" + DF.format(ldt.getMinute()) + ":" + DF.format(ldt.getSecond());
+        return new SimpleDateFormat("HH:mm:ss").format(new Date());
     }
 
     public static String getTimeWrapped() {
-        LocalDateTime ldt = LocalDateTime.now();
-        return "[" + DF.format(ldt.getHour()) + ":" +
-                DF.format(ldt.getMinute()) + ":" +
-                DF.format(ldt.getSecond()) + "]";
+        return bracket(getTime());
     }
 
     public static String getDate() {
-        Calendar calendar = Calendar.getInstance();
-        return (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH) + "/" +
-                calendar.get(Calendar.YEAR);
+        return new SimpleDateFormat("MM/dd/yyyy").format(new Date());
     }
 
     public static String getDateWrapped() {
-        return "[" + getDate() + "]";
+        return bracket(getDate());
     }
 
     // Collision logic

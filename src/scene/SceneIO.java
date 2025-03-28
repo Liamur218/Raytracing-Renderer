@@ -6,7 +6,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-public abstract class SceneIOHandler {
+public abstract class SceneIO {
 
     /*
     * Scene data formatting:
