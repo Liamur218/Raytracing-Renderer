@@ -11,8 +11,8 @@ public class Scene {
     public ArrayList<Mesh> meshes;
     public Camera camera;
 
-    // Environment color -> raw color of the skybox (i.e. blue sky)
-    // Ambient light color -> color of light illuminating objects in the scene (i.e. while light from the sun)
+    // Environment color -> raw color of the skybox (e.g. blue sky)
+    // Ambient light color -> color of light illuminating objects in the scene (e.g. while light from the sun)
     public NormColor enviroColor, ambientLightColor;
     public float ambientLightIntensity;
     public Vector lightSourceDir;
@@ -23,6 +23,9 @@ public class Scene {
     public static final Vector DEFAULT_DIR_LIGHT_DIR = new Vector(-1, 1, 1).normalize();
 
     public String name;
+    boolean finalized;
+
+    public static final HashMap<Integer ,Scene> SCENES_LIST = new HashMap<>();
 
     public Scene() {
         meshes = new ArrayList<>();
@@ -90,6 +93,8 @@ public class Scene {
                 polygonMesh.finalizeMesh();
             }
         }
+        finalized = true;
+        SCENES_LIST.put(hashCode(), this);
     }
 
     // Printing stuff
@@ -120,5 +125,12 @@ public class Scene {
                 System.out.println("\tOpacity ---------- " + mesh.material.opacity);
             }
         }
+    }
+
+    // Hashcode
+    @Override
+    public int hashCode() {
+        return Objects.hash(meshes, camera, enviroColor,
+                ambientLightColor, ambientLightIntensity, lightSourceDir, name);
     }
 }

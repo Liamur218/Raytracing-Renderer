@@ -90,7 +90,7 @@ public abstract class Renderer {
                     ImageFragment imageFragment = new ImageFragment(
                             hStepCount, vStepCount, xPos, yPos, frameNumber, frameSpaceID);
                     RaytracingThread thread = new RaytracingThread(camera.pos, baseDir, hStep, vStep,
-                            imageFragment, recursionCount, scene, random.nextInt());
+                            imageFragment, recursionCount, scene.hashCode(), random.nextInt());
 
                     threads.add(thread);
                 }

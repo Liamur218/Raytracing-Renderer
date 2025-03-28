@@ -14,18 +14,17 @@ public class RaytracingThread implements Runnable, Serializable {
     Vector hStep, vStep;
     int recursionCount;
     Scene scene;
+    int sceneHashCode;
     ImageFragment imageFragment;
 
     private final Random random;
-
-    long elapsedTime;
 
     int id;
     static int idCounter = 0;
 
     RaytracingThread(Vector origin, Vector startDir, Vector hStep, Vector vStep,
                      ImageFragment imageFragment,
-                     int recursionCount, Scene scene, int rngSeed) {
+                     int recursionCount, int sceneHashCode, int rngSeed) {
         this.origin = origin;
         this.startDir = startDir;
         this.hStep = hStep;
@@ -34,7 +33,8 @@ public class RaytracingThread implements Runnable, Serializable {
         this.imageFragment = imageFragment;
 
         this.recursionCount = recursionCount;
-        this.scene = scene;
+
+        this.sceneHashCode = sceneHashCode;
 
         random = new Random(rngSeed);
 
@@ -44,6 +44,7 @@ public class RaytracingThread implements Runnable, Serializable {
     @Override
     public void run() {
         imageFragment.initialize();
+        scene = Scene.SCENES_LIST.get(sceneHashCode);
         for (int i = 0; i < imageFragment.size.width; i++) {
             for (int j = 0; j < imageFragment.size.height; j++) {
                 Vector ray = new Vector(startDir);

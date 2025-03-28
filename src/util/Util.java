@@ -1,5 +1,6 @@
 package util;
 
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.text.*;
 import java.util.Date;
@@ -8,6 +9,7 @@ public abstract class Util {
 
     private static final DecimalFormat DF = new DecimalFormat("##");
 
+    // Math
     public static float clamp(float a, float low, float high) {
         return Math.max(Math.min(a, high), low);
     }
@@ -119,5 +121,27 @@ public abstract class Util {
             filter >>>= 1;
         }
         System.out.println();
+    }
+
+    // Serialization
+    // Stolen from https://stackoverflow.com/questions/2836646/java-serializable-object-to-byte-array
+    public static byte[] serialize(Object obj) {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        try (ObjectOutputStream output = new ObjectOutputStream(byteStream)) {
+            output.writeObject(obj);
+            output.flush();
+            return byteStream.toByteArray();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static Object deserialize(byte[] bytes) {
+        ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
+        try (ObjectInput input = new ObjectInputStream(byteStream)) {
+            return input.readObject();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

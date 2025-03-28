@@ -2,6 +2,8 @@ package mesh;
 
 import util.Util;
 
+import java.util.Objects;
+
 public class Vector {
 
     double x, y, z;
@@ -247,6 +249,11 @@ public class Vector {
             return vector.x == x && vector.y == y && vector.z == z;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 
     public double getX() {

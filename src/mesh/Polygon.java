@@ -2,7 +2,7 @@ package mesh;
 
 import renderer.Renderer;
 
-import java.util.Iterator;
+import java.util.*;
 
 public class Polygon implements Iterable<Vector> {
 
@@ -75,6 +75,13 @@ public class Polygon implements Iterable<Vector> {
     @Override
     public boolean equals(Object object) {
         return object instanceof Polygon && ((Polygon) object).id == id;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(normal, area, id);
+        result = 31 * result + Arrays.hashCode(points);
+        return result;
     }
 
     @Override

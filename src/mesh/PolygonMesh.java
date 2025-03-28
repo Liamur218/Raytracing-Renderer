@@ -3,7 +3,7 @@ package mesh;
 import renderer.RaycastInfo;
 import util.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class PolygonMesh extends Mesh {
 
@@ -201,5 +201,13 @@ public class PolygonMesh extends Mesh {
 
     public BoundingBox getBoundingBox() {
         return boundingBox;
+    }
+
+    // Hashing
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(tempVertexList, tempPolygonIndexList, boundingBox, finalized);
+        result = 31 * result + Arrays.hashCode(polygons);
+        return result;
     }
 }

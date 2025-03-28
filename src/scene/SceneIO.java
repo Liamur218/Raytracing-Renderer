@@ -51,6 +51,7 @@ public abstract class SceneIO {
             for (Mesh mesh : scene.meshes) {
                 writeMesh(mesh, materials.indexOf(mesh.material), outputStream);
             }
+            outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

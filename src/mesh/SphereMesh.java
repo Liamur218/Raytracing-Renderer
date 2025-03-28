@@ -3,6 +3,8 @@ package mesh;
 import renderer.RaycastInfo;
 import util.Util;
 
+import java.util.Objects;
+
 public class SphereMesh extends Mesh {
 
     public Vector center;
@@ -65,5 +67,10 @@ public class SphereMesh extends Mesh {
     public void scale(double scaleX, double scaleY, double scaleZ) {
         center = Vector.componentMultiply(center, new Vector(scaleX, scaleY, scaleZ));
         radius *= Math.min(scaleX, Math.min(scaleY, scaleZ));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(center, radius);
     }
 }

@@ -2,6 +2,8 @@ package mesh;
 
 import renderer.RaycastInfo;
 
+import java.util.Objects;
+
 public class PlaneMesh extends Mesh {
 
     public Vector refPoint, normal;
@@ -49,5 +51,10 @@ public class PlaneMesh extends Mesh {
     @Override
     public void scale(double scaleX, double scaleY, double scaleZ) {
         refPoint.set(Vector.componentMultiply(refPoint, new Vector(scaleX, scaleY, scaleZ)));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(refPoint, normal, doRearVisibility);
     }
 }
