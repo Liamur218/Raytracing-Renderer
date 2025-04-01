@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public abstract class SceneIO {
 
+    public static final String SCENE_FILE_EXT = ".bsd";
     /*
     * Scene data formatting:
     * String -------> Scene name
@@ -24,7 +25,7 @@ public abstract class SceneIO {
     * Mesh... ------> Meshes
     * */
     public static void writeToFile(Scene scene, String outputDir) {
-        File file = new File(outputDir + "/" + scene.name + ".scene");
+        File file = new File(outputDir + "/" + scene.name + SCENE_FILE_EXT);
         try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
             writeString(scene.name, outputStream);
 

@@ -6,17 +6,10 @@ public class LocalThreadPool extends ThreadPool {
 
     private final ArrayList<Worker> workers, activeWorkers, idleWorkers;
 
-    private final Object FINAL_WAKEUP_STICK;
-
     public LocalThreadPool(int maxThreadCount) {
         workers = new ArrayList<>();
         activeWorkers = new ArrayList<>();
         idleWorkers = new ArrayList<>();
-
-        workQueue = new ArrayList<>();
-        returnQueue = new ArrayList<>();
-
-        FINAL_WAKEUP_STICK = new Object();
 
         running = true;
 
@@ -26,11 +19,6 @@ public class LocalThreadPool extends ThreadPool {
             workers.add(worker);
             idleWorkers.add(worker);
         }
-    }
-
-    @Override
-    public synchronized void addTask(Runnable task) {
-        workQueue.add(task);
     }
 
     @Override

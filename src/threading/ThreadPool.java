@@ -6,19 +6,27 @@ import java.util.ArrayList;
 
 public abstract class ThreadPool extends Thread {
 
-    public static final int PORT = 11347;
-
     protected ArrayList<Runnable> workQueue, returnQueue;
 
     protected boolean running;
 
     protected ProgressBar progressBar;
 
-    abstract void addTask(Runnable task);
+    protected final Object FINAL_WAKEUP_STICK;
 
-    abstract void executeTasks();
+    protected ThreadPool() {
+        FINAL_WAKEUP_STICK = new Object();
+        workQueue = new ArrayList<>();
+        returnQueue = new ArrayList<>();
+    }
 
-    abstract void waitForAllToFinish();
+    public synchronized void addTask(Runnable task) {
+        workQueue.add(task);
+    }
+
+    abstract public void executeTasks();
+
+    abstract public void waitForAllToFinish();
 
     public synchronized ArrayList<Runnable> exportCompletedTasks() {
         ArrayList<Runnable> out = returnQueue;
@@ -26,7 +34,7 @@ public abstract class ThreadPool extends Thread {
         return out;
     }
 
-    abstract void halt();
+    abstract public void halt();
 
     public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;

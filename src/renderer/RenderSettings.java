@@ -16,6 +16,7 @@ public class RenderSettings {
 
     int threadCount;
     boolean distributed;
+    String ip;
 
     int sectionWidth, sectionHeight;
 
@@ -33,6 +34,7 @@ public class RenderSettings {
         BUDGET_SETTINGS.setThreadCount(30);
         BUDGET_SETTINGS.setSectionSize(500, 500);
         BUDGET_SETTINGS.setSeed(new Random().nextInt());
+        BUDGET_SETTINGS.setIP("127.0.0.1");
     }
 
     // Other settings
@@ -63,6 +65,8 @@ public class RenderSettings {
         recursionCount = settings.recursionCount;
         frameCount = settings.frameCount;
         threadCount = settings.threadCount;
+        distributed = settings.distributed;
+        ip = settings.ip;
         sectionWidth = settings.sectionWidth;
         sectionHeight = settings.sectionHeight;
         seed = settings.seed;
@@ -105,6 +109,11 @@ public class RenderSettings {
 
     public RenderSettings setDistributed(boolean distributed) {
         this.distributed = distributed;
+        return this;
+    }
+
+    public RenderSettings setIP(String ip) {
+        this.ip = ip;
         return this;
     }
 

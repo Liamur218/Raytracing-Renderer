@@ -2,11 +2,10 @@ package driver;
 
 import renderer.*;
 import scene.*;
-import scene.scenes.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSObjects.newScene();
+        Scene scene = SceneIO.readFromFile("output/scenes/Basic Environment.bsd");
 
         RenderSettings renderSettings = RenderSettings.DEFAULT_SETTINGS;
         renderSettings.setScene(scene);

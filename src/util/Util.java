@@ -122,26 +122,4 @@ public abstract class Util {
         }
         System.out.println();
     }
-
-    // Serialization
-    // Stolen from https://stackoverflow.com/questions/2836646/java-serializable-object-to-byte-array
-    public static byte[] serialize(Object obj) {
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-        try (ObjectOutputStream output = new ObjectOutputStream(byteStream)) {
-            output.writeObject(obj);
-            output.flush();
-            return byteStream.toByteArray();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public static Object deserialize(byte[] bytes) {
-        ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
-        try (ObjectInput input = new ObjectInputStream(byteStream)) {
-            return input.readObject();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 }
