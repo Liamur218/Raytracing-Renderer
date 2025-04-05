@@ -83,19 +83,21 @@ public class CylinderMesh extends Mesh {
     }
 
     @Override
-    public void setCenterAt(double x, double y, double z) {
+    public CylinderMesh setCenterAt(double x, double y, double z) {
         /*
         * <x0, y0, z0> + <x, y, z>(L/2) = <0, 0, 0>
         * -L/2*<x, y, z> = <x0, y0, z0>
         * */
         position = Vector.multiply(direction, -0.5 * length);
+        return this;
     }
 
     @Override
-    public void scale(double scaleX, double scaleY, double scaleZ) {
+    public CylinderMesh scale(double scaleX, double scaleY, double scaleZ) {
         position = Vector.componentMultiply(position, new Vector(scaleX, scaleY, scaleZ));
         double min = Math.min(scaleX, Math.min(scaleY, scaleZ));
         length *= min;
         radius *= min;
+        return this;
     }
 }

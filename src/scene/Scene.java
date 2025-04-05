@@ -25,7 +25,7 @@ public class Scene {
     public String name;
     boolean finalized;
 
-    public static final HashMap<Integer ,Scene> SCENES_LIST = new HashMap<>();
+    public static final HashMap<Integer, Scene> SCENES_LIST = new HashMap<>();
 
     public Scene() {
         meshes = new ArrayList<>();

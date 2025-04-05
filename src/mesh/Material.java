@@ -32,12 +32,13 @@ public class Material {
     public static final Material AIR = new Material(WHITE);
 
     // Private templates
-    private static final Material LIGHT = new Material(WHITE).setReflectivity(0).setEmissivity(1);
-    private static final Material GLASS = new Material(WHITE).setSpecularity(1).setOpacity(0).setRefractiveIndex(1.5f);
-    private static final Material MIRROR = new Material(WHITE).setSpecularity(1);
+    public static final Material LIGHT = new Material(WHITE).setReflectivity(0).setEmissivity(1);
+    public static final Material GLASS = new Material(WHITE).setSpecularity(1).setOpacity(0).setRefractiveIndex(1.5f);
+    public static final Material MIRROR = new Material(WHITE).setSpecularity(1);
 
     // Basic materials
     public static final Material WHITE_MAT = new Material(WHITE);
+    public static final Material OFF_WHITE_MAT = new Material(OFF_WHITE);
     public static final Material LIGHT_GRAY_MAT = new Material(LIGHT_GRAY);
     public static final Material GRAY_MAT = new Material(GRAY);
     public static final Material DARK_GRAY_MAT = new Material(DARK_GRAY);
@@ -50,6 +51,7 @@ public class Material {
     public static final Material MAGENTA_MAT = new Material(MAGENTA);
     public static final Material CYAN_MAT = new Material(CYAN);
     public static final Material BLUE_MAT = new Material(BLUE);
+    public static final Material LIGHT_BLUE_MAT = new Material(LIGHT_BLUE);
     public static final Material PURPLE_MAT = new Material(PURPLE);
 
     // Emissive materials
@@ -66,6 +68,7 @@ public class Material {
     public static final Material MAGENTA_EMISSIVE_MAT = new Material(LIGHT).setColor(MAGENTA);
     public static final Material CYAN_EMISSIVE_MAT = new Material(LIGHT).setColor(CYAN);
     public static final Material BLUE_EMISSIVE_MAT = new Material(LIGHT).setColor(BLUE);
+    public static final Material LIGHT_BLUE_EMISSIVE_MAT = new Material(LIGHT).setColor(LIGHT_BLUE);
     public static final Material PURPLE_EMISSIVE_MAT = new Material(LIGHT).setColor(PURPLE);
 
     // Mirrors
@@ -83,6 +86,7 @@ public class Material {
     public static final Material MAGENTA_MIRROR = new Material(MIRROR).setColor(MAGENTA);
     public static final Material CYAN_MIRROR = new Material(MIRROR).setColor(CYAN);
     public static final Material BLUE_MIRROR = new Material(MIRROR).setColor(BLUE);
+    public static final Material LIGHT_BLUE_MIRROR = new Material(MIRROR).setColor(LIGHT_BLUE);
     public static final Material PURPLE_MIRROR = new Material(MIRROR).setColor(PURPLE);
 
     // Glasses
@@ -100,6 +104,7 @@ public class Material {
     public static final Material MAGENTA_GLASS = new Material(GLASS).setColor(MAGENTA);
     public static final Material CYAN_GLASS = new Material(GLASS).setColor(CYAN);
     public static final Material BLUE_GLASS = new Material(GLASS).setColor(BLUE);
+    public static final Material LIGHT_BLUE_GLASS = new Material(GLASS).setColor(LIGHT_BLUE);
     public static final Material PURPLE_GLASS = new Material(GLASS).setColor(PURPLE);
 
     public Material() {
@@ -142,8 +147,12 @@ public class Material {
         return setColor(new NormColor(color));
     }
 
-    public Material setColor(float r, float g, float b) {
+    public Material setColorFloat(float r, float g, float b) {
         return setColor(new NormColor(r, g, b));
+    }
+
+    public Material setColorInt(int r, int g, int b) {
+        return setColor(new NormColor((float) r / RGB_MAX, (float) g / RGB_MAX, (float) b / RGB_MAX));
     }
 
     public Material setEmissivity(float emissivity) {

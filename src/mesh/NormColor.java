@@ -10,6 +10,7 @@ public class NormColor implements Serializable {
     public float r, g, b;
 
     public static final int LENGTH = 3;
+    public static final int RGB_MAX = 255;
 
     public static final NormColor WHITE = new NormColor(Color.WHITE);
     public static final NormColor LIGHT_GRAY = new NormColor(Color.LIGHT_GRAY);
@@ -24,6 +25,7 @@ public class NormColor implements Serializable {
     public static final NormColor MAGENTA = new NormColor(Color.MAGENTA);
     public static final NormColor CYAN = new NormColor(Color.CYAN);
     public static final NormColor BLUE = new NormColor(Color.BLUE);
+    public static final NormColor LIGHT_BLUE = new NormColor(new Color(0, 128, 255));
     public static final NormColor PURPLE = new NormColor(new Color(161, 0, 255));
     public static final NormColor OFF_WHITE = new NormColor(new Color(230, 230, 230));
 

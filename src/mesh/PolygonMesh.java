@@ -20,25 +20,28 @@ public class PolygonMesh extends Mesh {
         tempPolygonIndexList = new ArrayList<>();
     }
 
-    public void addPolygon(Vector v1, Vector v2, Vector v3) {
+    public PolygonMesh addPolygon(Vector v1, Vector v2, Vector v3) {
         int baseSize = tempVertexList.size();
         tempVertexList.add(v1);
         tempVertexList.add(v2);
         tempVertexList.add(v3);
         int[] polygonIndices = new int[]{baseSize, baseSize + 1, baseSize + 2};
         tempPolygonIndexList.add(polygonIndices);
+        return this;
     }
 
-    public void addPolygon(Polygon polygon) {
+    public PolygonMesh addPolygon(Polygon polygon) {
         addPolygon(polygon.points[0], polygon.points[1], polygon.points[2]);
+        return this;
     }
 
-    public void addPolygon(double x1, double y1, double z1, double x2, double y2, double z2,
+    public PolygonMesh addPolygon(double x1, double y1, double z1, double x2, double y2, double z2,
                            double x3, double y3, double z3) {
         addPolygon(new Vector(x1, y1, z1), new Vector(x2, y2, z2), new Vector(x3, y3, z3));
+        return this;
     }
 
-    public void addQuad(double x1, double y1, double z1, double x2, double y2, double z2,
+    public PolygonMesh addQuad(double x1, double y1, double z1, double x2, double y2, double z2,
                         double x3, double y3, double z3, double x4, double y4, double z4) {
         Vector v1 = new Vector(x1, y1, z1);
         Vector v2 = new Vector(x2, y2, z2);
@@ -46,9 +49,10 @@ public class PolygonMesh extends Mesh {
         Vector v4 = new Vector(x4, y4, z4);
         addPolygon(v1, v2, v3);
         addPolygon(v3, v4, v1);
+        return this;
     }
 
-    public void finalizeMesh() {
+    public PolygonMesh finalizeMesh() {
         if (!finalized) {
             Logger.logMsgLn(Util.getTimeWrapped() + " Finalizing mesh \"" + this + "\"... ");
             long startTime = System.nanoTime();
@@ -83,9 +87,10 @@ public class PolygonMesh extends Mesh {
             Logger.logMsgLn(Util.getTimeWrapped() + " Mesh \"" + name + "\" finalized in " +
                     TimeFormatter.timeToString(endTime - startTime));
         }
+        return this;
     }
 
-    public void unFinalizeMesh() {
+    public PolygonMesh unFinalizeMesh() {
         if (finalized) {
             Logger.logMsg(Util.getTimeWrapped() + " Un-finalizing mesh " + this + "... ");
             long startTime = System.nanoTime();
@@ -102,43 +107,50 @@ public class PolygonMesh extends Mesh {
             long endTime = System.nanoTime();
             Logger.logMsgLn("Done in " + TimeFormatter.timeToString(endTime - startTime));
         }
+        return this;
     }
 
     // For scene setup
-    public void move(double dx, double dy, double dz) {
+    public PolygonMesh move(double dx, double dy, double dz) {
         for (Vector vertex : tempVertexList) {
             vertex.add(dx, dy, dz);
         }
+        return this;
     }
 
-    public void move(Vector delta) {
+    public PolygonMesh move(Vector delta) {
         move(delta.x, delta.y, delta.z);
+        return this;
     }
 
-    public void rotate(double dxDeg, double dyDeg, double dzDeg) {
+    public PolygonMesh rotate(double dxDeg, double dyDeg, double dzDeg) {
         for (Vector vertex : tempVertexList) {
             vertex.rotate(Vector.X_AXIS, dxDeg);
             vertex.rotate(Vector.Y_AXIS, dyDeg);
             vertex.rotate(Vector.Z_AXIS, dzDeg);
         }
+        return this;
     }
 
-    public void scale(double x, double y, double z) {
+    public PolygonMesh scale(double x, double y, double z) {
         for (Vector vertex : tempVertexList) {
             vertex.x *= x;
             vertex.y *= y;
             vertex.z *= z;
         }
+        return this;
     }
 
     // More complicated transformations
-    public void setCenterAt(double x, double y, double z) {
+    public PolygonMesh setCenterAt(double x, double y, double z) {
         setCenterAt(new Vector(x, y, z));
+        return this;
     }
 
-    public void setCenterAt(Vector newCenter) {
+    public PolygonMesh setCenterAt(Vector newCenter) {
         Vector delta = Vector.subtract(newCenter, getCenter());
         move(delta);
+        return this;
     }
 
     // For raytracing
@@ -178,9 +190,10 @@ public class PolygonMesh extends Mesh {
         return getCenterAndSize()[0];
     }
 
-    public void normalize() {
+    public PolygonMesh normalize() {
         setCenterAt(Vector.ZERO_VECTOR);
         scale(1 / (getSize().getLargestComponent() / 2));
+        return this;
     }
 
     public int getVertexCount() {
