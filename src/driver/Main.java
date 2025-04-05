@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Scene scene = TSDragon.newScene();
 
-        RenderSettings renderSettings = RenderSettings.FANCY_SETTINGS;
+        RenderSettings renderSettings = RenderSettings.BUDGET_SETTINGS;
         renderSettings.setScene(scene);
         renderSettings.setSeed(0);
 

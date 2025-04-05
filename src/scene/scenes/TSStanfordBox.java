@@ -33,7 +33,7 @@ public abstract class TSStanfordBox {
         // Light (white)
         mesh = new PolygonMesh();
         mesh.addQuad(343.0, 548.8, 227.0, 343.0, 548.8, 332.0, 213.0, 548.8, 332.0, 213.0, 548.8, 227.0);
-        mesh.setMaterial(Material.WHITE_EMISSIVE_MAT);
+        mesh.setMaterial(new Material(Material.WHITE_EMISSIVE_MAT).setEmissivity(3));
         scene.addMesh(mesh);
 
         // Ceiling (white)
