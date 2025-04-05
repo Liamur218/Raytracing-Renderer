@@ -31,9 +31,7 @@ public class LocalThreadPool extends ThreadPool {
         idleWorkers.add(worker);
         returnQueue.add(worker.task);
         worker.task = null;
-        if (progressBar != null) {
-            progressBar.increment();
-        }
+        incrementProgressBar();
         if (workQueue.isEmpty() && activeWorkers.isEmpty()) {
             synchronized (FINAL_WAKEUP_STICK) {
                 FINAL_WAKEUP_STICK.notifyAll();

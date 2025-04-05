@@ -28,6 +28,10 @@ public abstract class ThreadPool extends Thread {
 
     abstract public void waitForAllToFinish();
 
+    protected void incrementProgressBar() {
+        if (progressBar != null) { progressBar.increment(); }
+    }
+
     public synchronized ArrayList<Runnable> exportCompletedTasks() {
         ArrayList<Runnable> out = returnQueue;
         returnQueue = new ArrayList<>();

@@ -59,14 +59,16 @@ public class SphereMesh extends Mesh {
     }
 
     @Override
-    public void setCenterAt(double x, double y, double z) {
+    public SphereMesh setCenterAt(double x, double y, double z) {
         center.set(x, y, z);
+        return this;
     }
 
     @Override
-    public void scale(double scaleX, double scaleY, double scaleZ) {
+    public SphereMesh scale(double scaleX, double scaleY, double scaleZ) {
         center = Vector.componentMultiply(center, new Vector(scaleX, scaleY, scaleZ));
         radius *= Math.min(scaleX, Math.min(scaleY, scaleZ));
+        return this;
     }
 
     @Override

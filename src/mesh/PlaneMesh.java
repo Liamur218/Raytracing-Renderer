@@ -44,13 +44,15 @@ public class PlaneMesh extends Mesh {
     }
 
     @Override
-    public void setCenterAt(double x, double y, double z) {
+    public PlaneMesh setCenterAt(double x, double y, double z) {
         refPoint.set(x, y, z);
+        return this;
     }
 
     @Override
-    public void scale(double scaleX, double scaleY, double scaleZ) {
+    public PlaneMesh scale(double scaleX, double scaleY, double scaleZ) {
         refPoint.set(Vector.componentMultiply(refPoint, new Vector(scaleX, scaleY, scaleZ)));
+        return this;
     }
 
     @Override
