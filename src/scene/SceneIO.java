@@ -8,7 +8,8 @@ import java.util.ArrayList;
 
 public abstract class SceneIO {
 
-    public static final String SCENE_FILE_EXT = ".bsd";
+    public static final String SCENE_FILE_EXT = ".scn";
+
     /*
     * Scene data formatting:
     * String -------> Scene name
