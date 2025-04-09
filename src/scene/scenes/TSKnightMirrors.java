@@ -34,8 +34,8 @@ public abstract class TSKnightMirrors {
         frontRightBottom = new Vector(0, -1, -1);
 
         // Knight
-        PolygonMesh polygonMesh = ModelLoader.loadModel(
-                "assets/Models/Knight", "Knight", ModelFileType.STL_BIN);
+        PolygonMesh polygonMesh = MeshLoader.loadModel(
+                "assets/Models/Knight", "Knight", MeshFileType.STL_BIN);
         polygonMesh.setCenterAt(0, 0, 0);
         polygonMesh.scale(1.5 / 3.37);
         polygonMesh.rotate(0, 0, 180 + 45);

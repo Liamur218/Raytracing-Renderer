@@ -6,12 +6,12 @@ public class ModelDataGetter {
     public static void main(String[] args) {
         String filename = "Croix";
         String fileLocation = "assets/big_assets/Crucifix";
-        ModelFileType modelType = ModelFileType.STL_BIN;
+        MeshFileType modelType = MeshFileType.STL_BIN;
 
         String[] modelNameArray = filename.split("/");
         String modelName = modelNameArray[modelNameArray.length - 1];
 
-        PolygonMesh polygonMesh = ModelLoader.loadModel(fileLocation, filename, modelType);
+        PolygonMesh polygonMesh = MeshLoader.loadModel(fileLocation, filename, modelType);
         int polygonCount = polygonMesh.getPolygonCount();
 
         System.out.println("Model Name: " + modelName);

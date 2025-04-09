@@ -1,6 +1,6 @@
 package mesh;
 
-public enum ModelFileType {
+public enum MeshFileType {
     STL_BIN,
     STL_ASCII,
     WAVEFRONT_OBJ;

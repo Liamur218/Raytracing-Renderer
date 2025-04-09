@@ -63,69 +63,69 @@ public abstract class TSChessBoard {
         scene.addMesh(mesh.setMaterial(new Material(Material.WHITE_MAT).setColor(new Color(150, 92, 0))));
 
         // Kings
-        mesh = ModelLoader.loadModel(fileLocation, "King", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "King", MeshFileType.STL_BIN).normalize();
         mesh.rotate(0, 0, 90).setCenterAt(0.5, 3.5, 1);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "King", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "King", MeshFileType.STL_BIN).normalize();
         mesh.rotate(0, 0, -90).setCenterAt(7.5, 3.5, 1);
         scene.addMesh(mesh.setMaterial(blackMaterial));
 
         // Queens
-        mesh = ModelLoader.loadModel(fileLocation, "Queen", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Queen", MeshFileType.STL_BIN).normalize();
         mesh.rotate(0, 0, 90).setCenterAt(0.5, 4.5, 1);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Queen", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Queen", MeshFileType.STL_BIN).normalize();
         mesh.rotate(0, 0, -90).setCenterAt(7.5, 4.5, 1);
         scene.addMesh(mesh.setMaterial(blackMaterial));
 
         // Bishops
-        mesh = ModelLoader.loadModel(fileLocation, "Bishop", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Bishop", MeshFileType.STL_BIN).normalize();
         mesh.scale(bishopScale).setCenterAt(0.5, 2.5, bishopScale);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Bishop", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Bishop", MeshFileType.STL_BIN).normalize();
         mesh.scale(bishopScale).setCenterAt(0.5, 5.5, bishopScale);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Bishop", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Bishop", MeshFileType.STL_BIN).normalize();
         mesh.scale(bishopScale).rotate(0, 0, 180).setCenterAt(7.5, 2.5, bishopScale);
         scene.addMesh(mesh.setMaterial(blackMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Bishop", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Bishop", MeshFileType.STL_BIN).normalize();
         mesh.scale(bishopScale).rotate(0, 0, 180).setCenterAt(7.5, 5.5, bishopScale);
         scene.addMesh(mesh.setMaterial(blackMaterial));
 
         // Knights
-        mesh = ModelLoader.loadModel(fileLocation, "Knight", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Knight", MeshFileType.STL_BIN).normalize();
         mesh.scale(knightScale).rotate(0, 0, 90).setCenterAt(0.5, 1.5, knightScale);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Knight", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Knight", MeshFileType.STL_BIN).normalize();
         mesh.scale(knightScale).rotate(0, 0, 90).setCenterAt(0.5, 6.5, knightScale);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Knight", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Knight", MeshFileType.STL_BIN).normalize();
         mesh.scale(knightScale).rotate(0, 0, -90).setCenterAt(7.5, 1.5, knightScale);
         scene.addMesh(mesh.setMaterial(blackMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Knight", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Knight", MeshFileType.STL_BIN).normalize();
         mesh.scale(knightScale).rotate(0, 0, -90).setCenterAt(7.5, 6.5, knightScale);
         scene.addMesh(mesh.setMaterial(blackMaterial));
 
         // Rooks
-        mesh = ModelLoader.loadModel(fileLocation, "Rook", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Rook", MeshFileType.STL_BIN).normalize();
         mesh.scale(rookScale).rotate(0, 0, 90).setCenterAt(0.5, 0.5, rookScale);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Rook", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Rook", MeshFileType.STL_BIN).normalize();
         mesh.scale(rookScale).rotate(0, 0, 90).setCenterAt(0.5, 7.5, rookScale);
         scene.addMesh(mesh.setMaterial(whiteMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Rook", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Rook", MeshFileType.STL_BIN).normalize();
         mesh.scale(rookScale).rotate(0, 0, -90).setCenterAt(7.5, 0.5, rookScale);
         scene.addMesh(mesh.setMaterial(blackMaterial));
-        mesh = ModelLoader.loadModel(fileLocation, "Rook", ModelFileType.STL_BIN).normalize();
+        mesh = MeshLoader.loadModel(fileLocation, "Rook", MeshFileType.STL_BIN).normalize();
         mesh.scale(rookScale).rotate(0, 0, -90).setCenterAt(7.5, 7.5, rookScale);
         scene.addMesh(mesh.setMaterial(blackMaterial));
 
         // Pawns
         for (int i = 0; i < 8; i++) {
-            mesh = ModelLoader.loadModel(fileLocation, "Pawn", ModelFileType.STL_BIN).normalize();
+            mesh = MeshLoader.loadModel(fileLocation, "Pawn", MeshFileType.STL_BIN).normalize();
             mesh.scale(pawnScale).rotate(0, 0, 90).setCenterAt(1.5, 0.5 + i, pawnScale);
             scene.addMesh(mesh.setMaterial(whiteMaterial));
-            mesh = ModelLoader.loadModel(fileLocation, "Pawn", ModelFileType.STL_BIN).normalize();
+            mesh = MeshLoader.loadModel(fileLocation, "Pawn", MeshFileType.STL_BIN).normalize();
             mesh.scale(pawnScale).rotate(0, 0, -90).setCenterAt(6.5, 0.5 + i, pawnScale);
             scene.addMesh(mesh.setMaterial(blackMaterial));
         }

@@ -23,7 +23,7 @@ public class Camera {
         dir = new Vector(dirX, dirY, dirZ).normalize();
         normal = new Vector(normalX, normalY, normalZ).normalize();
         binormal = Vector.cross(dir, normal);
-        normal = Vector.cross(binormal, dir);  // Re-set normal in cast it wasn't @ 90° to dir to begin with
+        normal = Vector.cross(binormal, dir);  // Re-set normal in case it wasn't @ 90° to dir to begin with
         setFOV(DEFAULT_H_FOV, DEFAULT_V_FOV);
     }
 

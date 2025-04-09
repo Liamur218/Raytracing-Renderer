@@ -5,9 +5,9 @@ import util.*;
 import java.io.*;
 import java.util.*;
 
-public abstract class ModelLoader {
+public abstract class MeshLoader {
 
-    public static PolygonMesh loadModel(String fileLocation, String filename, ModelFileType modelType) {
+    public static PolygonMesh loadModel(String fileLocation, String filename, MeshFileType modelType) {
         String modelName = filename.replace("_", " ");
         Logger.logMsgLn(Util.getTimeWrapped() + " Loading model " + modelName + " from " + fileLocation +
                 " (type: " + modelType + ")");

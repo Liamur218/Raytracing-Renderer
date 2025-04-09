@@ -17,8 +17,8 @@ public abstract class TSMasterChief {
         Material visorMat = new Material(visorColor).setSpecularity(0.8f);
 
         // Helmet
-        PolygonMesh helmet = ModelLoader.loadModel(
-                "assets/Large Models/master Chief", "Helmet 19K", ModelFileType.STL_BIN);
+        PolygonMesh helmet = MeshLoader.loadModel(
+                "assets/Large Models/master Chief", "Helmet 19K", MeshFileType.STL_BIN);
         helmet.setMaterial(helmetMat);
         helmet.scale(5);
         scene.addMesh(helmet);

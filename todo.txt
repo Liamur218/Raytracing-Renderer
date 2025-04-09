@@ -1,10 +1,10 @@
 IMPORTANT THINGS
-----------------
+=================
 -----> Refraction
 -----> Distributed thread pool
 [DONE] Environment/ambient lighting
 [DONE] Fix V/H FOV issue  (Kinda, maybe?)
 
 COOL THINGS
------------
+=================
 -----> GPU Rendering
