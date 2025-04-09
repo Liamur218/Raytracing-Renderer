@@ -3,6 +3,7 @@
 
 # Directories
 assets/big_assets/
+assets/Big Assets/
 output/logs
 output/renders
 test/
