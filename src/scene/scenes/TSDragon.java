@@ -14,7 +14,7 @@ public abstract class TSDragon {
         scene.setCamera(new Camera(camPos, camDir, camNorm));
 
         PolygonMesh pMesh = ModelLoader.loadModel(
-                "assets", "Low Poly Dragon", ModelFileType.STL_BIN);
+                "assets/Models/Dragon", "Low Poly Dragon", ModelFileType.STL_BIN);
         pMesh.setMaterial(Material.LIGHT_BLUE_MAT);
         pMesh.rotate(0, 0, 180 + 45/2).normalize();
         scene.addMesh(pMesh);

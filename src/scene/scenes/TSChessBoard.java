@@ -11,7 +11,7 @@ public abstract class TSChessBoard {
         scene.setName("Chess Board");
 
         PolygonMesh mesh;
-        String fileLocation = "assets/big_assets/chess/small";
+        String fileLocation = "assets/Large Models/chess/small";
 
         Vector camPos = new Vector(1, -2.5, 3);
         Vector camDir = new Vector(1, 2, -1.5);

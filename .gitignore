@@ -2,8 +2,6 @@
 .DS_Store
 
 # Directories
-assets/big_assets/
-assets/Big\ Assets/
 assets/Large\ Models/
 output/logs
 output/renders
