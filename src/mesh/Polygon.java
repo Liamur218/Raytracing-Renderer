@@ -77,6 +77,10 @@ public class Polygon implements Iterable<Vector> {
         return object instanceof Polygon && ((Polygon) object).id == id;
     }
 
+    public Polygon duplicate() {
+        return new Polygon(new Vector(points[0]), new Vector(points[1]), new Vector(points[2]));
+    }
+
     @Override
     public int hashCode() {
         int result = Objects.hash(normal, area, id);

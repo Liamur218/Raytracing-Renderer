@@ -72,6 +72,11 @@ public class SphereMesh extends Mesh {
     }
 
     @Override
+    public SphereMesh duplicate() {
+        return new SphereMesh(new Vector(center), radius);
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(center, radius);
     }

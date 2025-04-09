@@ -78,6 +78,7 @@ public abstract class Renderer {
         Logger.newLogSection("Thread creation", "Creating Threads");
         int frameSpaceID = 0;
         int fragsPerFrame = 0;
+        int sceneHashCode = scene.hashCode();
         for (int xPos = 0; xPos < width; xPos += ImageFragment.SECTION_SIZE.width) {
             for (int yPos = 0; yPos < height; yPos += ImageFragment.SECTION_SIZE.height) {
                 for (int frameNumber = 0; frameNumber < frameCount; frameNumber++) {
@@ -90,7 +91,7 @@ public abstract class Renderer {
                     ImageFragment imageFragment = new ImageFragment(
                             hStepCount, vStepCount, xPos, yPos, frameNumber, frameSpaceID);
                     RaytracingThread thread = new RaytracingThread(camera.pos, baseDir, hStep, vStep,
-                            imageFragment, recursionCount, scene.hashCode(), random.nextInt());
+                            imageFragment, recursionCount, sceneHashCode, random.nextInt());
 
                     threads.add(thread);
                 }

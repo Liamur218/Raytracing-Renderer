@@ -100,4 +100,9 @@ public class CylinderMesh extends Mesh {
         radius *= min;
         return this;
     }
+
+    @Override
+    public CylinderMesh duplicate() {
+        return new CylinderMesh(new Vector(position), new Vector(direction), radius, length);
+    }
 }

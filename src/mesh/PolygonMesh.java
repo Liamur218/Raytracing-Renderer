@@ -36,13 +36,13 @@ public class PolygonMesh extends Mesh {
     }
 
     public PolygonMesh addPolygon(double x1, double y1, double z1, double x2, double y2, double z2,
-                           double x3, double y3, double z3) {
+                                  double x3, double y3, double z3) {
         addPolygon(new Vector(x1, y1, z1), new Vector(x2, y2, z2), new Vector(x3, y3, z3));
         return this;
     }
 
     public PolygonMesh addQuad(double x1, double y1, double z1, double x2, double y2, double z2,
-                        double x3, double y3, double z3, double x4, double y4, double z4) {
+                               double x3, double y3, double z3, double x4, double y4, double z4) {
         Vector v1 = new Vector(x1, y1, z1);
         Vector v2 = new Vector(x2, y2, z2);
         Vector v3 = new Vector(x3, y3, z3);
@@ -132,6 +132,16 @@ public class PolygonMesh extends Mesh {
         return this;
     }
 
+    public PolygonMesh rotate(Vector vector) {
+        for (Vector vertex : tempVertexList) {
+            vertex.rotate(Vector.X_AXIS, vector.x);
+            vertex.rotate(Vector.Y_AXIS, vector.y);
+            vertex.rotate(Vector.Z_AXIS, vector.z);
+        }
+        return this;
+    }
+
+    @Override
     public PolygonMesh scale(double x, double y, double z) {
         for (Vector vertex : tempVertexList) {
             vertex.x *= x;
@@ -139,6 +149,37 @@ public class PolygonMesh extends Mesh {
             vertex.z *= z;
         }
         return this;
+    }
+
+    @Override
+    public PolygonMesh scale(double scale) {
+        return scale(scale, scale, scale);
+    }
+
+    @Override
+    public PolygonMesh scale(Vector scale) {
+        return scale(scale.x, scale.y, scale.z);
+    }
+
+    @Override
+    public PolygonMesh setMaterial(Material material) {
+        this.material = material;
+        return this;
+    }
+
+    @Override
+    public PolygonMesh duplicate() {  // TODO: 4/7/25 Make this more efficient
+        PolygonMesh polygonMesh = new PolygonMesh();
+        for (int i = 0; i < tempVertexList.size(); i++) {
+            polygonMesh.tempVertexList.add(new Vector(tempVertexList.get(i)));
+        }
+        for (int i = 0; i < tempPolygonIndexList.size(); i++) {
+            tempPolygonIndexList.add(new int[]{
+                    tempPolygonIndexList.get(0)[0],
+                    tempPolygonIndexList.get(0)[1],
+                    tempPolygonIndexList.get(0)[2]});
+        }
+        return polygonMesh;
     }
 
     // More complicated transformations

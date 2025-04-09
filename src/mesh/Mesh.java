@@ -19,6 +19,8 @@ public abstract class Mesh {
         public Mesh setCenterAt(double x, double y, double z) { return null; }
         @Override
         public Mesh scale(double scaleX, double scaleY, double scaleZ) { return null; }
+        @Override
+        public Mesh duplicate() { return null; }
     }.setMaterial(Material.AIR);
 
     protected Mesh() {
@@ -26,18 +28,20 @@ public abstract class Mesh {
         setName("Mesh " + id);
     }
 
+    public abstract Mesh duplicate();
+
     public abstract RaycastInfo getClosestIntersection(Vector origin, Vector ray, RaycastInfo lastCast);
 
     public abstract Mesh setCenterAt(double x, double y, double z);
 
     public abstract Mesh scale(double scaleX, double scaleY, double scaleZ);
 
-    public void scale(double scale) {
-        scale(scale, scale, scale);
+    public Mesh scale(double scale) {
+        return scale(scale, scale, scale);
     }
 
-    public void scale(Vector scale) {
-        scale(scale.x, scale.y, scale.z);
+    public Mesh scale(Vector scale) {
+        return scale(scale.x, scale.y, scale.z);
     }
 
     public Mesh setMaterial(Material material) {

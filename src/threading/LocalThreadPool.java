@@ -76,13 +76,7 @@ public class LocalThreadPool extends ThreadPool {
                         wait();
                     } catch (InterruptedException ignored) {
                     }
-//                    if (workQueue.isEmpty() && activeWorkers.isEmpty()) {
-//                        synchronized (FINAL_WAKEUP_STICK) {
-//                            FINAL_WAKEUP_STICK.notifyAll();
-//                        }
-//                    }
                 }
-
                 isRunning = running;
             }
         } while (isRunning);

@@ -123,6 +123,10 @@ public class Material {
         setColor(color);
     }
 
+    public Material(Color color) {
+        this(new NormColor(color));
+    }
+
     public Material(Material material) {
         color = material.color;
         reflectivity = material.reflectivity;

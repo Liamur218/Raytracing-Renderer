@@ -56,6 +56,11 @@ public class PlaneMesh extends Mesh {
     }
 
     @Override
+    public PlaneMesh duplicate() {
+        return new PlaneMesh(new Vector(refPoint), new Vector(normal));
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(refPoint, normal, doRearVisibility);
     }

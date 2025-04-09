@@ -2,13 +2,13 @@ package driver;
 
 import renderer.*;
 import scene.*;
-import scene.scenes.*;
+import scene.scenes.TSObjects;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSDragon.newScene();
+        Scene scene = TSObjects.newScene();
 
-        RenderSettings renderSettings = RenderSettings.BUDGET_SETTINGS;
+        RenderSettings renderSettings = RenderSettings.DEFAULT_SETTINGS;
         renderSettings.setScene(scene);
         renderSettings.setSeed(0);
 
