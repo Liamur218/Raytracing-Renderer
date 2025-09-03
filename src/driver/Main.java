@@ -3,13 +3,17 @@ package driver;
 import renderer.*;
 import scene.*;
 import scene.scenes.*;
+import util.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSObjects.newScene();
-        SceneIO.writeToFile(scene, "assets/scenes");
+        Scene scene = TSMasterChief.newScene();
 
         RenderSettings renderSettings = RenderSettings.DEFAULT_SETTINGS;
-        renderSettings.setScene(scene).setSeed(0).setImageScale(1.5);
+        renderSettings.setScene(scene).setSeed(0).setImageScale(1);
+
+        Image image = Renderer.render(renderSettings);
+        image.writeToFile(renderSettings);
+        Logger.writeLogsToFile(renderSettings);
     }
 }

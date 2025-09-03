@@ -182,20 +182,17 @@ public abstract class Renderer {
         return image;
     }
 
-    public static Image quickRender(Scene scene) {
-        return quickRender(scene, QUICK_RENDER_DEFAULT_SIZE);
-    }
+    public static Image quickRender(RenderSettings renderSettings) {
+        ensureCorrectSettings(renderSettings);
 
-    public static Image quickRender(Scene scene, Dimension imageSize) {
-        return quickRender(scene, imageSize.width, imageSize.height);
-    }
-
-    public static Image quickRender(Scene scene, int width, int height) {
         Logger.logMsgLn("Beginning quick render");
-        Image image = new Image(width, height);
 
         // Variable setup
-        Camera camera = scene.camera;
+        int width = 1920;
+        int height = 1080;
+        Image image = new Image(width, height);
+        Scene scene = renderSettings.scene;
+        Camera camera = renderSettings.scene.camera;
 
         // Vector setup
         /*
