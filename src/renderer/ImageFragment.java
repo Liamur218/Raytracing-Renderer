@@ -2,7 +2,6 @@ package renderer;
 
 import mesh.NormColor;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class ImageFragment implements Serializable {

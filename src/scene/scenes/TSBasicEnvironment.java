@@ -19,7 +19,7 @@ public abstract class TSBasicEnvironment {
         camPos = new Vector(0, 0, 0);
         camDir = new Vector(1, 0, 0);
         camNormal = new Vector(0, 0, 1);
-        camera = new Camera(camPos, camDir, camNormal).setFOV(105);
+        camera = new Camera(camPos, camDir, camNormal).setFOV(105).setImageSize(1920, 1080);
         scene.setCamera(camera);
 
         // Vectors

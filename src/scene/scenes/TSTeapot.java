@@ -14,6 +14,7 @@ public abstract class TSTeapot {
         Vector camDir = new Vector(0.75, 0, -0.25);
         Vector camNormal = new Vector(0, 0, 1);
         Camera camera = new Camera(camPos, camDir, camNormal);
+        camera.setImageSize(1920, 1080);
         scene.setCamera(camera);
 
         scene.setLightSourceDir(new Vector(0, 1, 1));

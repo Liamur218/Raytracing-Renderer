@@ -2,7 +2,6 @@ package renderer;
 
 import scene.Scene;
 
-import java.awt.*;
 import java.util.Random;
 
 public class RenderSettings {
@@ -10,7 +9,7 @@ public class RenderSettings {
     // Variables
     Scene scene;
 
-    Dimension size;
+    float imageScale;
 
     int recursionCount, frameCount;
 
@@ -28,7 +27,6 @@ public class RenderSettings {
     public static final RenderSettings BUDGET_SETTINGS = new RenderSettings();
 
     static {
-        BUDGET_SETTINGS.setSize(1920, 1080);
         BUDGET_SETTINGS.setRecursionCount(15);
         BUDGET_SETTINGS.setFrameCount(30);
         BUDGET_SETTINGS.setThreadCount(30);
@@ -46,22 +44,23 @@ public class RenderSettings {
         DEFAULT_SETTINGS.setFrameCount(150);
         DEFAULT_SETTINGS.setThreadCount(25);
 
-        FANCY_SETTINGS.setSize(1920 * 1.5, 1080 * 1.5);
         FANCY_SETTINGS.setRecursionCount(20);
         FANCY_SETTINGS.setFrameCount(200);
         FANCY_SETTINGS.setThreadCount(100);
 
-        ULTRA_SETTINGS.setSize(1920 * 2, 1080 * 2);
         ULTRA_SETTINGS.setRecursionCount(30);
         ULTRA_SETTINGS.setFrameCount(300);
         ULTRA_SETTINGS.setThreadCount(150);
     }
 
-    private RenderSettings() {}
+    private RenderSettings() {
+        imageScale = 1;
+    }
 
     public RenderSettings(RenderSettings settings) {
+        this();
         scene = settings.scene;
-        size = settings.size;
+        imageScale = settings.imageScale;
         recursionCount = settings.recursionCount;
         frameCount = settings.frameCount;
         threadCount = settings.threadCount;
@@ -78,18 +77,13 @@ public class RenderSettings {
         return this;
     }
 
-    public RenderSettings setSize(Dimension size) {
-        this.size = size;
-        return this;
+    public RenderSettings setImageScale(double imageScale) {
+        return setImageScale((float) imageScale);
     }
 
-    public RenderSettings setSize(int width, int height) {
-        setSize(new Dimension(width, height));
+    public RenderSettings setImageScale(float imageScale) {
+        this.imageScale = imageScale;
         return this;
-    }
-
-    public RenderSettings setSize(double width, double height) {
-        return setSize((int) width, (int) height);
     }
 
     public RenderSettings setRecursionCount(int recursionCount) {
@@ -149,17 +143,13 @@ public class RenderSettings {
 
     @Override
     public String toString() {
-        return scene + " " +
-                size.width + "x" + size.height + " " +
-                "R" + recursionCount + " " +
-                "F" + frameCount + " " +
-                "T" + threadCount;
+        return scene + " " + scene.camera.imageSize.width + "x" + scene.camera.imageSize.height +
+                " R" + recursionCount + " F" + frameCount + " T" + threadCount;
     }
 
     public String toFilenameString() {
-        return scene + " " +
-                size.width + "x" + size.height + " " +
-                "R" + recursionCount + " " +
-                "F" + frameCount;
+        int width = (int) (scene.camera.imageSize.width * imageScale);
+        int height = (int) (scene.camera.imageSize.height * imageScale);
+        return scene + " " + width + "x" + height + " R" + recursionCount + " F" + frameCount;
     }
 }

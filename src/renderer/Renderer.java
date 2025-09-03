@@ -6,7 +6,6 @@ import scene.*;
 import threading.*;
 import util.*;
 
-import java.awt.*;
 import java.util.*;
 
 public abstract class Renderer {
@@ -15,6 +14,8 @@ public abstract class Renderer {
 
     public static final double POLYGON_ERROR = 0.01;
     public static final double MIN_REFLECTION_ANGLE = 0.001;
+
+    private static final Dimension QUICK_RENDER_DEFAULT_SIZE = new Dimension(1920, 1080);
 
     private static Random random;
 
@@ -26,8 +27,10 @@ public abstract class Renderer {
         ensureCorrectSettings(renderSettings);
 
         Scene scene = renderSettings.scene;
-        int width = renderSettings.size.width;
-        int height = renderSettings.size.height;
+        Camera camera = scene.camera;
+        Dimension imageSize = Dimension.multiply(scene.camera.imageSize, renderSettings.imageScale);
+        int width = imageSize.width;
+        int height = imageSize.height;
         int recursionCount = renderSettings.recursionCount;
         int frameCount = renderSettings.frameCount;
         int threadCount = renderSettings.threadCount;
@@ -37,7 +40,6 @@ public abstract class Renderer {
         Image image = new Image(width, height);
 
         // Variable setup
-        Camera camera = scene.camera;
         long masterStart = System.nanoTime();
         random = new Random(rngSeed);
 
@@ -181,7 +183,7 @@ public abstract class Renderer {
     }
 
     public static Image quickRender(Scene scene) {
-        return quickRender(scene, RenderSettings.BUDGET_SETTINGS.size);
+        return quickRender(scene, QUICK_RENDER_DEFAULT_SIZE);
     }
 
     public static Image quickRender(Scene scene, Dimension imageSize) {
@@ -271,8 +273,14 @@ public abstract class Renderer {
             }
         }
 
-        if (settings.size.width <= 0 || settings.size.height <= 0) {
-            Logger.logErrorMsg("Image size contains invalid dimension (is " + settings.size + " must be > 0)");
+        if (settings.scene.camera.imageSize.width <= 0 || settings.scene.camera.imageSize.height <= 0) {
+            Logger.logErrorMsg("Camera image size contains invalid dimension (is " +
+                    settings.scene.camera.imageSize + ", must be > 0)");
+            doExit = true;
+        }
+
+        if (settings.imageScale <= 0) {
+            Logger.logErrorMsg("Image scale (" + settings.imageScale + ") must be > 0");
             doExit = true;
         }
 
@@ -293,7 +301,7 @@ public abstract class Renderer {
 
         if (settings.sectionWidth < 1 || settings.sectionHeight < 1) {
             Logger.logErrorMsg("Section size (" + settings.sectionWidth + " x " + settings.sectionHeight +
-                    ") contains invalid dimension must be > 0");
+                    ") contains invalid dimension, must be > 0");
             doExit = true;
         }
 

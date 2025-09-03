@@ -1,6 +1,7 @@
 package scene;
 
 import mesh.*;
+import util.Logger;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -21,6 +22,7 @@ public abstract class SceneIO {
     * Vector -------> Camera direction
     * Vector -------> Camera normal
     * float x2 -----> Camera FOV (horizontal, vertical)
+    * int x2 -------> Image dimensions (width, height)
     *
     * Material... --> Materials
     * Mesh... ------> Meshes
@@ -28,7 +30,16 @@ public abstract class SceneIO {
     public static void writeToFile(Scene scene, String outputDir) {
         File file = new File(outputDir + "/" + scene.name + SCENE_FILE_EXT);
         try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-            writeString(scene.name, outputStream);
+            outputStream.write(serialize(scene));
+            outputStream.flush();
+        } catch (IOException e) {
+            Logger.logWarningMsg("Encountered IOException while writing to file");
+        }
+    }
+
+    public static byte[] serialize(Scene scene) {
+        try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
+            writeString(scene.name, byteStream);
 
             ArrayList<Material> materials = new ArrayList<>();
             for (Mesh mesh : scene.meshes) {
@@ -37,26 +48,29 @@ public abstract class SceneIO {
                 }
             }
 
-            writeInt(materials.size(), outputStream);
-            writeInt(scene.meshes.size(), outputStream);
+            writeInt(materials.size(), byteStream);
+            writeInt(scene.meshes.size(), byteStream);
 
-            writeVector(scene.camera.pos, outputStream);
-            writeVector(scene.camera.dir, outputStream);
-            writeVector(scene.camera.normal, outputStream);
-            writeFloat(scene.camera.hFOV, outputStream);
-            writeFloat(scene.camera.vFOV, outputStream);
+            writeVector(scene.camera.pos, byteStream);
+            writeVector(scene.camera.dir, byteStream);
+            writeVector(scene.camera.normal, byteStream);
+            writeFloat(scene.camera.hFOV, byteStream);
+            writeFloat(scene.camera.vFOV, byteStream);
+            writeInt(scene.camera.imageSize.width, byteStream);
+            writeInt(scene.camera.imageSize.height, byteStream);
 
             for (Material material : materials) {
-                writeMaterial(material, outputStream);
+                writeMaterial(material, byteStream);
             }
 
             for (Mesh mesh : scene.meshes) {
-                writeMesh(mesh, materials.indexOf(mesh.material), outputStream);
+                writeMesh(mesh, materials.indexOf(mesh.material), byteStream);
             }
-            outputStream.flush();
+            return byteStream.toByteArray();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.logWarningMsg("Encountered IOException during scene serialization");
         }
+        return null;
     }
 
     public static Scene readFromFile(String filename) {
@@ -70,6 +84,7 @@ public abstract class SceneIO {
 
             Camera camera = new Camera(readVector(inputStream), readVector(inputStream), readVector(inputStream));
             camera.setFOV(readFloat(inputStream), readFloat(inputStream));
+            camera.setImageSize(readInt(inputStream), readInt(inputStream));
             scene.setCamera(camera);
 
             Material[] materials = new Material[materialCount];
@@ -84,7 +99,7 @@ public abstract class SceneIO {
 
             return scene;
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.logWarningMsg("Encountered IOException while reading from file");
         }
         return null;
     }
@@ -113,7 +128,7 @@ public abstract class SceneIO {
     * Vector -----> normal
     * boolean ----> do rear visibility
     * */
-    private static void writeMesh(Mesh mesh, int localMatID, BufferedOutputStream outputStream) throws IOException {
+    private static void writeMesh(Mesh mesh, int localMatID, OutputStream outputStream) throws IOException {
         if (mesh instanceof PolygonMesh polygonMesh) {
             writeByte((byte) 1, outputStream);
             writeInt(localMatID, outputStream);
@@ -150,7 +165,7 @@ public abstract class SceneIO {
         }
     }
 
-    private static Mesh readMesh(Material[] materialDict, BufferedInputStream inputStream) throws IOException {
+    private static Mesh readMesh(Material[] materialDict, InputStream inputStream) throws IOException {
         byte meshType = readByte(inputStream);
         Material material = materialDict[readInt(inputStream)];
         String name = readString(inputStream);
@@ -195,7 +210,7 @@ public abstract class SceneIO {
         }
     }
 
-    private static void writeMaterial(Material material, BufferedOutputStream outputStream) throws IOException {
+    private static void writeMaterial(Material material, OutputStream outputStream) throws IOException {
         /*
          * Material properties:
          *     color -----------> float x3
@@ -215,7 +230,7 @@ public abstract class SceneIO {
         writeFloat(material.refractiveIndex, outputStream);
     }
 
-    public static Material readMaterial(BufferedInputStream inputStream) throws IOException {
+    public static Material readMaterial(InputStream inputStream) throws IOException {
         Material material = new Material();
         material.setColor(new NormColor(readFloat(inputStream), readFloat(inputStream), readFloat(inputStream)));
         material.setEmissivity(readFloat(inputStream));
@@ -228,47 +243,47 @@ public abstract class SceneIO {
 
     // Primitives
     // boolean I/O
-    private static void writeBool(boolean b, BufferedOutputStream outputStream) throws IOException {
+    private static void writeBool(boolean b, OutputStream outputStream) throws IOException {
         outputStream.write(b ? 1 : 0);
     }
 
-    private static boolean readBool(BufferedInputStream inputStream) throws IOException {
+    private static boolean readBool(InputStream inputStream) throws IOException {
         return inputStream.read() != 0;
     }
 
     // byte I/O (for consistency's sake)
-    private static void writeByte(byte b, BufferedOutputStream outputStream) throws IOException {
+    private static void writeByte(byte b, OutputStream outputStream) throws IOException {
         outputStream.write(b);
     }
 
-    private static byte readByte(BufferedInputStream inputStream) throws IOException {
+    private static byte readByte(InputStream inputStream) throws IOException {
         return (byte) inputStream.read();
     }
 
     // int I/O
-    private static void writeInt(int i, BufferedOutputStream outputStream) throws IOException {
+    private static void writeInt(int i, OutputStream outputStream) throws IOException {
         outputStream.write(i >> 24);
         outputStream.write(i >> 16);
         outputStream.write(i >> 8);
         outputStream.write(i);
     }
 
-    private static int readInt(BufferedInputStream inputStream) throws IOException {
+    private static int readInt(InputStream inputStream) throws IOException {
         return inputStream.read() << 24 | inputStream.read() << 16 | inputStream.read() << 8 | inputStream.read();
     }
 
     // char I/O
-    private static void writeChar(char c, BufferedOutputStream outputStream) throws IOException {
+    private static void writeChar(char c, OutputStream outputStream) throws IOException {
         outputStream.write(c >> 8);
         outputStream.write(c);
     }
 
-    private static char readChar(BufferedInputStream inputStream) throws IOException {
+    private static char readChar(InputStream inputStream) throws IOException {
         return (char) (inputStream.read() << 8 | inputStream.read());
     }
 
     // long I/O
-    private static void writeLong(long l, BufferedOutputStream outputStream) throws IOException {
+    private static void writeLong(long l, OutputStream outputStream) throws IOException {
         outputStream.write((byte) (l >> 56));
         outputStream.write((byte) (l >> 48));
         outputStream.write((byte) (l >> 40));
@@ -279,7 +294,7 @@ public abstract class SceneIO {
         outputStream.write((byte) (l));
     }
 
-    private static long readLong(BufferedInputStream inputStream) throws IOException {
+    private static long readLong(InputStream inputStream) throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(8);
         buffer.mark();
         for (int i = 0; i < 8; i++) {
@@ -289,32 +304,32 @@ public abstract class SceneIO {
     }
 
     // float I/O
-    private static void writeFloat(float f, BufferedOutputStream outputStream) throws IOException {
+    private static void writeFloat(float f, OutputStream outputStream) throws IOException {
         writeInt(Float.floatToRawIntBits(f), outputStream);
     }
 
-    private static float readFloat(BufferedInputStream inputStream) throws IOException {
+    private static float readFloat(InputStream inputStream) throws IOException {
         return Float.intBitsToFloat(readInt(inputStream));
     }
 
     // double I/O
-    private static void writeDouble(double d, BufferedOutputStream outputStream) throws IOException {
+    private static void writeDouble(double d, OutputStream outputStream) throws IOException {
         writeLong(Double.doubleToRawLongBits(d), outputStream);
     }
 
-    private static double readDouble(BufferedInputStream inputStream) throws IOException {
+    private static double readDouble(InputStream inputStream) throws IOException {
         return Double.longBitsToDouble(readLong(inputStream));
     }
 
     // String I/O
-    private static void writeString(String string, BufferedOutputStream outputStream) throws IOException {
+    private static void writeString(String string, OutputStream outputStream) throws IOException {
         writeInt(string.length(), outputStream);
         for (char c : string.toCharArray()) {
             writeChar(c, outputStream);
         }
     }
 
-    private static String readString(BufferedInputStream inputStream) throws IOException {
+    private static String readString(InputStream inputStream) throws IOException {
         int length = readInt(inputStream);
         char[] charArray = new char[length];
         for (int i = 0; i < charArray.length; i++) {
@@ -324,13 +339,13 @@ public abstract class SceneIO {
     }
 
     // Vector I/O
-    private static void writeVector(Vector vector, BufferedOutputStream outputStream) throws IOException {
+    private static void writeVector(Vector vector, OutputStream outputStream) throws IOException {
         writeDouble(vector.getX(), outputStream);
         writeDouble(vector.getY(), outputStream);
         writeDouble(vector.getZ(), outputStream);
     }
 
-    private static Vector readVector(BufferedInputStream inputStream) throws IOException {
+    private static Vector readVector(InputStream inputStream) throws IOException {
         return new Vector(readDouble(inputStream), readDouble(inputStream), readDouble(inputStream));
     }
 }

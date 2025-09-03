@@ -20,7 +20,7 @@ public abstract class TSKnightMirrors {
         camPos = new Vector(0.125, 0.5, 0);
         camDir = Vector.subtract(centerPos, camPos);
         camNormal = new Vector(0, 0, 1);
-        camera = new Camera(camPos, camDir, camNormal).setFOV(100);
+        camera = new Camera(camPos, camDir, camNormal).setFOV(100).setImageSize(1920, 1080);
         scene.setCamera(camera);
 
         // Vectors

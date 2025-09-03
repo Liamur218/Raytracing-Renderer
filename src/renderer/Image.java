@@ -49,8 +49,8 @@ public class Image extends BufferedImage {
 
     public void writeToFile(String filename) {
         if (infoOnImage) {
-            writeStrOnImage("Size: " + renderSettings.size.width + " x " + renderSettings.size.height,
-                    0, 3);
+            writeStrOnImage("Size: " + renderSettings.scene.camera.imageSize.width + " x " +
+                            renderSettings.scene.camera.imageSize.height, 0, 3);
             writeStrOnImage("Recursion Limit: " + renderSettings.recursionCount, 1, 3);
             writeStrOnImage("Frames: " + renderSettings.frameCount, 2, 3);
             writeStrOnImage("Threads: " + renderSettings.threadCount, 3, 3);
