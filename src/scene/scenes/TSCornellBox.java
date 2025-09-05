@@ -7,11 +7,11 @@ import mesh.Vector;
 import scene.Camera;
 import scene.Scene;
 
-public abstract class TSStanfordBox {
+public abstract class TSCornellBox {
     // https://www.graphics.cornell.edu/online/box/data.html
     public static Scene newScene() {
         Scene scene = new Scene();
-        scene.setName("Stanford Box");
+        scene.setName("Cornell Box");
 
         // Scene lighting
         scene.setAmbientLight(0);
@@ -22,7 +22,7 @@ public abstract class TSStanfordBox {
         Vector cameraNorm = new Vector(0, 1, 0);
         Camera camera = new Camera(cameraPos, cameraDir, cameraNorm);
         camera.setFOV(46);
-        camera.setImageSize(2000, 2000);
+        camera.setImageSize(1500, 1500);
         scene.setCamera(camera);
 
         // Floor (white)

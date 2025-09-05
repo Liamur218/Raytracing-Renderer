@@ -7,7 +7,7 @@ import util.Logger;
 
 public class Main {
     public static void main(String[] args) {
-        Scene scene = TSMasterChief.newScene();
+        Scene scene = TSCornellBox.newScene();
 
         RenderSettings renderSettings = RenderSettings.DEFAULT_SETTINGS;
         renderSettings.setScene(scene).setSeed(0).setImageScale(1);

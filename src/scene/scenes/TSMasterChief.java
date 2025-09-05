@@ -4,6 +4,7 @@ import mesh.*;
 import scene.Scene;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public abstract class TSMasterChief {
     public static Scene newScene() {
